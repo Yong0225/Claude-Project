@@ -2,86 +2,50 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Running the game
+## What's in this repo
 
-Open `shooter.html` directly in a browser — no build step, no server required. Double-click the file or drag it into a browser tab.
+Several independent projects share one repo, `Claude-Project` (renamed from `space-shooter`; the local folder is `Claude Project`).
 
-## Architecture
+| Path | What it is | Docs |
+|------|-----------|------|
+| `business-tracker/` | **Pulse** — business metrics tracker. Single-file web app, data in localStorage | `business-tracker/README.md` |
+| `staff-scheduler/` | 班表 — restaurant scheduling, timesheets, payroll. Single-file web app | `staff-scheduler/README.md` |
+| `restaurant-site/` | 拾山 SHISHAN restaurant landing page | — |
+| root `*.py` | F&B lead pipeline: scraping (`scrap*.py`), ICP qualification with Gemini (`analyze_leads.py`), cold emails (`generate_emails.py`), `leads_app.py` | `scrap.md`, `pp.md`, `icp.md`, `coldemail.md` |
 
-The entire game lives in a single file: `shooter.html`. It is structured in three sections inline:
+The web apps have no build step and no dependencies: open `index.html` in a browser, or serve with `py -m http.server`.
 
-- **CSS** (`<style>`) — layout, overlay, HUD, and button styles. Canvas is fixed at 480×600.
-- **HTML** — a HUD bar (`#ui`), the `<canvas id="c">`, and an `#overlay` div reused for start/game-over screens.
-- **JavaScript** (`<script>`) — all game logic, no external dependencies.
+## Live site (GitHub Pages)
 
-### Game loop
+GitHub Pages serves the `master` branch from the repo root:
 
-`loop(ts)` is driven by `requestAnimationFrame`. Each tick computes `dt` normalised to 60 fps (`ts / 16.67`, clamped to 3), then calls `update(dt)` → `render()`.
+- https://yong0225.github.io/Claude-Project/business-tracker/ — Pulse. The owner uses this daily on their phone from the home screen.
+- Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`).
 
-### State machine
+**Anything pushed to `master` is live within 1–2 minutes.** Never push broken work to `master`.
 
-The global `state` string controls what `update` and `render` act on:
-
-| Value | Meaning |
-|-------|---------|
-| `idle` | Title screen, loop not yet started |
-| `playing` | Active gameplay |
-| `dead` | Game over overlay shown |
-
-### Key subsystems
-
-| Function | Responsibility |
-|----------|---------------|
-| `initGame()` | Resets all globals and calls `buildEnemyGrid(1)` |
-| `buildEnemyGrid(lvl)` | Rebuilds the `enemies` array; rows = `min(2+lvl, 5)`, cols = 8 |
-| `updateEnemies(dt)` | Marches the grid sideways, drops a row on wall-hit, fires enemy bullets, scales speed by survivors remaining |
-| `triggerDeath()` | Decrements lives, grants 180-frame invincibility, or transitions to `dead` |
-| `rectsOverlap()` | AABB collision used for all bullet/entity hits |
-| `render()` | Full repaint every frame: background → stars → particles → player → enemies → bullets |
-| `showOverlay()` | Rebuilds `#overlay` innerHTML and re-attaches the start button listener |
-
-### Difficulty scaling (per level)
-
-- Enemy grid grows by one row per level (max 5 rows).
-- Enemy move speed increases as fewer enemies remain: `speed = max(4, 40 - aliveCount * 0.5)`.
-- Enemy shoot interval shrinks: `max(30, 90 - level * 8)` frames.
-- Enemy bullet speed increases: `4 + level * 0.4` px/frame.
-- Score per kill multiplied by level.
-
-### Data shapes
-
-```js
-player      = { x, y, w, h, speed, invincible }   // invincible counts down in dt units
-enemy       = { x, y, w, h, color, hp, alive, col, row }
-bullet      = { x, y, speed }                       // player bullets move up
-enemyBullet = { x, y, speed }                       // enemy bullets move down
-particle    = { x, y, vx, vy, life, decay, size, color }
-```
+Pulse stores each user's data in their own browser's localStorage (key `pulse.v1`). Every code change must keep reading existing saved data: extend `normalize()` for new fields, and never rename or remove stored keys without a migration.
 
 ## Git workflow
 
-Remote: https://github.com/Yong0225/space-shooter  
-Branch: `master`
+Remote: https://github.com/Yong0225/Claude-Project
+Main branch: `master` (this is what the live site serves)
 
-**Every change must be committed and pushed before the session ends. No exceptions.**
+**Every change must be committed, pushed, and reach `master` before the session ends. No exceptions.**
 
-This rule applies to Claude Code itself — if Claude makes any change to any file during a session, it must run `git add`, `git commit`, and `git push` before finishing. Do not batch multiple unrelated changes into one commit, and never leave work uncommitted. GitHub must always reflect the latest state of the project so nothing is ever lost and any change can be reverted.
+1. At the start of a session, `git fetch origin` and make sure you are working on top of the latest `origin/master` (`git pull` on master, or `git merge --ff-only origin/master` on a branch).
+2. After each change: `git add <changed files>` → `git commit -m "type: description"` → `git push`.
+3. If you are on a branch other than `master` (e.g. a `claude/...` worktree branch), merge into `master` once the change is verified — syntax-checked and opened in a browser with no console errors:
+   ```
+   git fetch origin
+   git merge origin/master        # resolve any conflicts on the branch, re-verify
+   git push                        # update the branch
+   git push origin HEAD:master     # fast-forward master = deploy
+   ```
+   Never force-push `master`. If `HEAD:master` is rejected, fetch and merge again rather than forcing.
+4. Do not merge half-finished work. If a task is only partly done when the session ends, commit and push the branch, and tell the owner it has not been merged yet.
 
-Commit message convention: `type: short description` (e.g. `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`).
-
-When to commit:
-- After adding a new feature or script
-- After fixing a bug
-- After any refactor or visual change
-- After updating CLAUDE.md or any project config/documentation
-- After adding new files (scripts, markdown docs, config files)
-
-Command sequence after each change:
-```
-git add <changed files>
-git commit -m "type: description"
-git push
-```
+Commit message convention: `type: short description` (e.g. `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`). Do not batch unrelated changes into one commit.
 
 Files to never commit:
 - `.env` (contains API keys)
