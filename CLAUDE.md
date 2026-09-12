@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What's in this repo
 
-Several independent projects share one repo (the name `space-shooter` is historical — the game is gone).
+Several independent projects share one repo, `Claude-Project` (renamed from `space-shooter`; the local folder is `Claude Project`).
 
 | Path | What it is | Docs |
 |------|-----------|------|
@@ -19,7 +19,7 @@ The web apps have no build step and no dependencies: open `index.html` in a brow
 
 GitHub Pages serves the `master` branch from the repo root:
 
-- https://yong0225.github.io/space-shooter/business-tracker/ — Pulse. The owner uses this daily on their phone from the home screen.
+- https://yong0225.github.io/Claude-Project/business-tracker/ — Pulse. The owner uses this daily on their phone from the home screen.
 - Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`).
 
 **Anything pushed to `master` is live within 1–2 minutes.** Never push broken work to `master`.
@@ -28,7 +28,7 @@ Pulse stores each user's data in their own browser's localStorage (key `pulse.v1
 
 ## Git workflow
 
-Remote: https://github.com/Yong0225/space-shooter
+Remote: https://github.com/Yong0225/Claude-Project
 Main branch: `master` (this is what the live site serves)
 
 **Every change must be committed, pushed, and reach `master` before the session ends. No exceptions.**
