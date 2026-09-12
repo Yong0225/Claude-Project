@@ -1070,7 +1070,10 @@ function hydrate(root) {
 }
 const numHTML = (key, v, fmt, compact) => `<span class="num" data-num="${esc(key)}" data-v="${v == null || !fin(v) ? '' : v}" data-fmt="${fmt}" data-compact="${compact ? 1 : 0}">${fmtVal(v, fmt, compact)}</span>`;
 
-function haptic() { try { navigator.vibrate && navigator.vibrate(6); } catch (e) { } }
+function haptic() {
+  // Chrome logs an error if vibrate() runs before the user has touched the page
+  try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(6); } catch (e) { }
+}
 
 /* ---- icons (SF-Symbols-like strokes) ---- */
 const ICON = {
