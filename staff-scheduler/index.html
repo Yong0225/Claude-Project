@@ -149,6 +149,7 @@ button{border:0;background:none;padding:0;cursor:pointer}
   transition:background-color 150ms ease,transform 120ms var(--ease-out);letter-spacing:-.01em;position:relative;z-index:1}
 .seg button:active{transform:scale(.97)}
 .seg button.on{background:var(--bg-elev);box-shadow:var(--shadow-1)}
+.seg .wk-l{min-width:78px}
 
 .pill{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;
   font-size:11.5px;font-weight:650;background:var(--fill-2);color:var(--label-2)}
@@ -196,6 +197,9 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
   box-shadow:0 2px 5px rgba(0,0,0,.2);transition:transform 200ms var(--ease-out)}
 .switch.on{background:var(--green)}
 .switch.on::after{transform:translateX(19px)}
+.switch.sm{width:40px;height:24px;border-radius:12px}
+.switch.sm::after{width:20px;height:20px}
+.switch.sm.on::after{transform:translateX(16px)}
 
 .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
 .tbl th{text-align:left;font-size:11.5px;font-weight:650;color:var(--label-2);letter-spacing:.03em;
@@ -313,8 +317,23 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
 .hint{font-size:12px;color:var(--label-2);line-height:1.45}
 .sec-t{font-size:12px;font-weight:650;color:var(--label-2);letter-spacing:.04em;text-transform:uppercase;
   padding:0 4px 8px;margin-top:6px}
-.avail-grid{display:grid;grid-template-columns:52px 1fr 1fr;gap:8px;align-items:center}
-.avail-grid .d{font-size:13px;font-weight:600}
+.avail-grid{display:grid;grid-template-columns:132px minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center}
+.avail-grid>*{min-width:0}
+.avail-grid .d{font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avail-grid .inp{min-width:0;padding:0 8px}
+.avail-grid .d-m{display:none}
+@media (max-width:520px){
+  .avail-grid{grid-template-columns:80px minmax(0,1fr) minmax(0,1fr);gap:6px}
+  .avail-grid .d-l{display:none} .avail-grid .d-m{display:inline}
+  .avail-grid .inp{font-size:14px;padding:0 6px}
+  .avail-grid input[type=time]::-webkit-calendar-picker-indicator{display:none}  /* 手机上点整格就会弹出时间选择，省下图标的位置给 AM/PM */
+}
+.slip-who{flex:1;min-width:0}
+.slip-who .row-s{white-space:normal}
+.slip-gross{flex:none;text-align:right}
+.slip-gross .mono{font-size:24px;font-weight:700;letter-spacing:-.02em}
+@media (max-width:420px){.slip-gross .mono{font-size:20px}}
+.kv>:last-child:not(:first-child){margin-left:auto;text-align:right}
 .chips-row{display:flex;flex-wrap:wrap;gap:7px}
 .tglchip{padding:6px 11px;border-radius:999px;background:var(--fill);font-size:12.5px;font-weight:600;
   transition:transform 120ms var(--ease-out),background-color 150ms ease,color 150ms ease}
@@ -485,7 +504,7 @@ const I18N = {
     'c.confirm': '确定', 'c.total': '合计', 'c.role': '岗位', 'c.staff': '员工', 'c.date': '日期',
     'c.start': '开始', 'c.end': '结束', 'c.note': '备注', 'c.export': '导出 CSV', 'c.print': '打印',
     'c.perHour': '/小时', 'c.perMonth': '/月', 'c.saved': '已保存', 'c.saving': '保存中…',
-    'c.appearance': '外观', 'c.language': '语言', 'c.thisWeek': '本周', 'c.day': '天', 'c.people': '人',
+    'c.appearance': '外观', 'c.language': '语言', 'c.thisWeek': '本周', 'c.lastWeek': '上周', 'c.nextWeek': '下周', 'c.weeksAgo': '{n} 周前', 'c.weeksAhead': '{n} 周后', 'c.day': '天', 'c.people': '人',
     'c.hoursShort': 'h', 'c.shifts': '班次', 'c.rest': '休息', 'c.onLeave': '请假',
     'nav.ops': '运营', 'nav.admin': '管理', 'nav.more': '更多',
     'nav.dash': '总览', 'nav.sched': '排班', 'nav.time': '工时', 'nav.pay': '薪资',
@@ -540,7 +559,7 @@ const I18N = {
     'pay.goFix': '去处理', 'pay.method': '计薪方式', 'pay.reg': '正常', 'pay.ot': '加班',
     'pay.base': '基本', 'pay.taxCol': '雇主税', 'pay.costCol': '合计成本', 'pay.grossCol': '应发',
     'pay.slip': '{n} · 工资单', 'pay.breakdown': '工时构成', 'pay.byDay': '逐日工时',
-    'pay.regLine': '正常工时', 'pay.otLine': '加班工时（{m}×）', 'pay.dtLine': '双倍工时',
+    'pay.regLine': '正常工时', 'pay.hoursLine': '工作时数', 'pay.salaryLine': '月薪 {v} · 按 {d} 天折算', 'pay.otLine': '加班工时（{m}×）', 'pay.dtLine': '双倍工时',
     'pay.tipLine': '小费分配（按工时）', 'pay.grossLine': '应发合计', 'pay.taxLine': '雇主税费 {p}%',
     'pay.costLine': '雇主总成本', 'pay.noHours': '本周期没有工时记录',
     'pay.slipMiss': '⚠︎ 有 {n} 天排了班但没有打卡记录',
@@ -634,7 +653,7 @@ const I18N = {
     'pay.myNote': '马来西亚：正常工时每天 {d}h、每周 {w}h，超出按 {m}×；休息日与公假另按 EA 1955 计算。',
     'set.holidays': '公共假期', 'set.holidaysSub': '这些日子上班按公假规则计算工资',
     'set.addHoliday': '＋ 添加', 'set.holidayName': '假期名称', 'set.noHolidays': '还没有添加公共假期',
-    'set.restDay': '每周休息日', 'set.restDaySub': '休息日上班按 EA 1955 另计工资',
+    'set.restDay': '每周休息日', 'set.restDaySub': '可多选，也可以不设；休息日上班按 EA 1955 另计工资',
     'set.punch': '打卡方式', 'set.punchSub': '扫码需要员工在店里扫屏幕上的二维码；加定位会再校验一次距离',
     'punch.free': '自由打卡', 'punch.code': '扫码打卡', 'punch.geo': '扫码 + 定位',
     'set.storeLoc': '门店位置', 'set.storeLocSub': '用于定位校验', 'set.useHere': '记录当前位置',
@@ -677,7 +696,7 @@ const I18N = {
     'c.confirm': 'Confirm', 'c.total': 'Total', 'c.role': 'Role', 'c.staff': 'Staff', 'c.date': 'Date',
     'c.start': 'Start', 'c.end': 'End', 'c.note': 'Note', 'c.export': 'Export CSV', 'c.print': 'Print',
     'c.perHour': '/hr', 'c.perMonth': '/mo', 'c.saved': 'Saved', 'c.saving': 'Saving…',
-    'c.appearance': 'Theme', 'c.language': 'Language', 'c.thisWeek': 'This week', 'c.day': 'days', 'c.people': 'people',
+    'c.appearance': 'Theme', 'c.language': 'Language', 'c.thisWeek': 'This week', 'c.lastWeek': 'Last week', 'c.nextWeek': 'Next week', 'c.weeksAgo': '{n} weeks ago', 'c.weeksAhead': 'In {n} weeks', 'c.day': 'days', 'c.people': 'people',
     'c.hoursShort': 'h', 'c.shifts': 'shifts', 'c.rest': 'Off', 'c.onLeave': 'On leave',
     'nav.ops': 'Operations', 'nav.admin': 'Admin', 'nav.more': 'More',
     'nav.dash': 'Overview', 'nav.sched': 'Schedule', 'nav.time': 'Hours', 'nav.pay': 'Payroll',
@@ -732,7 +751,7 @@ const I18N = {
     'pay.goFix': 'Fix now', 'pay.method': 'Pay basis', 'pay.reg': 'Regular', 'pay.ot': 'OT',
     'pay.base': 'Base', 'pay.taxCol': 'Emp. tax', 'pay.costCol': 'Total cost', 'pay.grossCol': 'Gross',
     'pay.slip': '{n} · Payslip', 'pay.breakdown': 'Breakdown', 'pay.byDay': 'Day by day',
-    'pay.regLine': 'Regular hours', 'pay.otLine': 'Overtime ({m}×)', 'pay.dtLine': 'Double time',
+    'pay.regLine': 'Regular hours', 'pay.hoursLine': 'Hours worked', 'pay.salaryLine': 'Salary {v}/mo · {d} days prorated', 'pay.otLine': 'Overtime ({m}×)', 'pay.dtLine': 'Double time',
     'pay.tipLine': 'Tips (by hours worked)', 'pay.grossLine': 'Gross total', 'pay.taxLine': 'Employer tax {p}%',
     'pay.costLine': 'Total employer cost', 'pay.noHours': 'No hours in this period',
     'pay.slipMiss': '⚠︎ {n} scheduled days have no punch record',
@@ -826,7 +845,7 @@ const I18N = {
     'pay.myNote': 'Malaysia: normal hours are {d}h a day and {w}h a week; beyond that is paid at {m}×. Rest days and public holidays follow EA 1955.',
     'set.holidays': 'Public holidays', 'set.holidaysSub': 'Work on these days is paid at holiday rates',
     'set.addHoliday': '＋ Add', 'set.holidayName': 'Holiday name', 'set.noHolidays': 'No public holidays added yet',
-    'set.restDay': 'Weekly rest day', 'set.restDaySub': 'Work on a rest day is paid under EA 1955 rules',
+    'set.restDay': 'Weekly rest day', 'set.restDaySub': 'Pick any days, or none. Work on a rest day is paid under EA 1955 rules',
     'set.punch': 'Clock-in method', 'set.punchSub': 'Scanning requires the code shown on the store screen; adding location checks the distance too',
     'punch.free': 'Open', 'punch.code': 'Scan a code', 'punch.geo': 'Scan + location',
     'set.storeLoc': 'Store location', 'set.storeLocSub': 'Used for the distance check', 'set.useHere': 'Use current location',
@@ -869,7 +888,7 @@ const I18N = {
     'c.confirm': 'Sahkan', 'c.total': 'Jumlah', 'c.role': 'Jawatan', 'c.staff': 'Pekerja', 'c.date': 'Tarikh',
     'c.start': 'Mula', 'c.end': 'Tamat', 'c.note': 'Nota', 'c.export': 'Eksport CSV', 'c.print': 'Cetak',
     'c.perHour': '/jam', 'c.perMonth': '/bulan', 'c.saved': 'Disimpan', 'c.saving': 'Menyimpan…',
-    'c.appearance': 'Tema', 'c.language': 'Bahasa', 'c.thisWeek': 'Minggu ini', 'c.day': 'hari', 'c.people': 'orang',
+    'c.appearance': 'Tema', 'c.language': 'Bahasa', 'c.thisWeek': 'Minggu ini', 'c.lastWeek': 'Minggu lepas', 'c.nextWeek': 'Minggu depan', 'c.weeksAgo': '{n} minggu lalu', 'c.weeksAhead': '{n} minggu lagi', 'c.day': 'hari', 'c.people': 'orang',
     'c.hoursShort': 'j', 'c.shifts': 'syif', 'c.rest': 'Rehat', 'c.onLeave': 'Bercuti',
     'nav.ops': 'Operasi', 'nav.admin': 'Pentadbiran', 'nav.more': 'Lagi',
     'nav.dash': 'Ringkasan', 'nav.sched': 'Jadual', 'nav.time': 'Jam Kerja', 'nav.pay': 'Gaji',
@@ -924,7 +943,7 @@ const I18N = {
     'pay.goFix': 'Betulkan', 'pay.method': 'Asas gaji', 'pay.reg': 'Biasa', 'pay.ot': 'OT',
     'pay.base': 'Asas', 'pay.taxCol': 'Cukai majikan', 'pay.costCol': 'Jumlah kos', 'pay.grossCol': 'Kasar',
     'pay.slip': '{n} · Slip gaji', 'pay.breakdown': 'Pecahan jam', 'pay.byDay': 'Jam harian',
-    'pay.regLine': 'Jam biasa', 'pay.otLine': 'Jam OT ({m}×)', 'pay.dtLine': 'Masa berganda',
+    'pay.regLine': 'Jam biasa', 'pay.hoursLine': 'Jam bekerja', 'pay.salaryLine': 'Gaji {v}/bln · pro-rata {d} hari', 'pay.otLine': 'Jam OT ({m}×)', 'pay.dtLine': 'Masa berganda',
     'pay.tipLine': 'Tip (ikut jam kerja)', 'pay.grossLine': 'Jumlah kasar', 'pay.taxLine': 'Cukai majikan {p}%',
     'pay.costLine': 'Jumlah kos majikan', 'pay.noHours': 'Tiada jam dalam tempoh ini',
     'pay.slipMiss': '⚠︎ {n} hari berjadual tiada rekod daftar',
@@ -1018,7 +1037,7 @@ const I18N = {
     'pay.myNote': 'Malaysia: waktu kerja biasa {d}j sehari dan {w}j seminggu; lebih daripada itu dibayar {m}×. Hari rehat dan cuti umum ikut Akta Kerja 1955.',
     'set.holidays': 'Cuti umum', 'set.holidaysSub': 'Kerja pada hari ini dibayar mengikut kadar cuti umum',
     'set.addHoliday': '＋ Tambah', 'set.holidayName': 'Nama cuti', 'set.noHolidays': 'Belum ada cuti umum ditambah',
-    'set.restDay': 'Hari rehat mingguan', 'set.restDaySub': 'Kerja pada hari rehat dibayar mengikut Akta Kerja 1955',
+    'set.restDay': 'Hari rehat mingguan', 'set.restDaySub': 'Pilih beberapa hari atau tiada. Kerja pada hari rehat dibayar mengikut Akta Kerja 1955',
     'set.punch': 'Cara daftar masuk', 'set.punchSub': 'Imbasan memerlukan kod pada skrin kedai; tambah lokasi untuk semak jarak juga',
     'punch.free': 'Bebas', 'punch.code': 'Imbas kod', 'punch.geo': 'Imbas + lokasi',
     'set.storeLoc': 'Lokasi kedai', 'set.storeLocSub': 'Digunakan untuk semakan jarak', 'set.useHere': 'Guna lokasi semasa',
@@ -1168,7 +1187,7 @@ function applyRegion(code) {
 function defaultSettings() {
   return {
     biz: '拾山 SHISHAN', cur: '$', weekStart: 1, lang: 'en', bossPin: '',
-    region: 'US', restDay: 0,
+    region: 'US', restDays: [0],
     punchMode: 'free', storeSecret: Math.random().toString(36).slice(2, 10).toUpperCase(),
     codeWindow: 60, geo: { lat: null, lng: null, radius: 150 },
     otWeeklyOn: true, otWeekly: 40, otMult: 1.5,
@@ -1288,6 +1307,11 @@ function migrate() {
   DB.holidays = DB.holidays || [];
   DB.seenNotif = DB.seenNotif || {};
   if (!DB.settings.geo) DB.settings.geo = { lat: null, lng: null, radius: 150 };
+  if ('restDay' in DB.settings) {      // 旧版只能选一个休息日；load() 已先合并默认值，所以要看旧字段
+    DB.settings.restDays = DB.settings.restDay == null ? [] : [Number(DB.settings.restDay)];
+    delete DB.settings.restDay;
+  }
+  if (!Array.isArray(DB.settings.restDays)) DB.settings.restDays = [0];
   if (!DB.settings.storeSecret) DB.settings.storeSecret = Math.random().toString(36).slice(2, 10).toUpperCase();
 }
 
@@ -1470,8 +1494,8 @@ function periodKey(from, to) { return from + '~' + to; }
 function dayKind(s, date) {
   const r = REG();
   if (r.phOn && (DB.holidays || []).some(h => h.d === date)) return 'ph';
-  const rd = s.restDay == null ? DB.settings.restDay : s.restDay;
-  if (r.restDayOn && dowOf(date) === rd) return 'rest';
+  const rds = s.restDay == null ? (DB.settings.restDays || []) : [].concat(s.restDay);
+  if (r.restDayOn && rds.includes(dowOf(date))) return 'rest';
   return 'normal';
 }
 const holidayOn = date => (DB.holidays || []).find(h => h.d === date);
@@ -2334,12 +2358,20 @@ function topbarHTML(title, sub, right = '') {
   return `<div><div class="tb-title">${title}</div><div class="tb-sub">${sub}</div></div>
     <div class="tb-right">${right}${bell}</div>`;
 }
+/* 当前显示的是哪一周：本周 / 上周 / 下周 / n 周前 / n 周后 */
+function weekLabel(ws) {
+  const n = Math.round(daysBetween(weekStartOf(TODAY), ws) / 7);
+  if (n === 0) return t('c.thisWeek');
+  if (n === -1) return t('c.lastWeek');
+  if (n === 1) return t('c.nextWeek');
+  return t(n < 0 ? 'c.weeksAgo' : 'c.weeksAhead', { n: Math.abs(n) });
+}
 function weekNav() {
   const ws = state.week, we = addDays(ws, 6);
-  const isNow = ws === weekStartOf(TODAY);
-  return `<div class="seg"><button data-act="wk" data-d="-1">‹</button>
-    <button data-act="wk" data-d="0" class="${isNow ? 'on' : ''}">${t('c.thisWeek')}</button>
-    <button data-act="wk" data-d="1">›</button></div>
+  // 中间显示正在看的那一周；不是本周时点它回到本周
+  return `<div class="seg"><button data-act="wk" data-d="-1" aria-label="${t('c.lastWeek')}">‹</button>
+    <button data-act="wk" data-d="0" class="on wk-l" title="${t('c.thisWeek')}">${weekLabel(ws)}</button>
+    <button data-act="wk" data-d="1" aria-label="${t('c.nextWeek')}">›</button></div>
     <span class="tiny dim nowrap">${fmtMD(ws)} – ${fmtMD(we)}</span>`;
 }
 function statCard(label, value, sub, extra = '') {
@@ -2915,16 +2947,19 @@ function slipBody(r, from, to) {
       <span class="tiny dim">${srcName[d.from]}</span></span><b>${hh(d.min)}${H}</b></div>`).join('');
   return `
       <div class="rowline">${avatarHTML(r.s, 'lg')}
-        <div><div style="font-weight:700;font-size:16px">${esc(r.s.n)}</div>
+        <div class="slip-who"><div style="font-weight:700;font-size:16px">${esc(r.s.n)}</div>
           <div class="row-s">${r.s.roles.map(roleName).join(' / ')} · ${r.salaried ? t('staff.monthly') : money(r.s.rate) + t('c.perHour')}</div></div>
-        <div class="spacer"></div><div style="text-align:right"><div class="tiny dim">${t('pay.grossCol')}</div>
-          <div style="font-size:24px;font-weight:700;letter-spacing:-.02em">${money(r.gross)}</div></div></div>
+        <div class="slip-gross"><div class="tiny dim">${t('pay.grossCol')}</div>
+          <div class="mono">${money(r.gross)}</div></div></div>
       <div class="hr"></div>
       <div class="sec-t">${t('pay.breakdown')}</div>
-      <div class="kv"><span>${t('pay.regLine')}</span><b>${hh(r.reg)}${H} × ${money(r.s.rate)} = ${money(r.base)}</b></div>
-      ${r.ot ? `<div class="kv"><span style="color:var(--orange)">${t('pay.otLine', { m: st.otMult })}</span>
+      ${r.salaried   // 月薪：工时只做记录，工资按天折算
+      ? `<div class="kv"><span>${t('pay.hoursLine')}</span><b>${hh(r.totalMin)}${H}</b></div>
+        <div class="kv"><span>${t('pay.salaryLine', { v: money0(r.s.rate), d: daysBetween(from, to) + 1 })}</span><b>${money(r.base)}</b></div>`
+      : `<div class="kv"><span>${t('pay.regLine')}</span><b>${hh(r.reg)}${H} × ${money(r.s.rate)} = ${money(r.base)}</b></div>`}
+      ${r.ot && !r.salaried ? `<div class="kv"><span style="color:var(--orange)">${t('pay.otLine', { m: st.otMult })}</span>
         <b style="color:var(--orange)">${hh(r.ot)}${H} × ${money(r.s.rate * st.otMult)} = ${money(r.otPay)}</b></div>` : ''}
-      ${r.dt ? `<div class="kv"><span>${t('pay.dtLine')}</span><b>${hh(r.dt)}${H} = ${money(r.dtPay)}</b></div>` : ''}
+      ${r.dt && !r.salaried ? `<div class="kv"><span>${t('pay.dtLine')}</span><b>${hh(r.dt)}${H} = ${money(r.dtPay)}</b></div>` : ''}
       ${r.restPay ? `<div class="kv"><span style="color:var(--purple)">${t('pay.restDay')} · ${hh(r.restMin)}${H}</span>
         <b style="color:var(--purple)">${money(r.restPay)}</b></div>` : ''}
       ${r.phPay ? `<div class="kv"><span style="color:var(--pink)">${t('pay.ph')} · ${hh(r.phMin)}${H}</span>
@@ -2991,8 +3026,8 @@ function availRowsHTML(av, editable) {
   return [1, 2, 3, 4, 5, 6, 0].map(d => `
     <div class="avail-grid" style="margin-bottom:8px" data-av="${d}">
       <div class="rowline" style="gap:7px">
-        ${editable ? `<div class="switch ${av[d] ? 'on' : ''}" data-act="tglAvail" data-d="${d}" style="width:40px;height:24px"></div>` : ''}
-        <span class="d">${DOW_L(d)}</span></div>
+        ${editable ? `<div class="switch sm ${av[d] ? 'on' : ''}" data-act="tglAvail" data-d="${d}"></div>` : ''}
+        <span class="d"><span class="d-l">${DOW_L(d)}</span><span class="d-m">${DOW_M(d)}</span></span></div>
       ${editable
       ? `<input class="inp" type="time" data-k="s" value="${av[d] ? m2t(av[d][0]) : '09:00'}" ${av[d] ? '' : 'disabled'}>
            <input class="inp" type="time" data-k="e" value="${av[d] ? m2t(Math.min(av[d][1], 1439)) : '22:00'}" ${av[d] ? '' : 'disabled'}>`
@@ -3227,11 +3262,14 @@ VIEWS.set = {
             <div class="row-s">${t('set.regionSub')}</div></div>
             <div class="row-r"><div class="seg">${Object.keys(REGIONS).map(r =>
       `<button data-act="setRegion" data-r="${r}" class="${st.region === r ? 'on' : ''}">${t('region.' + r)}</button>`).join('')}</div></div></div>
-          ${REG().restDayOn ? `<div class="row"><div class="row-m"><div class="row-t">${t('set.restDay')}</div>
+          ${REG().restDayOn ? `<div class="row stack"><div class="row-m"><div class="row-t">${t('set.restDay')}</div>
             <div class="row-s">${t('set.restDaySub')}</div></div>
-            <div class="row-r"><select class="inp" style="width:130px;height:32px" data-set="restDay">
-              ${[0, 1, 2, 3, 4, 5, 6].map(d => `<option value="${d}" ${st.restDay === d ? 'selected' : ''}>${DOW_L(d)}</option>`).join('')}
-            </select></div></div>` : ''}
+            <div class="row-r chips-row">
+              ${[0, 1, 2, 3, 4, 5, 6].map(i => (st.weekStart + i) % 7).map(d => {
+        const on = (st.restDays || []).includes(d);
+        return `<button class="tglchip ${on ? 'on' : ''}" data-act="tglRestDay" data-d="${d}" aria-pressed="${on}">${DOW_M(d)}</button>`;
+      }).join('')}
+            </div></div>` : ''}
         </div>
 
         <div class="sec-t">${t('set.punch')}</div>
@@ -3437,7 +3475,7 @@ EVIEWS.my = {
     </div>
 
     <div class="card pad0">
-      <div style="padding:16px 18px 8px" class="card-h"><div><div class="card-t">${t('emp.thisWeek')}</div>
+      <div style="padding:16px 18px 8px" class="card-h"><div><div class="card-t">${ws === weekStartOf(TODAY) ? t('emp.thisWeek') : weekLabel(ws)}</div>
         <div class="card-s">${fmtMD(ws)} – ${fmtMD(addDays(ws, 6))}</div></div></div>
       ${DB.shifts.some(x => x.staffId === s.id && x.date >= ws && x.date <= addDays(ws, 6))
         ? days
@@ -3479,7 +3517,7 @@ EVIEWS.ehours = {
         <div class="card-s">${miss ? t('pay.missWarn', { n: miss }) : t('time.complete')}</div></div></div>
       ${punchRowsHTML(s.id, ws, false)}
     </div>
-    ${r ? `<div class="card"><div class="card-h"><div class="card-t">${t('pay.breakdown')}</div></div>${slipBody(r, ws, addDays(ws, 6))}</div>` : ''}`;
+    ${r ? `<div class="card"><div class="card-h"><div class="card-t">${t('emp.weekPay')}</div></div>${slipBody(r, ws, addDays(ws, 6))}</div>` : ''}`;
   }
 };
 
@@ -4119,6 +4157,11 @@ const ACT = {
     }, false);
   },
   setPunch(b) { DB.settings.punchMode = b.dataset.v; save(); render(); },
+  tglRestDay(b) {
+    const d = Number(b.dataset.d), st = DB.settings, cur = st.restDays || [];
+    st.restDays = cur.includes(d) ? cur.filter(x => x !== d) : cur.concat(d).sort((x, y) => x - y);
+    save(); render();
+  },
   async useHere() {
     toast(t('punch.geoChecking'), 'info');
     try {
@@ -4350,7 +4393,7 @@ document.addEventListener('change', e => {
   }
   if (el.dataset.set !== undefined) {
     const k = el.dataset.set;
-    const v = el.type === 'number' ? Number(el.value) : (['weekStart', 'restDay'].includes(k) ? Number(el.value) : el.value);
+    const v = el.type === 'number' ? Number(el.value) : (k === 'weekStart' ? Number(el.value) : el.value);
     DB.settings[k] = v; save();
     if (k === 'weekStart') state.week = weekStartOf(TODAY);
     render(); return;
