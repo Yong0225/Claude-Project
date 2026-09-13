@@ -346,6 +346,11 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
 .rowline{display:flex;align-items:center;gap:10px}
 .spacer{flex:1}
 .hr{height:1px;background:var(--sep);margin:4px 0}
+.qr-box{display:grid;place-items:center;padding:16px;background:#fff;border-radius:18px;margin:0 auto 10px;width:max-content;max-width:100%}
+.qr-box canvas{display:block;width:220px;height:220px;image-rendering:pixelated}
+.code-big{font:650 18px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.04em;text-align:center;
+  word-spacing:.2em;padding:10px 12px;border-radius:12px;background:var(--fill);user-select:all}
+[data-sync-status][data-s="offline"],[data-sync-status][data-s="error"]{color:var(--orange)}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
@@ -613,6 +618,41 @@ const I18N = {
     'set.importData': '导入数据', 'set.importSub': '从 JSON 备份恢复',
     'set.resetData': '重置为示例数据', 'set.resetSub': '清空当前所有排班、打卡与员工',
     'set.privacy': '数据只保存在这台设备的浏览器里（localStorage），不会上传到任何服务器。',
+    'sync.title': '云同步', 'sync.notSetup': '云同步还没设置',
+    'sync.notSetupSub': '填入你的 Supabase 项目，老板和员工的手机、电脑就会看到同一份数据',
+    'sync.setup': '设置', 'sync.offSub': '未开启 · 数据目前只在这台设备上',
+    'sync.create': '把这台设备的数据传上云', 'sync.link': '连接已有的店铺',
+    'sync.ok': '已同步 {t}', 'sync.syncing': '同步中…', 'sync.offline': '离线 · 联网后自动同步', 'sync.error': '同步出错：{e}',
+    'sync.now': '立即同步', 'sync.staffJoin': '员工加入',
+    'sync.staffJoinSub': '员工用手机相机扫码或打开链接，就能在自己手机上看班表、打卡、请假',
+    'sync.ownerDev': '添加老板的其他设备', 'sync.ownerDevSub': '拥有全部权限，只在你自己的手机或电脑上用',
+    'sync.disconnect': '这台设备停止同步', 'sync.disconnectSub': '这里保留一份副本，云端数据不会删除',
+    'sync.disconnectMsg': '这台设备将不再同步。云端数据还在，之后用老板码可以重新连接。', 'sync.disconnected': '已停止同步',
+    'sync.cfgTitle': 'Supabase 项目', 'sync.cfgHint': '在 Supabase 的 Project Settings → API 里复制。先在 SQL Editor 执行一次 supabase.sql。',
+    'sync.cfgUrl': 'Project URL', 'sync.cfgKey': 'Publishable key（或 anon key）', 'sync.cfgBad': '网址或 key 格式不对',
+    'sync.cfgOK': '已连上 Supabase', 'sync.created': '已上云 · 这台设备是老板设备',
+    'sync.linkTitle': '连接店铺', 'sync.linkSub': '粘贴老板码、员工加入码或链接', 'sync.linkPh': '加入码或链接', 'sync.linkBtn': '连接',
+    'sync.badCode': '这个码不对', 'sync.replaceMsg': '这台设备上的数据会被店铺的云端数据替换，并获得老板的全部权限。',
+    'sync.linkedOwner': '已连接 · 老板设备', 'sync.joined': '已加入 {biz}',
+    'sync.alreadyOwner': '这台设备已经是老板设备，不需要再用员工码加入',
+    'sync.joinTitle': '员工加入', 'sync.ownerTitle': '老板码',
+    'sync.ownerWarn': '拿到这个码的人可以查看和修改所有数据，包括工资和密码。不要发给员工。',
+    'sync.code': '加入码', 'sync.linkLabel': '链接', 'sync.copy': '复制链接', 'sync.share': '发送', 'sync.copied': '链接已复制',
+    'sync.shareText': '用这个链接加入 {biz} 的排班', 'sync.rotate': '换一个新的员工码',
+    'sync.rotateMsg': '旧的码和链接会立即失效，已经加入的员工需要用新链接重新加入。', 'sync.rotated': '已生成新的员工码',
+    'sync.leave': '退出这家店', 'sync.leaveMsg': '这台手机将不再显示这家店的数据。',
+    'sync.staffDevice': '这台手机是员工设备，不能进入老板端', 'sync.haveCode': '有加入码？点这里',
+    'sync.privacy': '数据保存在你的 Supabase 云数据库，所有老板设备自动同步。员工手机只拿到自己的资料和班表，看不到别人的工资和密码。',
+    'sync.err.offline': '没有网络，请稍后再试', 'sync.err.server': '服务器出错，请稍后再试',
+    'sync.err.no_sql': '数据库还没安装：请先在 Supabase 执行 supabase.sql', 'sync.err.not_configured': '云同步还没设置',
+    'sync.err.bad_key': '这个加入码已失效，请向老板要新的', 'sync.err.bad_pin': '密码不对',
+    'sync.err.locked': '密码错太多次，请 15 分钟后再试', 'sync.err.inactive': '这个账号已停用，请联系老板',
+    'sync.err.no_staff': '找不到这个员工', 'sync.err.no_pin': '还没设置密码，请联系老板',
+    'sync.err.bad_code': '打卡码不对或已过期', 'sync.err.need_loc': '需要定位才能打卡', 'sync.err.too_far': '你离门店太远，不能打卡',
+    'sync.err.no_shift': '今天没有你的班', 'sync.err.already_in': '今天已经打过上班卡了', 'sync.err.not_in': '还没有打上班卡',
+    'sync.err.bad_data': '数据格式不对', 'sync.err.too_big': '数据太大，无法上传', 'sync.err.conflict': '数据冲突，请重试',
+    'staff.pinBad': '密码必须是 4 位数字', 'sync.pinChanged': '你的密码已被老板修改，请重新登录',
+    'sync.sendLink': '把这个链接发给员工（WhatsApp、短信都行），他们在自己手机上打开就会加入',
     'set.lang': '语言与外观', 'set.langLabel': '界面语言', 'set.themeLabel': '外观',
     'set.themeAuto': '跟随系统', 'set.themeLight': '浅色', 'set.themeDark': '深色',
     'set.imported': '数据已导入', 'set.importBad': '文件格式不正确',
@@ -670,7 +710,7 @@ const I18N = {
     'punch.confirm': '确认打卡',
     'login.title': '输入你的密码', 'login.sub': '{n}，请输入 4 位数字密码',
     'login.wrong': '密码不正确', 'login.remember': '记住这台设备',
-    'staff.pin': '员工密码', 'staff.pinSub': '员工进入员工端时要输入的 4 位数字',
+    'staff.pin': '员工密码', 'staff.pinSub': '员工登录用的 4 位数字，固定不变，只有你在这里改才会变',
     'staff.newPin': '重新生成', 'staff.pinNew': '新密码：{p}',
     'staff.photo': '头像', 'staff.upload': '上传照片', 'staff.remove': '移除',
     'staff.photoBad': '这张图片读不了，换一张试试',
@@ -805,6 +845,41 @@ const I18N = {
     'set.importData': 'Import data', 'set.importSub': 'Restore from a JSON backup',
     'set.resetData': 'Reset to sample data', 'set.resetSub': 'Clears all shifts, punches and staff',
     'set.privacy': 'Data stays in this browser (localStorage). Nothing is uploaded to any server.',
+    'sync.title': 'Cloud sync', 'sync.notSetup': 'Cloud sync is not set up',
+    'sync.notSetupSub': 'Add your Supabase project so every owner and employee device sees the same data',
+    'sync.setup': 'Set up', 'sync.offSub': 'Off · data is only on this device for now',
+    'sync.create': 'Upload this device to the cloud', 'sync.link': 'Link to my store',
+    'sync.ok': 'Synced {t}', 'sync.syncing': 'Syncing…', 'sync.offline': 'Offline · will sync when back online', 'sync.error': 'Sync problem: {e}',
+    'sync.now': 'Sync now', 'sync.staffJoin': 'Employees join',
+    'sync.staffJoinSub': 'Employees scan with their phone camera or open the link to see shifts, clock in and request time off',
+    'sync.ownerDev': 'Add another owner device', 'sync.ownerDevSub': 'Full access to everything. Only use it on your own phone or computer',
+    'sync.disconnect': 'Stop syncing this device', 'sync.disconnectSub': 'A copy stays here and the cloud data is not deleted',
+    'sync.disconnectMsg': 'This device will stop syncing. The cloud data stays, and you can link again later with the owner code.', 'sync.disconnected': 'Sync stopped',
+    'sync.cfgTitle': 'Supabase project', 'sync.cfgHint': 'Copy these from Supabase Project Settings → API. Run supabase.sql in the SQL Editor first.',
+    'sync.cfgUrl': 'Project URL', 'sync.cfgKey': 'Publishable key (or anon key)', 'sync.cfgBad': 'The URL or key does not look right',
+    'sync.cfgOK': 'Connected to Supabase', 'sync.created': 'In the cloud · this is an owner device',
+    'sync.linkTitle': 'Link to a store', 'sync.linkSub': 'Paste an owner code, employee join code or link', 'sync.linkPh': 'Code or link', 'sync.linkBtn': 'Link',
+    'sync.badCode': 'That code is not valid', 'sync.replaceMsg': 'The data on this device will be replaced by the store data in the cloud, with full owner access.',
+    'sync.linkedOwner': 'Linked · owner device', 'sync.joined': 'Joined {biz}',
+    'sync.alreadyOwner': 'This is already an owner device, so it does not need the employee code',
+    'sync.joinTitle': 'Employees join', 'sync.ownerTitle': 'Owner code',
+    'sync.ownerWarn': 'Anyone with this code can see and change all data, including pay and passcodes. Never send it to employees.',
+    'sync.code': 'Join code', 'sync.linkLabel': 'Link', 'sync.copy': 'Copy link', 'sync.share': 'Send', 'sync.copied': 'Link copied',
+    'sync.shareText': 'Use this link to join the {biz} schedule', 'sync.rotate': 'Make a new employee code',
+    'sync.rotateMsg': 'The old code and link stop working right away. Employees who already joined will need the new link.', 'sync.rotated': 'New employee code created',
+    'sync.leave': 'Leave this store', 'sync.leaveMsg': 'This phone will stop showing this store.',
+    'sync.staffDevice': 'This phone is joined as an employee device and cannot open the owner view', 'sync.haveCode': 'Have a join code? Tap here',
+    'sync.privacy': 'Data is stored in your Supabase cloud database and synced across owner devices. Employee phones only receive their own details and the schedule, never other people’s pay or passcodes.',
+    'sync.err.offline': 'No internet connection. Try again in a moment', 'sync.err.server': 'Server problem. Try again in a moment',
+    'sync.err.no_sql': 'The database is not set up yet: run supabase.sql in Supabase first', 'sync.err.not_configured': 'Cloud sync is not set up',
+    'sync.err.bad_key': 'This join code no longer works. Ask your manager for the new one', 'sync.err.bad_pin': 'Wrong passcode',
+    'sync.err.locked': 'Too many wrong passcodes. Try again in 15 minutes', 'sync.err.inactive': 'This account is inactive. Ask your manager',
+    'sync.err.no_staff': 'This employee was not found', 'sync.err.no_pin': 'No passcode set yet. Ask your manager',
+    'sync.err.bad_code': 'Wrong or expired punch code', 'sync.err.need_loc': 'Location is needed to clock in', 'sync.err.too_far': 'You are too far from the store to clock in',
+    'sync.err.no_shift': 'You have no shift today', 'sync.err.already_in': 'You already clocked in today', 'sync.err.not_in': 'You have not clocked in yet',
+    'sync.err.bad_data': 'Invalid data', 'sync.err.too_big': 'The data is too large to upload', 'sync.err.conflict': 'Data conflict, please try again',
+    'staff.pinBad': 'The passcode must be 4 digits', 'sync.pinChanged': 'Your passcode was changed by your manager. Please sign in again',
+    'sync.sendLink': 'Send this link to employees (WhatsApp, text message). They open it on their own phone to join',
     'set.lang': 'Language & appearance', 'set.langLabel': 'Interface language', 'set.themeLabel': 'Appearance',
     'set.themeAuto': 'System', 'set.themeLight': 'Light', 'set.themeDark': 'Dark',
     'set.imported': 'Data imported', 'set.importBad': 'That file format is not recognised',
@@ -862,7 +937,7 @@ const I18N = {
     'punch.confirm': 'Confirm',
     'login.title': 'Enter your passcode', 'login.sub': '{n}, type your 4-digit passcode',
     'login.wrong': 'Wrong passcode', 'login.remember': 'Remember this device',
-    'staff.pin': 'Staff passcode', 'staff.pinSub': 'The 4 digits they type to open the employee view',
+    'staff.pin': 'Staff passcode', 'staff.pinSub': 'The 4 digits they use to sign in. It stays the same until you change it here',
     'staff.newPin': 'Generate new', 'staff.pinNew': 'New passcode: {p}',
     'staff.photo': 'Photo', 'staff.upload': 'Upload photo', 'staff.remove': 'Remove',
     'staff.photoBad': 'That image could not be read — try another one',
@@ -997,6 +1072,41 @@ const I18N = {
     'set.importData': 'Import data', 'set.importSub': 'Pulihkan daripada sandaran JSON',
     'set.resetData': 'Set semula kepada data contoh', 'set.resetSub': 'Kosongkan semua jadual, rekod dan pekerja',
     'set.privacy': 'Data disimpan dalam pelayar peranti ini (localStorage) sahaja, tiada muat naik ke mana-mana pelayan.',
+    'sync.title': 'Segerak awan', 'sync.notSetup': 'Segerak awan belum disediakan',
+    'sync.notSetupSub': 'Tambah projek Supabase anda supaya semua peranti pemilik dan pekerja melihat data yang sama',
+    'sync.setup': 'Sediakan', 'sync.offSub': 'Tutup · data hanya pada peranti ini buat masa ini',
+    'sync.create': 'Muat naik peranti ini ke awan', 'sync.link': 'Sambung ke kedai saya',
+    'sync.ok': 'Disegerak {t}', 'sync.syncing': 'Menyegerak…', 'sync.offline': 'Luar talian · akan disegerak apabila ada internet', 'sync.error': 'Masalah segerak: {e}',
+    'sync.now': 'Segerak sekarang', 'sync.staffJoin': 'Pekerja sertai',
+    'sync.staffJoinSub': 'Pekerja imbas dengan kamera telefon atau buka pautan untuk lihat syif, daftar masuk dan mohon cuti',
+    'sync.ownerDev': 'Tambah peranti pemilik lain', 'sync.ownerDevSub': 'Akses penuh. Guna hanya pada telefon atau komputer anda sendiri',
+    'sync.disconnect': 'Henti segerak peranti ini', 'sync.disconnectSub': 'Salinan kekal di sini dan data awan tidak dipadam',
+    'sync.disconnectMsg': 'Peranti ini akan berhenti segerak. Data awan kekal, dan anda boleh sambung semula dengan kod pemilik.', 'sync.disconnected': 'Segerak dihentikan',
+    'sync.cfgTitle': 'Projek Supabase', 'sync.cfgHint': 'Salin dari Supabase Project Settings → API. Jalankan supabase.sql dalam SQL Editor dahulu.',
+    'sync.cfgUrl': 'Project URL', 'sync.cfgKey': 'Publishable key (atau anon key)', 'sync.cfgBad': 'URL atau key tidak betul',
+    'sync.cfgOK': 'Bersambung ke Supabase', 'sync.created': 'Dalam awan · ini peranti pemilik',
+    'sync.linkTitle': 'Sambung ke kedai', 'sync.linkSub': 'Tampal kod pemilik, kod sertai pekerja atau pautan', 'sync.linkPh': 'Kod atau pautan', 'sync.linkBtn': 'Sambung',
+    'sync.badCode': 'Kod tidak sah', 'sync.replaceMsg': 'Data pada peranti ini akan diganti dengan data kedai dalam awan, dengan akses penuh pemilik.',
+    'sync.linkedOwner': 'Bersambung · peranti pemilik', 'sync.joined': 'Menyertai {biz}',
+    'sync.alreadyOwner': 'Ini sudah peranti pemilik, tidak perlu kod pekerja',
+    'sync.joinTitle': 'Pekerja sertai', 'sync.ownerTitle': 'Kod pemilik',
+    'sync.ownerWarn': 'Sesiapa yang ada kod ini boleh lihat dan ubah semua data, termasuk gaji dan kata laluan. Jangan hantar kepada pekerja.',
+    'sync.code': 'Kod sertai', 'sync.linkLabel': 'Pautan', 'sync.copy': 'Salin pautan', 'sync.share': 'Hantar', 'sync.copied': 'Pautan disalin',
+    'sync.shareText': 'Guna pautan ini untuk sertai jadual {biz}', 'sync.rotate': 'Buat kod pekerja baharu',
+    'sync.rotateMsg': 'Kod dan pautan lama berhenti berfungsi serta-merta. Pekerja yang sudah sertai perlu pautan baharu.', 'sync.rotated': 'Kod pekerja baharu dibuat',
+    'sync.leave': 'Keluar dari kedai ini', 'sync.leaveMsg': 'Telefon ini tidak lagi menunjukkan kedai ini.',
+    'sync.staffDevice': 'Telefon ini peranti pekerja dan tidak boleh buka mod pemilik', 'sync.haveCode': 'Ada kod sertai? Tekan di sini',
+    'sync.privacy': 'Data disimpan dalam pangkalan data awan Supabase anda dan disegerak antara peranti pemilik. Telefon pekerja hanya menerima butiran sendiri dan jadual, bukan gaji atau kata laluan orang lain.',
+    'sync.err.offline': 'Tiada sambungan internet. Cuba lagi sebentar', 'sync.err.server': 'Masalah pelayan. Cuba lagi sebentar',
+    'sync.err.no_sql': 'Pangkalan data belum disediakan: jalankan supabase.sql dalam Supabase dahulu', 'sync.err.not_configured': 'Segerak awan belum disediakan',
+    'sync.err.bad_key': 'Kod sertai ini tidak lagi sah. Minta kod baharu daripada pengurus', 'sync.err.bad_pin': 'Kata laluan salah',
+    'sync.err.locked': 'Terlalu banyak cubaan salah. Cuba lagi dalam 15 minit', 'sync.err.inactive': 'Akaun ini tidak aktif. Hubungi pengurus',
+    'sync.err.no_staff': 'Pekerja tidak dijumpai', 'sync.err.no_pin': 'Kata laluan belum ditetapkan. Hubungi pengurus',
+    'sync.err.bad_code': 'Kod daftar salah atau tamat tempoh', 'sync.err.need_loc': 'Lokasi diperlukan untuk daftar masuk', 'sync.err.too_far': 'Anda terlalu jauh dari kedai untuk daftar masuk',
+    'sync.err.no_shift': 'Tiada syif anda hari ini', 'sync.err.already_in': 'Anda sudah daftar masuk hari ini', 'sync.err.not_in': 'Anda belum daftar masuk',
+    'sync.err.bad_data': 'Data tidak sah', 'sync.err.too_big': 'Data terlalu besar untuk dimuat naik', 'sync.err.conflict': 'Konflik data, sila cuba lagi',
+    'staff.pinBad': 'Kata laluan mesti 4 digit', 'sync.pinChanged': 'Kata laluan anda telah ditukar oleh pengurus. Sila log masuk semula',
+    'sync.sendLink': 'Hantar pautan ini kepada pekerja (WhatsApp, SMS). Mereka buka di telefon sendiri untuk sertai',
     'set.lang': 'Bahasa & penampilan', 'set.langLabel': 'Bahasa antara muka', 'set.themeLabel': 'Penampilan',
     'set.themeAuto': 'Ikut sistem', 'set.themeLight': 'Cerah', 'set.themeDark': 'Gelap',
     'set.imported': 'Data diimport', 'set.importBad': 'Format fail tidak dikenali',
@@ -1054,7 +1164,7 @@ const I18N = {
     'punch.confirm': 'Sahkan',
     'login.title': 'Masukkan kata laluan anda', 'login.sub': '{n}, taip kata laluan 4 digit anda',
     'login.wrong': 'Kata laluan salah', 'login.remember': 'Ingat peranti ini',
-    'staff.pin': 'Kata laluan pekerja', 'staff.pinSub': '4 digit yang ditaip untuk masuk mod pekerja',
+    'staff.pin': 'Kata laluan pekerja', 'staff.pinSub': '4 digit untuk log masuk. Kekal sama sehingga anda ubah di sini',
     'staff.newPin': 'Jana baharu', 'staff.pinNew': 'Kata laluan baharu: {p}',
     'staff.photo': 'Gambar', 'staff.upload': 'Muat naik gambar', 'staff.remove': 'Buang',
     'staff.photoBad': 'Gambar itu tidak dapat dibaca — cuba yang lain',
@@ -1268,13 +1378,15 @@ const LSKEY = 'banbiao.v1';
 function save() {
   _notifCache = null;
   try {
-    localStorage.setItem(LSKEY, JSON.stringify(DB));
+    if (Cloud.isStaff()) Cloud.cacheStaff();      // 员工手机只缓存服务器给的那份，不碰本机原来的数据
+    else localStorage.setItem(LSKEY, JSON.stringify(DB));
     flashSaved();
   } catch (e) { console.warn('保存失败', e); }
+  Cloud.touch();                                  // 老板设备：稍后推到云端
 }
 let savedTimer;
 function flashSaved() {
-  const el = $('#saveState'); if (!el) return;
+  const el = $('#saveState'); if (!el || Cloud.linked()) return;
   el.textContent = '保存中…'; clearTimeout(savedTimer);
   savedTimer = setTimeout(() => { el.textContent = '已保存 ' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }); }, 260);
 }
@@ -2283,9 +2395,9 @@ function renderNav() {
     `<button class="btn sm gho" data-act="langMenu">🌐 ${LANGS[LANG]}</button>
      <button class="btn sm gho ico" data-act="theme" title="${t('c.appearance')}">◐</button>
      <div class="spacer"></div>
-     <span class="tiny dim" id="saveState">${t('c.saved')}</span>`;
+     <span class="tiny dim" id="saveState" data-sync-status>${Cloud.statusText()}</span>`;
   $('#modeSwitch').innerHTML = emp
-    ? `<button class="btn sm" data-act="toBoss">↩ ${t('mode.toBoss')}</button>`
+    ? (Cloud.isStaff() ? '' : `<button class="btn sm" data-act="toBoss">↩ ${t('mode.toBoss')}</button>`)
     : `<button class="btn sm" data-act="toEmp">${t('mode.toEmp')} ›</button>`;
   $('#bizName').textContent = DB.settings.biz;
   $('#bizTag').textContent = emp ? t('mode.emp') : t('app.tag');
@@ -3060,7 +3172,8 @@ function openStaffEditor(id) {
       </div>
       <div class="row" style="border-radius:12px;background:var(--fill)">
         <div class="row-m"><div class="row-t">${t('staff.pin')}</div><div class="row-s">${t('staff.pinSub')}</div></div>
-        <div class="row-r"><b class="mono" id="s_pin" style="font-size:17px;letter-spacing:.12em">${s.pin}</b>
+        <div class="row-r"><input class="inp mono" id="s_pin" inputmode="numeric" maxlength="4" autocomplete="off" value="${esc(s.pin)}"
+            style="width:82px;height:34px;text-align:center;font-size:17px;font-weight:650;letter-spacing:.12em;padding:0 6px">
           <button class="btn sm" data-act="newPinAct">${t('staff.newPin')}</button></div>
       </div>
       <div class="field"><label>${t('staff.roles')}</label><div class="chips-row" id="s_roles">
@@ -3112,12 +3225,14 @@ function openStaffEditor(id) {
         pv.style.backgroundImage = ''; pv.style.background = avaColor(s); pv.textContent = initials($('#s_n', el).value || '?');
       };
       ACT.newPinAct = () => {
-        s.pin = newPin(); $('#s_pin', el).textContent = s.pin;
+        s.pin = newPin(); $('#s_pin', el).value = s.pin;
         toast(t('staff.pinNew', { p: s.pin }), 'info');
       };
       ACT.saveStaff = () => {
         const n = $('#s_n', el).value.trim();
         if (!n) return toast(t('staff.needName'), 'err');
+        const pin = $('#s_pin', el).value.trim();
+        if (!/^\d{4}$/.test(pin)) return toast(t('staff.pinBad'), 'err');
         const avail = {};
         [0, 1, 2, 3, 4, 5, 6].forEach(d => {
           const box = $(`[data-av="${d}"]`, el);
@@ -3127,7 +3242,7 @@ function openStaffEditor(id) {
         const rec = {
           id: s.id, n, roles, pay: $('#s_pay', el).value, rate: Number($('#s_rate', el).value) || 0,
           maxH: Number($('#s_max', el).value) || 40, hired: $('#s_h', el).value, phone: $('#s_p', el).value,
-          note: $('#s_note', el).value, avail, active, pin: s.pin, photo, restDay: s.restDay == null ? null : s.restDay,
+          note: $('#s_note', el).value, avail, active, pin, photo, restDay: s.restDay == null ? null : s.restDay,
         };
         if (isNew) DB.staff.push(rec); else Object.assign(staffById(s.id), rec);
         save(); closeSheet(); render(); toast(isNew ? t('staff.added', { n }) : t('staff.updated'));
@@ -3220,6 +3335,13 @@ function openLeaveEditor(id, asEmployee) {
         x.from = $('#l_f', el).value; x.to = $('#l_t', el).value;
         x.type = $('#l_ty', el).value; x.reason = $('#l_r', el).value;
         if (x.to < x.from) return toast(t('leave.badDate'), 'err');
+        if (asEmployee && Cloud.isStaff()) {
+          Cloud.staffWrite('leave', { from: x.from, to: x.to, type: x.type, reason: x.reason }).then(r => {
+            if (r.error) return r.handled || toast(Cloud.errText(r.error), 'err');
+            closeSheet(); render(); toast(t('emp.leaveSent'));
+          });
+          return;
+        }
         DB.timeoff.push(x); save(); closeSheet(); render();
         toast(asEmployee ? t('emp.leaveSent') : t('leave.submitted'));
       };
@@ -3256,6 +3378,7 @@ VIEWS.set = {
             </div></div></div>
         </div>
 
+        ${syncSectionHTML()}
         <div class="sec-t">${t('set.region')}</div>
         <div class="list" style="margin-bottom:16px">
           <div class="row stack"><div class="row-m"><div class="row-t">${t('set.region')}</div>
@@ -3367,10 +3490,10 @@ VIEWS.set = {
             <div class="row-s">${t('set.exportSub')}</div></div><span class="chev">›</span></div>
           <div class="row tap" data-act="importData"><div class="row-m"><div class="row-t">${t('set.importData')}</div>
             <div class="row-s">${t('set.importSub')}</div></div><span class="chev">›</span></div>
-          <div class="row tap" data-act="resetData"><div class="row-m"><div class="row-t" style="color:var(--red)">${t('set.resetData')}</div>
-            <div class="row-s">${t('set.resetSub')}</div></div><span class="chev">›</span></div>
+          ${Cloud.isBoss() ? '' : `<div class="row tap" data-act="resetData"><div class="row-m"><div class="row-t" style="color:var(--red)">${t('set.resetData')}</div>
+            <div class="row-s">${t('set.resetSub')}</div></div><span class="chev">›</span></div>`}
         </div>
-        <div class="hint" style="margin-top:12px">${t('set.privacy')}</div>
+        <div class="hint" style="margin-top:12px">${t(Cloud.linked() ? 'sync.privacy' : 'set.privacy')}</div>
       </div>
     </div>`;
   }
@@ -3387,8 +3510,8 @@ let empTimer = null;
 
 /* 选人进入员工端 */
 EVIEWS.pick = {
-  top: () => topbarHTML(t('mode.pick'), t('mode.pickSub'),
-    `<button class="btn" data-act="toBoss">↩ ${t('mode.toBoss')}</button>`),
+  top: () => topbarHTML(Cloud.isStaff() ? esc(DB.settings.biz) : t('mode.pick'), t('mode.pickSub'),
+    Cloud.isStaff() ? '' : `<button class="btn" data-act="toBoss">↩ ${t('mode.toBoss')}</button>`),
   body() {
     return `<div class="pickgrid">${DB.staff.filter(s => s.active).map(s => `
       <button class="pickcard" data-act="pickMe" data-id="${s.id}" data-m="item" data-mk="pk-${s.id}">
@@ -3397,7 +3520,9 @@ EVIEWS.pick = {
         <div class="row-s">${s.roles.map(roleName).join(' / ')}</div>
         <div class="tiny dim">🔒 ${t('login.title')}</div>
       </button>`).join('')}</div>
-      <div class="hint" style="margin-top:16px;max-width:520px">${t('mode.hint')}</div>`;
+      <div class="hint" style="margin-top:16px;max-width:520px">${t('mode.hint')}</div>
+      ${Cloud.isStaff() ? `<button class="btn sm gho" data-act="leaveStore" style="margin-top:10px;color:var(--red)">${t('sync.leave')}</button>`
+        : Cloud.configured() && !Cloud.linked() ? `<button class="btn sm" data-act="syncLink" style="margin-top:12px">${t('sync.haveCode')}</button>` : ''}`;
   }
 };
 
@@ -3587,8 +3712,11 @@ EVIEWS.eme = {
         <div class="list">
           <div class="row tap" data-act="signOutEmp"><div class="row-m"><div class="row-t">${t('emp.switchUser')}</div>
             <div class="row-s">${t('mode.pickSub')}</div></div><span class="chev">›</span></div>
-          <div class="row tap" data-act="toBoss"><div class="row-m"><div class="row-t">${t('mode.toBoss')}</div>
-            <div class="row-s">${t('mode.hint')}</div></div><span class="chev">›</span></div>
+          ${Cloud.isStaff()
+          ? `<div class="row tap" data-act="leaveStore"><div class="row-m"><div class="row-t" style="color:var(--red)">${t('sync.leave')}</div>
+            <div class="row-s">${esc(DB.settings.biz)}</div></div><span class="chev">›</span></div>`
+          : `<div class="row tap" data-act="toBoss"><div class="row-m"><div class="row-t">${t('mode.toBoss')}</div>
+            <div class="row-s">${t('mode.hint')}</div></div><span class="chev">›</span></div>`}
         </div>
       </div>
     </div>`;
@@ -3598,7 +3726,7 @@ EVIEWS.eme = {
 
 /* =========================================================================
    打卡：门店轮换码 + 二维码 + 扫码 / 定位校验
-   （二维码编码器：字节模式，纠错等级 M，版本 1–3，自动选掩码）
+   （二维码编码器：字节模式，纠错等级 M，版本 1–6，自动选掩码；版本 6 最多 106 字节，够放员工加入链接）
    ========================================================================= */
 const QR = (() => {
   const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
@@ -3622,16 +3750,16 @@ const QR = (() => {
     }
     return res.slice(data.length);
   }
-  /* 版本表（纠错等级 M，单块）：[版本, 数据码字, 纠错码字] */
-  const VER = [[1, 16, 10], [2, 28, 16], [3, 44, 26]];
+  /* 版本表（纠错等级 M）：[版本, 数据码字总数, 每块纠错码字, 块数]，各块数据码字一样多 */
+  const VER = [[1, 16, 10, 1], [2, 28, 16, 1], [3, 44, 26, 1], [4, 64, 18, 2], [5, 86, 24, 2], [6, 108, 16, 4]];
   const FORMAT_M = [0x5412, 0x5125, 0x5E7C, 0x5B4B, 0x45F9, 0x40CE, 0x4F97, 0x4AA0];
-  const ALIGN = { 1: null, 2: 18, 3: 22 };
+  const ALIGN = { 1: null, 2: 18, 3: 22, 4: 26, 5: 30, 6: 34 };
 
   function encode(text) {
     const bytes = Array.from(new TextEncoder().encode(text));
     const v = VER.find(x => bytes.length <= x[1] - 2);
     if (!v) throw new Error('QR payload too long');
-    const [ver, dataCW, ecCW] = v, size = 17 + 4 * ver;
+    const [ver, dataCW, ecCW, nBlocks] = v, size = 17 + 4 * ver;
 
     /* --- 位流 --- */
     const bits = [];
@@ -3645,7 +3773,12 @@ const QR = (() => {
     const PAD = [0xEC, 0x11];
     while (data.length < dataCW) data.push(PAD[(data.length - bytes.length - 2) % 2 === 0 ? 0 : 1]);
     while (data.length > dataCW) data.pop();
-    const all = data.concat(rsEncode(data, ecCW));
+    /* 分块各自算纠错码，再按列交错排列 */
+    const per = dataCW / nBlocks, blocks = [];
+    for (let i = 0; i < nBlocks; i++) blocks.push(data.slice(i * per, (i + 1) * per));
+    const ecs = blocks.map(b => rsEncode(b, ecCW)), all = [];
+    for (let i = 0; i < per; i++) blocks.forEach(b => all.push(b[i]));
+    for (let i = 0; i < ecCW; i++) ecs.forEach(e => all.push(e[i]));
 
     /* --- 骨架 --- */
     const m = Array.from({ length: size }, () => new Array(size).fill(null));
@@ -3774,6 +3907,8 @@ function validPunchCode(code) {
   return c.length === 6 && [st, st - 1].some(x => punchCodeFor(x) === c);
 }
 const QR_PREFIX = 'BB1:';
+/* 员工手机上没有门店密钥，只能先看格式，真正的校验在服务器 */
+const codeLooksValid = c => Cloud.isStaff() ? /^\d{6}$/.test(String(c || '').replace(/\D/g, '')) : validPunchCode(c);
 
 /* ---------------- 定位 ---------------- */
 function distanceM(a, b) {
@@ -3843,13 +3978,15 @@ function openScanner(onOK) {
              <button class="btn pri" data-act="scanConfirm">${t('punch.confirm')}</button>`,
     onMount(el) {
       const msg = $('#scanMsg', el), input = $('#scanCode', el);
-      const finish = async via => {
+      const finish = async (via, code) => {
+        let loc = null;
         if (needGeo) {
           const g = DB.settings.geo;
           if (g && g.lat != null) {
             msg.textContent = t('punch.geoChecking');
             try {
               const pos = await getPosition();
+              loc = { lat: pos.lat, lng: pos.lng, acc: pos.acc };
               const d = distanceM(pos, g);
               if (d > (g.radius || 150) + (pos.acc || 0)) {
                 msg.innerHTML = `<span style="color:var(--red)">${t('punch.tooFar', { d: fmtDist(d), r: fmtDist(g.radius || 150) })}</span>`;
@@ -3858,11 +3995,11 @@ function openScanner(onOK) {
             } catch (e) { return toast(t('punch.geoFail'), 'err'); }
           }
         }
-        stopScan(); closeSheet(); setTimeout(() => onOK(via), 80);
+        stopScan(); closeSheet(); setTimeout(() => onOK(via, { code, loc }), 80);
       };
       ACT.scanConfirm = () => {
-        if (!validPunchCode(input.value)) { input.value = ''; return toast(t('punch.wrong'), 'err'); }
-        finish('code');
+        if (!codeLooksValid(input.value)) { input.value = ''; return toast(t('punch.wrong'), 'err'); }
+        finish('code', input.value.replace(/\D/g, ''));
       };
       input.addEventListener('keydown', e => { if (e.key === 'Enter') ACT.scanConfirm(); });
 
@@ -3885,7 +4022,7 @@ function openScanner(onOK) {
               for (const c of codes) {
                 const raw = String(c.rawValue || '');
                 const val = raw.startsWith(QR_PREFIX) ? raw.slice(QR_PREFIX.length) : raw;
-                if (validPunchCode(val)) { clearInterval(scanRAF); scanRAF = null; finish('qr'); return; }
+                if (codeLooksValid(val)) { clearInterval(scanRAF); scanRAF = null; finish('qr', val.replace(/\D/g, '')); return; }
               }
             } catch (e) { }
           }, 350);
@@ -3959,16 +4096,23 @@ function openPinLogin(staffId) {
       let remember = true;
       setTimeout(() => input.focus(), 250);
       ACT.tglRemember = b => { remember = b.classList.toggle('on'); };
-      const submit = () => {
-        if (input.value !== String(s.pin)) {
-          input.value = ''; input.style.borderColor = 'var(--red)';
-          return toast(t('login.wrong'), 'err');
-        }
+      let busy = false;
+      const wrong = msg => { input.value = ''; input.style.borderColor = 'var(--red)'; toast(msg, 'err'); };
+      const enter = () => {
         closeSheet();
         state.me = s.id; state.eview = 'my';
         lsSet('banbiao.me', s.id);
-        lsSet('banbiao.meTok', remember ? pinToken(s) : '');
+        lsSet('banbiao.meTok', remember && !Cloud.isStaff() ? pinToken(s) : '');
         setTimeout(() => { render('zoom'); toast(t('emp.hello', { n: s.n }), 'info'); }, 80);
+      };
+      const submit = async () => {
+        if (busy) return;
+        if (!Cloud.isStaff()) return input.value === String(s.pin) ? enter() : wrong(t('login.wrong'));
+        busy = true; input.disabled = true;                 // 员工手机上没有别人的密码，交给服务器核对
+        const err = await Cloud.staffLogin(s.id, input.value, remember);
+        busy = false; input.disabled = false;
+        if (err) return wrong(err === 'bad_pin' ? t('login.wrong') : Cloud.errText(err));
+        enter();
       };
       input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
       input.addEventListener('input', () => { if (input.value.length === 4) submit(); });
@@ -4129,12 +4273,13 @@ const ACT = {
     render('zoom');
   },
   toBoss() {
+    if (Cloud.isStaff()) return toast(t('sync.staffDevice'), 'info');
     if (state.mode === 'emp' && DB.settings.bossPin) return askPin();
     if (sheetStack.length) closeSheet();
     state.mode = 'boss'; lsSet('banbiao.mode', 'boss'); render('zoom');
   },
   pickMe: b => openPinLogin(b.dataset.id),
-  signOutEmp() { state.me = null; lsSet('banbiao.me', ''); lsSet('banbiao.meTok', ''); render('zoom'); },
+  signOutEmp() { if (Cloud.isStaff()) Cloud.staffSignOut(); state.me = null; lsSet('banbiao.me', ''); lsSet('banbiao.meTok', ''); render('zoom'); },
   notif: () => openNotif(),
   markAllNotif() {
     notifList().forEach(n => DB.seenNotif[n.id] = Date.now());
@@ -4146,7 +4291,11 @@ const ACT = {
     setTimeout(() => { if (state.mode === 'emp') ego(v); else go(v); }, 80);
   },
   punchCode: () => openPunchCode(),
-  upPhotoMe: () => pickPhoto(d => { const s = me(); if (!s) return; s.photo = d; save(); render(); }),
+  upPhotoMe: () => pickPhoto(d => {
+    const s = me(); if (!s) return;
+    if (Cloud.isStaff()) return Cloud.staffWrite('photo', { photo: d }).then(r => r.error ? (r.handled || toast(Cloud.errText(r.error), 'err')) : render());
+    s.photo = d; save(); render();
+  }),
   setRegion(b) {
     const r = b.dataset.r; if (r === DB.settings.region) return;
     confirmSheet(t('region.switchTitle'), t('region.switchMsg', { r: t('region.' + r) }), t('c.confirm'), () => {
@@ -4157,6 +4306,75 @@ const ACT = {
     }, false);
   },
   setPunch(b) { DB.settings.punchMode = b.dataset.v; save(); render(); },
+  /* ---- 云同步 ---- */
+  syncSetup() {
+    const c = Cloud.cfgRaw();
+    openSheet({
+      title: t('sync.cfgTitle'), sub: t('sync.cfgHint'),
+      body: `<div class="field"><label>${t('sync.cfgUrl')}</label>
+          <input class="inp" id="cf_u" placeholder="https://xxxx.supabase.co" value="${esc(c.url || '')}" autocapitalize="off" autocomplete="off" spellcheck="false"></div>
+        <div class="field"><label>${t('sync.cfgKey')}</label>
+          <input class="inp" id="cf_k" placeholder="sb_publishable_…" value="${esc(c.key || '')}" autocapitalize="off" autocomplete="off" spellcheck="false"></div>`,
+      footer: `<button class="btn" data-act="closeSheet">${t('c.cancel')}</button>
+               <button class="btn pri" data-act="cfgSave">${t('c.save')}</button>`,
+      onMount(el) {
+        ACT.cfgSave = async b => {
+          const url = $('#cf_u', el).value.trim(), key = $('#cf_k', el).value.trim();
+          if (!/^https?:\/\/\S+$/.test(url) || key.length < 20) return toast(t('sync.cfgBad'), 'err');
+          const prev = Cloud.cfgRaw();
+          Cloud.setCfg({ url, key }); b.disabled = true;
+          const err = await Cloud.ping(); b.disabled = false;
+          if (err) { Cloud.setCfg(prev); return toast(Cloud.errText(err), 'err'); }
+          closeSheet(); render(); toast(t('sync.cfgOK'));
+        };
+      }
+    });
+  },
+  async syncCreate(b) {
+    b.disabled = true;
+    try { await Cloud.create(); render(); toast(t('sync.created')); }
+    catch (e) { b.disabled = false; toast(Cloud.errText(e.code), 'err'); }
+  },
+  syncLink() {
+    openSheet({
+      title: t('sync.linkTitle'), sub: t('sync.linkSub'),
+      body: `<div class="field"><input class="inp" id="lk_c" placeholder="${t('sync.linkPh')}" autocapitalize="off" autocomplete="off"
+        spellcheck="false" style="height:48px;font-size:16px"></div>`,
+      footer: `<button class="btn" data-act="closeSheet">${t('c.cancel')}</button>
+               <button class="btn pri" data-act="lkGo">${t('sync.linkBtn')}</button>`,
+      onMount(el) {
+        const input = $('#lk_c', el);
+        setTimeout(() => input.focus(), 250);
+        ACT.lkGo = () => {
+          const p = Cloud.parseCode(input.value);
+          if (!p) return toast(t('sync.badCode'), 'err');
+          closeSheet(); setTimeout(() => joinFromLink(p), 80);
+        };
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') ACT.lkGo(); });
+      }
+    });
+  },
+  syncNow: () => Cloud.syncNow(),
+  syncJoinShow: () => openShareSheet('staff'),
+  syncOwnerShow: () => openShareSheet('boss'),
+  syncRotate() {
+    confirmSheet(t('sync.rotate'), t('sync.rotateMsg'), t('sync.rotate'), async () => {
+      try { await Cloud.rotate(); } catch (e) { return toast(Cloud.errText(e.code), 'err'); }
+      while (sheetStack.length) closeSheet({ instant: true });
+      toast(t('sync.rotated'));
+      setTimeout(() => openShareSheet('staff'), 120);
+    });
+  },
+  syncDisconnect() {
+    confirmSheet(t('sync.disconnect'), t('sync.disconnectMsg'), t('sync.disconnect'), () => {
+      Cloud.disconnect(); render(); toast(t('sync.disconnected'), 'info');
+    });
+  },
+  leaveStore() {
+    confirmSheet(t('sync.leave'), t('sync.leaveMsg'), t('sync.leave'), () => {
+      Cloud.disconnect(); render('zoom'); toast(t('sync.disconnected'), 'info');
+    });
+  },
   tglRestDay(b) {
     const d = Number(b.dataset.d), st = DB.settings, cur = st.restDays || [];
     st.restDays = cur.includes(d) ? cur.filter(x => x !== d) : cur.concat(d).sort((x, y) => x - y);
@@ -4181,10 +4399,19 @@ const ACT = {
   /* ---- 员工打卡 ---- */
   clockIn() {
     const s = me(), sh = todayShiftOf(s.id); if (!sh) return;
-    punchGate(via => {
-      const now = nowHM();
-      DB.punches.push({ id: uid(), shiftId: sh.id, staffId: s.id, date: TODAY, in: now, out: null, brk: sh.brk, via });
-      save(); render();
+    punchGate(async (via, extra = {}) => {
+      let now = nowHM();
+      if (Cloud.isStaff()) {                              // 时间由服务器按门店时区记录，改手机时间没用
+        const btn = document.querySelector('#page .big-btn'); if (btn) btn.disabled = true;
+        const r = await Cloud.staffWrite('punch_in', { shiftId: sh.id, via, loc: extra.loc || null }, extra.code);
+        if (btn) btn.disabled = false;
+        if (r.error) return r.handled || toast(Cloud.errText(r.error), 'err');
+        now = r.time;
+      } else {
+        DB.punches.push({ id: uid(), shiftId: sh.id, staffId: s.id, date: TODAY, in: now, out: null, brk: sh.brk, via });
+        save();
+      }
+      render();
       if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
       Motion.pulse(document.querySelector('#page .big-btn'));
       const late = t2m(now) - t2m(sh.start) > DB.settings.lateGrace;
@@ -4193,11 +4420,19 @@ const ACT = {
   },
   clockOut() {
     const s = me(), p = punchOf(s.id, TODAY); if (!p) return;
-    punchGate(via => {
-      p.out = nowHM(); p.outVia = via; save(); render();
+    punchGate(async (via, extra = {}) => {
+      let out;
+      if (Cloud.isStaff()) {
+        const btn = document.querySelector('#page .big-btn'); if (btn) btn.disabled = true;
+        const r = await Cloud.staffWrite('punch_out', { via, loc: extra.loc || null }, extra.code);
+        if (btn) btn.disabled = false;
+        if (r.error) return r.handled || toast(Cloud.errText(r.error), 'err');
+        out = r.time;
+      } else { p.out = nowHM(); p.outVia = via; save(); out = p.out; }
+      render();
       if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
       Motion.pulse(document.querySelector('#page .big-btn'));
-      toast(t('emp.clockOutOK', { t: p.out, h: hh(workedMin(s.id, TODAY) || 0) }));
+      toast(t('emp.clockOutOK', { t: out, h: hh(workedMin(s.id, TODAY) || 0) }));
     });
   },
   empLeave: () => openLeaveEditor(null, true),
@@ -4424,6 +4659,483 @@ document.addEventListener('keydown', e => {
 let rzT;
 addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (state.mode === 'boss' && state.view === 'sched') render('none'); else Motion.mountSegs(null); }, 220); });
 
+/* =========================================================================
+   云同步（Supabase）· 数据库那边的代码在 supabase.sql
+   · 老板设备：拿整份数据。每次保存 0.8 秒后推上去；别的设备先改过的话，按记录三方合并再推。
+   · 员工手机：只拿到服务器裁剪过的数据（没有别人的密码、工资、打卡密钥）。
+     打卡 / 请假 / 换头像走服务器函数，由服务器核对密码、打卡码、定位，并按门店时区记录时间。
+   · 页面在前台时每 6 秒问一次版本号，有变化才拉数据。
+   ========================================================================= */
+/* 所有设备（包括员工手机）共用的 Supabase 项目。这两个值本来就是公开的，数据靠店铺密钥和员工密码保护。
+   留空时，老板在「设置 → 云同步」里自己填，员工加入链接会把它一起带过去。 */
+const CLOUD = { url: '', key: '' };
+
+const Cloud = (() => {
+  const LS_CFG = 'banbiao.cloud', LS_LINK = 'banbiao.link', LS_BASE = 'banbiao.base', LS_DIRTY = 'banbiao.dirty', LS_STAFF = 'banbiao.staffData';
+  const POLL_MS = 6000, PUSH_MS = 800;
+  const AUTH_ERRS = ['bad_pin', 'locked', 'inactive', 'no_staff', 'no_pin'];
+  const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const lsJSON = k => { try { return JSON.parse(lsGet(k) || 'null'); } catch (e) { return null; } };
+  const lsPut = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { console.warn('本机存储失败', e); } };
+  const tzName = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; } };
+  const fail = code => Object.assign(new Error(code), { code });
+
+  let link = null;                  // { role: 'boss' | 'staff', key, staffKey?, staffId?, pin? }
+  let memPin = null;                // 员工没勾「记住这台设备」时，密码只放内存
+  let base = null, baseVer = 0;     // 老板设备：上次和服务器一致的那份
+  let dirty = false, editSeq = 0, pushing = false, pushT = null, pollT = null, ticking = false;
+  let staffVer = 0, status = 'off', lastOK = 0, lastErr = '', waitBlur = false;
+
+  const isBoss = () => !!link && link.role === 'boss';
+  const isStaff = () => !!link && link.role === 'staff';
+  const staffPin = () => (link && link.pin) || memPin;
+
+  /* ---- 配置 / 请求 ---- */
+  function cfgRaw() {
+    if (CLOUD.url) return CLOUD;
+    const o = lsJSON(LS_CFG);
+    return o && o.url ? o : { url: '', key: '' };
+  }
+  function cfg() { const c = cfgRaw(); return c.url && c.key ? { url: c.url.replace(/\/+$/, ''), key: c.key } : null; }
+  function setCfg(c) { lsPut(LS_CFG, JSON.stringify({ url: (c.url || '').trim().replace(/\/+$/, ''), key: (c.key || '').trim() })); }
+  async function rpc(fn, args) {
+    const c = cfg(); if (!c) throw fail('not_configured');
+    const headers = { 'Content-Type': 'application/json', apikey: c.key };
+    if (c.key.startsWith('eyJ')) headers.Authorization = 'Bearer ' + c.key;      // 旧版 anon key 是 JWT
+    let res;
+    try { res = await fetch(`${c.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers, body: JSON.stringify(args), cache: 'no-store' }); }
+    catch (e) { throw fail('offline'); }
+    let body = null;
+    try { body = await res.json(); } catch (e) { }
+    if (res.status === 404) throw fail('no_sql');
+    if (!res.ok) throw fail('server');
+    return body || {};
+  }
+  async function ping() {
+    try { const r = await rpc('bb_version', { p_key: '-' }); return r.error === 'bad_key' ? null : 'server'; }
+    catch (e) { return e.code || 'server'; }
+  }
+
+  /* ---- 状态 ---- */
+  function errText(code) { const k = 'sync.err.' + code, s = t(k); return s === k ? t('sync.err.server') : s; }
+  function statusText() {
+    if (!link) return t('c.saved');
+    if (status === 'syncing') return t('sync.syncing');
+    if (status === 'offline') return t('sync.offline');
+    if (status === 'error') return t('sync.error', { e: lastErr });
+    const at = lastOK ? new Date(lastOK).toLocaleTimeString(LANG === 'zh' ? 'zh-CN' : LANG, { hour: '2-digit', minute: '2-digit' }) : '';
+    return t('sync.ok', { t: at }).trim();
+  }
+  function setStatus(s, code) {
+    status = s;
+    if (s === 'ok') lastOK = Date.now();
+    if (code) lastErr = errText(code);
+    const txt = statusText();
+    document.querySelectorAll('[data-sync-status]').forEach(x => { x.textContent = txt; x.dataset.s = s; });
+  }
+  const netFail = e => setStatus(e && e.code === 'offline' ? 'offline' : 'error', (e && e.code) || 'server');
+
+  /* ---- 本机存储 ---- */
+  function saveLink() {
+    if (!link) return lsPut(LS_LINK, null);
+    lsPut(LS_LINK, JSON.stringify(link));
+  }
+  function persistBase() { lsPut(LS_BASE, JSON.stringify({ data: base, version: baseVer })); lsPut(LS_DIRTY, dirty ? '1' : null); }
+  function cacheStaff() {
+    if (!isStaff()) return;
+    const loggedInNoRemember = link.staffId && !link.pin;       // 没勾「记住」：个人资料不落盘
+    lsPut(LS_STAFF, loggedInNoRemember ? null : JSON.stringify({ data: DB, version: staffVer }));
+  }
+  function normalize(data) {
+    DB = data;
+    DB.settings = Object.assign(defaultSettings(), DB.settings || {});
+    DB.tips = DB.tips || {};
+    migrate();
+    _notifCache = null;
+  }
+  function adoptBoss(data) { normalize(data); lsPut(LSKEY, JSON.stringify(DB)); }
+  function adoptStaff(data, keepSeen) {
+    const seen = keepSeen && DB && DB.seenNotif ? DB.seenNotif : {};
+    normalize(data);
+    DB.seenNotif = seen;
+    cacheStaff();
+  }
+
+  /* 别人改了数据要重画页面；正在页面上打字的话，等输入框失焦再画 */
+  function refreshUI() {
+    const a = document.activeElement;
+    if (a && a.matches && a.matches('input,textarea,select') && !a.closest('.sheet')) {
+      if (!waitBlur) {
+        waitBlur = true;
+        a.addEventListener('blur', () => { waitBlur = false; setTimeout(refreshUI, 30); }, { once: true });
+      }
+      return;
+    }
+    render();
+  }
+
+  /* ---- 三方合并：base 是上次一致的版本，l 是本机，r 是服务器 ----
+     有 id（或节假日的 d）的数组按记录合并；对象按字段合并；两边都改了同一个值时本机优先 */
+  const isObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
+  const keyOf = x => isObj(x) ? (x.id != null ? 'i:' + x.id : x.d != null ? 'd:' + x.d : null) : null;
+  function merge3(b, l, r) {
+    if (same(l, b)) return clone(r);
+    if (same(r, b)) return clone(l);
+    if (isObj(l) && isObj(r)) {
+      const out = {}, bb = isObj(b) ? b : {};
+      new Set([...Object.keys(r), ...Object.keys(l)]).forEach(k => {
+        const v = merge3(bb[k], l[k], r[k]);
+        if (v !== undefined) out[k] = v;
+      });
+      return out;
+    }
+    if (Array.isArray(l) && Array.isArray(r) && l.concat(r).every(x => keyOf(x))) {
+      const toMap = a => new Map((Array.isArray(a) ? a : []).filter(keyOf).map(x => [keyOf(x), x]));
+      const B = toMap(b), L = toMap(l), R = toMap(r), out = [], done = new Set();
+      r.concat(l).forEach(x => {
+        const k = keyOf(x); if (done.has(k)) return; done.add(k);
+        const bv = B.get(k), lv = L.get(k), rv = R.get(k);
+        let v;
+        if (same(lv, bv)) v = rv;                  // 本机没动 → 用服务器的（可能已删除）
+        else if (same(rv, bv)) v = lv;             // 服务器没动 → 用本机的
+        else if (lv === undefined) v = rv;         // 一边删了一边改了 → 保留改过的
+        else if (rv === undefined) v = lv;
+        else v = merge3(bv, lv, rv);
+        if (v !== undefined) out.push(clone(v));
+      });
+      return out;
+    }
+    return clone(l);
+  }
+
+  /* ---- 老板设备 ---- */
+  function touch() {
+    if (!isBoss()) return;
+    dirty = true; editSeq++; lsPut(LS_DIRTY, '1');
+    setStatus('syncing');
+    clearTimeout(pushT); pushT = setTimeout(push, PUSH_MS);
+  }
+  async function push() {
+    clearTimeout(pushT);
+    if (!isBoss() || !dirty) return;
+    if (pushing || ticking) { pushT = setTimeout(push, 400); return; }
+    pushing = true;
+    try {
+      for (let i = 0; i < 5; i++) {
+        if (tzName()) DB.settings.tz = tzName();
+        const seq = editSeq, sent = clone(DB);
+        const r = await rpc('bb_boss_push', { p_key: link.key, p_data: sent, p_base: baseVer });
+        if (r.error === 'conflict') {
+          const merged = merge3(base, DB, r.data);
+          base = r.data; baseVer = r.version;
+          adoptBoss(merged); persistBase(); refreshUI();
+          continue;
+        }
+        if (r.error) { setStatus('error', r.error); return; }
+        base = sent; baseVer = r.version;
+        dirty = editSeq !== seq;
+        persistBase();
+        if (dirty) { setStatus('syncing'); pushT = setTimeout(push, 200); } else setStatus('ok');
+        return;
+      }
+      setStatus('error', 'conflict');
+    } catch (e) {
+      netFail(e); pushT = setTimeout(push, 8000);
+    } finally { pushing = false; }
+  }
+  async function pullBoss() {
+    const r = await rpc('bb_boss_pull', { p_key: link.key });
+    if (r.error) { setStatus('error', r.error); return false; }
+    if (r.staff_key && link.staffKey !== r.staff_key) { link.staffKey = r.staff_key; saveLink(); }
+    if (base && r.version === baseVer) return false;
+    if (dirty && base) {
+      const merged = merge3(base, DB, r.data);
+      base = r.data; baseVer = r.version;
+      adoptBoss(merged); persistBase();
+      pushT = setTimeout(push, 50);
+    } else {
+      base = r.data; baseVer = r.version; dirty = false;
+      adoptBoss(clone(r.data)); persistBase();
+    }
+    return true;
+  }
+
+  /* ---- 员工手机 ---- */
+  function staffKeyLost(code) {
+    disconnect();
+    toast(errText(code), 'err');
+    render('zoom');
+    return false;
+  }
+  function authLost(code) {
+    link.staffId = null; link.pin = null; memPin = null; saveLink();
+    state.me = null; lsSet('banbiao.me', '');
+    toast(code === 'bad_pin' ? t('sync.pinChanged') : errText(code), 'err');
+    pullRoster().then(ok => { if (ok) render('zoom'); }).catch(netFail);
+  }
+  async function pullRoster() {
+    const r = await rpc('bb_staff_roster', { p_key: link.key });
+    if (r.error) return staffKeyLost(r.error);
+    staffVer = r.version; adoptStaff(r.data, true);
+    return true;
+  }
+  async function pullStaff() {
+    const r = await rpc('bb_staff_pull', { p_key: link.key, p_staff: link.staffId, p_pin: staffPin() });
+    if (r.error) {
+      if (r.error === 'bad_key') return staffKeyLost(r.error);
+      authLost(r.error); return false;
+    }
+    staffVer = r.version; adoptStaff(r.data, true);
+    return true;
+  }
+  async function staffLogin(id, pin, remember) {
+    try {
+      const r = await rpc('bb_staff_pull', { p_key: link.key, p_staff: id, p_pin: pin });
+      if (r.error) return r.error;
+      link.staffId = id; link.pin = remember ? pin : null; memPin = pin; saveLink();
+      staffVer = r.version; adoptStaff(r.data, true); setStatus('ok');
+      return null;
+    } catch (e) { netFail(e); return e.code || 'server'; }
+  }
+  function staffSignOut() {
+    link.staffId = null; link.pin = null; memPin = null; saveLink();
+    normalize(Object.assign({}, DB, { shifts: [], punches: [], timeoff: [], tips: {} }));   // 马上清掉这个人的资料
+    cacheStaff();
+    pullRoster().then(ok => { if (ok) refreshUI(); }).catch(netFail);
+  }
+  async function staffWrite(op, rec, code) {
+    try {
+      const r = await rpc('bb_staff_write', {
+        p_key: link.key, p_staff: link.staffId, p_pin: staffPin(), p_op: op, p_rec: rec || {}, p_code: code || null,
+      });
+      if (r.error) {
+        if (r.error === 'bad_key') { staffKeyLost(r.error); r.handled = true; }
+        else if (AUTH_ERRS.includes(r.error)) { authLost(r.error); r.handled = true; }
+        return r;
+      }
+      staffVer = r.version; adoptStaff(r.data, true); setStatus('ok');
+      return r;
+    } catch (e) { netFail(e); return { error: e.code || 'server' }; }
+  }
+  const staffMe = () => (isStaff() && link.staffId && staffPin()) ? link.staffId : null;
+
+  /* ---- 连接 / 断开 ---- */
+  async function create() {
+    if (tzName()) DB.settings.tz = tzName();
+    const r = await rpc('bb_create', { p_data: clone(DB) });
+    if (r.error) throw fail(r.error);
+    link = { role: 'boss', key: r.boss_key, staffKey: r.staff_key }; saveLink();
+    base = clone(DB); baseVer = r.version; dirty = false; persistBase();
+    lsPut(LSKEY, JSON.stringify(DB));
+    startPolling(); setStatus('ok');
+  }
+  async function joinBoss(key) {
+    const r = await rpc('bb_boss_pull', { p_key: key });
+    if (r.error) throw fail(r.error);
+    link = { role: 'boss', key, staffKey: r.staff_key }; saveLink();
+    base = r.data; baseVer = r.version; dirty = false;
+    adoptBoss(clone(r.data)); persistBase();
+    startPolling(); setStatus('ok');
+  }
+  async function joinStaff(key) {
+    const r = await rpc('bb_staff_roster', { p_key: key });
+    if (r.error) throw fail(r.error);
+    link = { role: 'staff', key }; memPin = null; saveLink();
+    staffVer = r.version; adoptStaff(r.data, false);
+    startPolling(); setStatus('ok');
+  }
+  function disconnect() {
+    const wasStaff = isStaff();
+    link = null; memPin = null; base = null; baseVer = 0; dirty = false; staffVer = 0;
+    [LS_LINK, LS_BASE, LS_DIRTY, LS_STAFF].forEach(k => lsPut(k, null));
+    clearInterval(pollT); clearTimeout(pushT); status = 'off';
+    if (wasStaff) { load(); state.me = null; lsSet('banbiao.me', ''); }
+  }
+  async function rotate() {
+    const r = await rpc('bb_boss_rotate_staff_key', { p_key: link.key });
+    if (r.error) throw fail(r.error);
+    link.staffKey = r.staff_key; saveLink();
+  }
+  function parseCode(text) {
+    const s = String(text || '').trim();
+    const m = s.match(/[#&?](join|own)=([0-9a-f]{32}|[0-9a-f]{24})(?![0-9a-f])/i);
+    if (m) {
+      const u = s.match(/[#&?]u=([^&\s]+)/), k = s.match(/[#&?]k=([^&\s]+)/);
+      const dec = x => { try { return decodeURIComponent(x); } catch (e) { return ''; } };
+      return { role: m[1].toLowerCase() === 'own' ? 'boss' : 'staff', key: m[2].toLowerCase(), url: u ? dec(u[1]) : '', apikey: k ? dec(k[1]) : '' };
+    }
+    const hex = s.replace(/[\s-]/g, '').toLowerCase();
+    if (/^[0-9a-f]{32}$/.test(hex)) return { role: 'boss', key: hex };
+    if (/^[0-9a-f]{24}$/.test(hex)) return { role: 'staff', key: hex };
+    return null;
+  }
+  function codeFor(role) { return !link ? '' : role === 'boss' ? link.key : (link.staffKey || ''); }
+  function linkFor(role) {
+    const c = cfg(), code = codeFor(role); if (!c || !code) return '';
+    const extra = CLOUD.url ? '' : `&u=${encodeURIComponent(c.url)}&k=${encodeURIComponent(c.key)}`;
+    return `${location.origin}${location.pathname}#${role === 'boss' ? 'own' : 'join'}=${code}${extra}`;
+  }
+  /* 打开的是加入链接：取出来并从地址栏抹掉 */
+  function takeHash() {
+    if (!/[#&](join|own)=/.test(location.hash)) return null;
+    const p = parseCode(location.hash);
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { }
+    if (p && p.url && p.apikey && !cfg()) setCfg({ url: p.url, key: p.apikey });   // 已设置过的设备不让链接改写
+    return p || { bad: true };
+  }
+
+  /* ---- 同步循环 ---- */
+  async function syncNow() {
+    if (!link || ticking || pushing) return;
+    ticking = true;
+    try {
+      const v = await rpc('bb_version', { p_key: link.key });
+      if (isBoss()) {
+        if (v.error) setStatus('error', v.error);
+        else if (!base || v.version !== baseVer) { if (await pullBoss()) refreshUI(); if (!dirty) setStatus('ok'); }
+        else if (dirty) { ticking = false; await push(); }
+        else setStatus('ok');
+      } else if (isStaff()) {
+        if (v.error) staffKeyLost(v.error);
+        else {
+          if (v.version !== staffVer) {
+            const ok = staffMe() ? await pullStaff() : await pullRoster();
+            if (ok) refreshUI();
+          }
+          if (link) setStatus('ok');
+        }
+      }
+    } catch (e) { netFail(e); }
+    finally { ticking = false; }
+  }
+  function startPolling() {
+    clearInterval(pollT);
+    pollT = setInterval(() => { if (!document.hidden) syncNow(); }, POLL_MS);
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNow(); });
+  addEventListener('online', () => syncNow());
+
+  /* 启动第一步（在第一次画页面之前）：用本机缓存秒开 */
+  function boot() {
+    link = lsJSON(LS_LINK);
+    if (!link || !link.key || !cfg()) { link = null; return; }
+    status = 'syncing';
+    if (isBoss()) {
+      const b = lsJSON(LS_BASE);
+      if (b && b.data) { base = b.data; baseVer = b.version || 0; }
+      dirty = lsGet(LS_DIRTY) === '1';
+    } else {
+      if (!link.pin) link.staffId = null;
+      const c = lsJSON(LS_STAFF);
+      if (c && c.data) { staffVer = c.version || 0; normalize(c.data); }
+      else normalize(Object.assign({}, DB, { staff: [], shifts: [], punches: [], timeoff: [], tips: {}, seenNotif: {} }));
+    }
+  }
+  /* 启动第二步（画完之后）：后台拉最新 */
+  async function start() {
+    if (!link) return;
+    if (navigator.storage && navigator.storage.persist && isBoss()) navigator.storage.persist().catch(() => { });
+    startPolling();
+    await syncNow();
+  }
+
+  return {
+    isBoss, isStaff, linked: () => !!link, configured: () => !!cfg(), cfgRaw, setCfg, ping, errText, statusText,
+    touch, cacheStaff, boot, start, syncNow, takeHash, parseCode, codeFor, linkFor,
+    create, joinBoss, joinStaff, disconnect, rotate,
+    staffLogin, staffSignOut, staffWrite, staffMe, merge3,
+  };
+})();
+
+/* 设置页里的「云同步」一节 */
+function syncSectionHTML() {
+  const wrap = s => `<div class="row-s" style="white-space:normal">${s}</div>`;
+  let rows;
+  if (!Cloud.configured()) {
+    rows = `<div class="row"><div class="row-m"><div class="row-t">${t('sync.notSetup')}</div>${wrap(t('sync.notSetupSub'))}</div>
+      <div class="row-r"><button class="btn sm pri" data-act="syncSetup">${t('sync.setup')}</button></div></div>`;
+  } else if (!Cloud.linked()) {
+    rows = `<div class="row stack"><div class="row-m"><div class="row-t">${t('sync.title')}</div>${wrap(t('sync.offSub'))}</div>
+        <div class="row-r"><button class="btn sm pri" data-act="syncCreate">☁︎ ${t('sync.create')}</button>
+          <button class="btn sm" data-act="syncLink">${t('sync.link')}</button></div></div>
+      ${CLOUD.url ? '' : `<div class="row tap" data-act="syncSetup"><div class="row-m"><div class="row-t">${t('sync.cfgTitle')}</div>
+        <div class="row-s">${esc(Cloud.cfgRaw().url)}</div></div><span class="chev">›</span></div>`}`;
+  } else {
+    rows = `<div class="row"><div class="row-m"><div class="row-t">☁︎ ${t('sync.title')}</div>
+          <div class="row-s" data-sync-status>${Cloud.statusText()}</div></div>
+        <div class="row-r"><button class="btn sm" data-act="syncNow">${t('sync.now')}</button></div></div>
+      <div class="row tap" data-act="syncJoinShow"><div class="row-m"><div class="row-t">${t('sync.staffJoin')}</div>${wrap(t('sync.staffJoinSub'))}</div><span class="chev">›</span></div>
+      <div class="row tap" data-act="syncOwnerShow"><div class="row-m"><div class="row-t">${t('sync.ownerDev')}</div>${wrap(t('sync.ownerDevSub'))}</div><span class="chev">›</span></div>
+      <div class="row tap" data-act="syncDisconnect"><div class="row-m"><div class="row-t" style="color:var(--red)">${t('sync.disconnect')}</div>${wrap(t('sync.disconnectSub'))}</div><span class="chev">›</span></div>`;
+  }
+  return `<div class="sec-t">${t('sync.title')}</div><div class="list" style="margin-bottom:16px">${rows}</div>`;
+}
+
+/* 员工加入码 / 老板码 */
+function openShareSheet(role) {
+  const owner = role === 'boss', url = Cloud.linkFor(role), code = Cloud.codeFor(role);
+  if (!url) return toast(t('sync.err.server'), 'err');
+  openSheet({
+    title: owner ? t('sync.ownerTitle') : t('sync.joinTitle'), sub: esc(DB.settings.biz),
+    body: `${owner
+      ? `<div class="hint" style="color:var(--red);margin-bottom:12px">${t('sync.ownerWarn')}</div>`
+      : `<div class="qr-box" id="shareQRBox"><canvas id="shareQR"></canvas></div>
+         <div class="hint" id="shareQRHint" style="text-align:center;margin-bottom:12px">${t('sync.staffJoinSub')}</div>`}
+      <div class="field"><label>${t('sync.code')}</label><div class="code-big">${code.match(/.{1,4}/g).join(' ')}</div></div>
+      <div class="field"><label>${t('sync.linkLabel')}</label><input class="inp" id="shareUrl" readonly value="${esc(url)}"></div>
+      ${owner ? '' : `<button class="btn sm dgr" data-act="syncRotate" style="margin-top:2px">${t('sync.rotate')}</button>`}`,
+    footer: `<button class="btn" data-act="shareCopy">${t('sync.copy')}</button>
+             ${navigator.share ? `<button class="btn pri" data-act="shareSend">${t('sync.share')}</button>`
+        : `<button class="btn pri" data-act="closeSheet">${t('c.close')}</button>`}`,
+    onMount(el) {
+      const cv = $('#shareQR', el);
+      if (cv) {
+        try { QR.draw(cv, url, 220); }
+        catch (e) {                       // 链接里带着项目网址和 key 时太长，二维码放不下：改成发链接
+          $('#shareQRBox', el).style.display = 'none';
+          $('#shareQRHint', el).textContent = t('sync.sendLink');
+        }
+      }
+      ACT.shareCopy = async () => {
+        try { await navigator.clipboard.writeText(url); }
+        catch (e) { const i = $('#shareUrl', el); i.select(); try { document.execCommand('copy'); } catch (e2) { } }
+        toast(t('sync.copied'));
+      };
+      ACT.shareSend = () => navigator.share({
+        title: DB.settings.biz, text: owner ? t('sync.ownerTitle') : t('sync.shareText', { biz: DB.settings.biz }), url,
+      }).catch(() => { });
+    }
+  });
+}
+
+/* 打开加入链接，或手动粘贴了码 */
+async function joinFromLink(p) {
+  if (!p || p.bad) return toast(t('sync.badCode'), 'err');
+  if (!Cloud.configured()) return toast(t('sync.err.not_configured'), 'err');
+  if (p.role === 'staff') {
+    if (Cloud.isBoss()) return toast(t('sync.alreadyOwner'), 'info');
+    try {
+      if (Cloud.linked()) Cloud.disconnect();
+      await Cloud.joinStaff(p.key);
+    } catch (e) { return toast(Cloud.errText(e.code), 'err'); }
+    state.mode = 'emp'; state.me = null; lsSet('banbiao.mode', 'emp'); lsSet('banbiao.me', '');
+    render('zoom');
+    toast(t('sync.joined', { biz: esc(DB.settings.biz) }));
+  } else {
+    confirmSheet(t('sync.ownerTitle'), t('sync.replaceMsg'), t('sync.linkBtn'), async () => {
+      try {
+        if (Cloud.linked()) Cloud.disconnect();
+        await Cloud.joinBoss(p.key);
+      } catch (e) { return toast(Cloud.errText(e.code), 'err'); }
+      state.mode = 'boss'; state.view = 'dash'; lsSet('banbiao.mode', 'boss');
+      render('fade');
+      toast(t('sync.linkedOwner'));
+    }, false);
+  }
+}
+
 /* ---------------- 启动 ---------------- */
 (function init() {
   let savedLang = null, savedMode = null, savedMe = null;
@@ -4435,6 +5147,7 @@ addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { i
   } catch (e) { }
   LANG = savedLang && LANGS[savedLang] ? savedLang : 'en';
   load();
+  Cloud.boot();                // 已连接云端：先用本机缓存秒开，画完再后台拉最新
   if (savedLang && LANGS[savedLang]) DB.settings.lang = savedLang;
   else LANG = LANGS[DB.settings.lang] ? DB.settings.lang : 'en';
   if (savedMode === 'emp') state.mode = 'emp';
@@ -4442,6 +5155,7 @@ addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { i
   try { savedTok = localStorage.getItem('banbiao.meTok'); } catch (e) { }
   const who = savedMe && staffById(savedMe);
   if (who && savedTok && savedTok === pinToken(who)) state.me = savedMe;   // 只有记住过这台设备才免密
+  if (Cloud.isStaff()) { state.mode = 'emp'; state.me = Cloud.staffMe(); }
   state.week = weekStartOf(TODAY);
   render('none');
   markViewSeen(state.mode === 'emp' ? state.eview : state.view);
@@ -4449,6 +5163,8 @@ addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { i
   Motion.seen.add(lastViewKey);
   Motion.firstVisit();
   Motion.attachSwipe();
+  const joinLink = Cloud.takeHash();
+  Cloud.start().then(() => { if (joinLink) joinFromLink(joinLink); });
   /* 顶栏只在有内容滚到它下面时才显出分隔线 */
   const main = $('#main'); let ticking = false;
   main.addEventListener('scroll', () => {
