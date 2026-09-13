@@ -26,6 +26,8 @@ GitHub Pages serves the `master` branch from the repo root:
 
 Pulse stores each user's data in their own browser's localStorage (key `pulse.v1`). Every code change must keep reading existing saved data: extend `normalize()` for new fields, and never rename or remove stored keys without a migration.
 
+Pulse cloud sync uses the Supabase project `rlaeklherxdfrlbduqde` (shared with staff-scheduler's `bb_*` objects — never touch those). Pulse's tables and functions are prefixed `pulse_`; the schema is in `business-tracker/supabase.sql`. Devices running an older cached copy of the page keep calling these functions, so change them only in backward-compatible ways, and keep the sync fields (`u`, `su`, `setu`, `del`) and merge rules in `mergeDB()` compatible.
+
 ## Git workflow
 
 Remote: https://github.com/Yong0225/Claude-Project
