@@ -385,9 +385,13 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
 @media (max-width:900px){ .hero{border-radius:var(--r-l)} }
 
 /* ============ 动效 ============ */
-#stage{min-height:100dvh;transform-origin:50% 0}
-#stage.presenting{border-radius:12px;overflow:hidden}
-body.presenting{background:#000}
+#stage{min-height:100dvh}
+/* 手机端遮罩不做模糊：全屏 backdrop-filter 叠逐帧透明度，在部分安卓 GPU 上会出黑块 */
+@media (max-width:720px){.scrim{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(0,0,0,.36)}}
+.page-ghost{position:fixed;overflow:hidden;pointer-events:none;background:var(--bg)}
+.page-ghost > *{position:absolute;margin:0}
+.big-btn{position:relative}
+.pulse-ring{position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 2px var(--green);pointer-events:none}
 #motionLayer{position:fixed;inset:0;pointer-events:none;z-index:150}
 .main.scrolled .topbar{border-bottom-color:var(--sep)}
 
@@ -404,32 +408,8 @@ body.presenting{background:#000}
 @keyframes draw-check{to{stroke-dashoffset:0}}
 .bell{transform-origin:50% 12%}
 
-/* 页面转场（View Transitions）：只在切换的那一瞬间给元素起名 */
-@keyframes vt-fade-out{to{opacity:0}}
-@keyframes vt-fade-in{from{opacity:0}}
-@keyframes vt-out-left{to{opacity:0;transform:translateX(-24px)}}
-@keyframes vt-in-right{from{opacity:0;transform:translateX(24px)}}
-@keyframes vt-out-right{to{opacity:0;transform:translateX(24px)}}
-@keyframes vt-in-left{from{opacity:0;transform:translateX(-24px)}}
-@keyframes vt-scale-in{from{opacity:0;transform:scale(0.98)}}
-html[data-vt] #page{view-transition-name:page}
-html[data-vt] .topbar{view-transition-name:topbar}
-html[data-vt]::view-transition-group(*){animation-duration:0s}
-html[data-vt]::view-transition-old(*),html[data-vt]::view-transition-new(*){mix-blend-mode:normal}
-html[data-vt]::view-transition-old(root),html[data-vt]::view-transition-new(root){animation:none}
-html[data-vt]::view-transition-old(topbar){animation:vt-fade-out 120ms var(--ease-out) both}
-html[data-vt]::view-transition-new(topbar){animation:vt-fade-in 200ms var(--ease-out) both}
-html[data-vt="tab"]::view-transition-old(page){animation:vt-fade-out 120ms var(--ease-out) both}
-html[data-vt="tab"]::view-transition-new(page){animation:none}
-html[data-vt="fwd"]::view-transition-old(page){animation:vt-out-left 160ms var(--ease-out) both}
-html[data-vt="fwd"]::view-transition-new(page){animation:vt-in-right 240ms var(--ease-out) both}
-html[data-vt="back"]::view-transition-old(page){animation:vt-out-right 160ms var(--ease-out) both}
-html[data-vt="back"]::view-transition-new(page){animation:vt-in-left 240ms var(--ease-out) both}
-html[data-vt="zoom"]::view-transition-old(root),html[data-vt="fade"]::view-transition-old(root){animation:vt-fade-out 200ms var(--ease-out) both}
-html[data-vt="zoom"]::view-transition-new(root),html[data-vt="fade"]::view-transition-new(root){animation:vt-fade-in 250ms var(--ease-out) both}
-html[data-vt="zoom"]::view-transition-old(page),html[data-vt="fade"]::view-transition-old(page){animation:vt-fade-out 200ms var(--ease-out) both}
-html[data-vt="zoom"]::view-transition-new(page){animation:vt-scale-in 260ms var(--ease-out) both}
-html[data-vt="fade"]::view-transition-new(page){animation:vt-fade-in 250ms var(--ease-out) both}
+/* 换语言 / 深浅色：整屏一起交叉淡化，沿用浏览器默认的加亮混合，中途不会发暗 */
+html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-transition-new(root){animation-duration:220ms;animation-timing-function:var(--ease-out)}
 
 /* 悬停反馈只给真正有鼠标的设备：触屏点一下会留下假悬停 */
 @media (hover:hover) and (pointer:fine){
@@ -1688,6 +1668,14 @@ function openSheet({ title, sub, body, footer, wide, onMount }) {
   scrim.addEventListener('pointerdown', () => closeSheet());
   document.addEventListener('keydown', escClose);
   onMount && onMount(sheet);
+  /* 面板里的内容跟着面板一起错开浮上来 */
+  if (!REDUCED && !document.hidden) {
+    const items = [...sheet.querySelectorAll('.sheet-b > *')]
+      .flatMap(el => el.classList.contains('list') ? [...el.children] : [el]).slice(0, 10);
+    items.forEach((el, i) => el.animate(
+      [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+      { duration: 260, easing: EASE.out, delay: 50 + i * 25, fill: 'backwards' }));
+  }
   return sheet;
 }
 /* 手机端：面板位置 → 遮罩透明度 + 底下整页后退的程度，拖动时 1:1 连续变化 */
@@ -1696,7 +1684,6 @@ function sheetProgress(inst, y) {
   sheet.style.transform = `translateY(${y}px)`;
   const p = clamp(1 - y / (sheet.offsetHeight || 1), 0, 1);
   scrim.style.opacity = p.toFixed(3);
-  if (inst.depth === 0) setStage(p);
 }
 function escClose(e) { if (e.key === 'Escape') closeSheet({ instant: true }); }   // 键盘操作不做动画
 function closeSheet(o = {}) {
@@ -1706,7 +1693,7 @@ function closeSheet(o = {}) {
   scrim.style.pointerEvents = 'none';        // 淡出期间别再挡住后面的按钮
   sheet.style.pointerEvents = 'none';
   let gone = false;
-  const bye = () => { if (gone) return; gone = true; sheet.remove(); scrim.remove(); if (inst.depth === 0) setStage(0); };
+  const bye = () => { if (gone) return; gone = true; sheet.remove(); scrim.remove(); };
   inst.spr && inst.spr.stop();
   if (o.instant) return bye();
   if (mobile) {
@@ -1814,7 +1801,7 @@ const EASE = {
   drawer: 'cubic-bezier(0.32, 0.72, 0, 1)',     // 抽屉
 };
 const HAS_VT = typeof document.startViewTransition === 'function';
-const NAV_KINDS = new Set(['tab', 'fwd', 'back', 'zoom', 'fade']);
+const PAGE_KINDS = new Set(['tab', 'fwd', 'back', 'zoom']);
 const MOTION_SCOPE = '#page [data-mk], #nav [data-mk], #tabbar [data-mk], #topbar [data-mk]';
 
 /* 与 CSS cubic-bezier() 同一条曲线，给 JS 数字补间用 */
@@ -1973,18 +1960,21 @@ const Motion = {
     else if (n > was) el.animate([{ transform: 'scale(1.15)' }, { transform: 'none' }], { duration: 220, easing: EASE.out });
   },
 
-  tweenNumber(el, from, to) {
+  parseNum(str) {
+    const m = String(str).trim().match(/^(\D*?)(-?\d[\d,]*(?:\.\d+)?)(\D*)$/);
+    if (!m) return null;
+    return { pre: m[1], suf: m[3], n: parseFloat(m[2].replace(/,/g, '')), dec: (m[2].split('.')[1] || '').length, comma: m[2].includes(',') };
+  },
+  fmtNum(v, like) {
+    return (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('en-US',
+      { minimumFractionDigits: like.dec, maximumFractionDigits: like.dec, useGrouping: like.comma });
+  },
+  tweenNumber(el, from, to, dur = 300) {
     if (REDUCED) return;
-    const parse = str => {
-      const m = String(str).trim().match(/^(\D*?)(-?\d[\d,]*(?:\.\d+)?)(\D*)$/);
-      if (!m) return null;
-      return { pre: m[1], suf: m[3], n: parseFloat(m[2].replace(/,/g, '')), dec: (m[2].split('.')[1] || '').length, comma: m[2].includes(',') };
-    };
-    const a = parse(from), b = parse(to);
+    const a = this.parseNum(from), b = this.parseNum(to);
     if (!a || !b || a.pre !== b.pre || a.suf !== b.suf || a.n === b.n) return;
-    const fmt = v => (v < 0 ? '-' : '') + Math.abs(v).toLocaleString('en-US',
-      { minimumFractionDigits: b.dec, maximumFractionDigits: b.dec, useGrouping: b.comma });
-    const t0 = performance.now(), dur = 300;
+    const fmt = v => this.fmtNum(v, b);
+    const t0 = performance.now();
     const tick = now => {
       if (!el.isConnected) return;
       const p = Math.min(1, (now - t0) / dur);
@@ -1996,22 +1986,152 @@ const Motion = {
     setTimeout(() => { if (el.isConnected) el.textContent = to; }, dur + 400);   // 标签页在后台 rAF 停了也要落到终值
   },
 
-  /* 切页面时内容轻轻错开浮上来（只取最前面几块，后面的直接出现） */
-  staggerIn() {
-    if (REDUCED) return;
-    const items = [];
-    [...$('#page').children].forEach(c => { if (c.classList.contains('grid-cards')) items.push(...c.children); else items.push(c); });
-    items.slice(0, 12).forEach((el, i) => el.animate(
-      [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }],
-      { duration: 220, easing: EASE.out, delay: Math.min(i, 5) * 30, fill: 'backwards' }));
+  /* 切页面前：把旧页面克隆一份盖在原位（带不透明底色），新内容换好后让它淡出/滑走。
+     是真实 DOM 而不是截图，所以半透明的顶栏、底栏不受影响，也不会有空白帧 */
+  capturePage() {
+    const page = $('#page'), main = $('#main'), topbar = $('#topbar'), tab = $('#tabbar');
+    if (!page || !main) return null;
+    const pr = page.getBoundingClientRect(), mr = main.getBoundingClientRect();
+    const tabTop = tab && getComputedStyle(tab).display !== 'none' ? tab.getBoundingClientRect().top : innerHeight;
+    const top = Math.max(mr.top, topbar ? topbar.getBoundingClientRect().bottom : mr.top);
+    const bottom = Math.min(mr.bottom, tabTop, innerHeight);
+    if (bottom - top < 10 || !pr.width) return null;
+    const box = document.createElement('div');
+    box.className = 'page-ghost';
+    Object.assign(box.style, { left: mr.left + 'px', top: top + 'px', width: mr.width + 'px', height: (bottom - top) + 'px' });
+    const clone = page.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+    clone.querySelectorAll('[data-mk]').forEach(n => n.removeAttribute('data-mk'));
+    Object.assign(clone.style, { left: (pr.left - mr.left) + 'px', top: (pr.top - top) + 'px', width: pr.width + 'px',
+      transform: 'none', opacity: page.style.opacity || '1', touchAction: '' });
+    box.appendChild(clone);
+    document.getElementById('motionLayer').appendChild(box);
+    const scrolls = new Map();
+    page.querySelectorAll('[data-scroll]').forEach(el => scrolls.set(el.dataset.scroll, [el.scrollTop, el.scrollLeft]));
+    clone.querySelectorAll('[data-scroll]').forEach(el => { const v = scrolls.get(el.dataset.scroll); if (v) { el.scrollTop = v[0]; el.scrollLeft = v[1]; } });
+    return { box };
   },
 
-  /* 浏览器不支持 View Transitions 时：只做入场，不增加任何等待 */
-  fallbackIn(kind) {
+  pageTransition(kind, g) {
+    const page = $('#page'), box = g.box;
+    let gone = false;
+    const kill = () => { if (!gone) { gone = true; box.remove(); } };
+    let out, inn = null, outDur = 180, inDur = 280;
+    if (REDUCED || kind === 'tab') {
+      out = [{ opacity: 1 }, { opacity: 0 }]; outDur = REDUCED ? 150 : 160;
+      if (!REDUCED) inn = 'rise';
+    } else if (kind === 'fwd' || kind === 'back') {
+      const d = kind === 'fwd' ? -1 : 1;                 // 下一周：旧的往左走，新的从右边来
+      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${d * 48}px)` }]; outDur = 200;
+      inn = [{ opacity: 0, transform: `translateX(${-d * 36}px)` }, { opacity: 1, transform: 'none' }];
+    } else {                                              // zoom：管理端 ↔ 员工端
+      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(0.97)' }]; outDur = 200;
+      inn = [{ opacity: 0, transform: 'scale(1.02)' }, { opacity: 1, transform: 'none' }];
+    }
+    const a = box.animate(out, { duration: outDur, easing: EASE.out, fill: 'forwards' });
+    a.finished.then(kill, kill);
+    setTimeout(kill, outDur + 500);
+    if (inn === 'rise') {
+      const items = [];
+      [...page.children].forEach(c => { if (c.classList.contains('grid-cards')) items.push(...c.children); else items.push(c); });
+      items.slice(0, 10).forEach((el, i) => el.animate([{ transform: 'translateY(10px)' }, { transform: 'none' }],
+        { duration: inDur, easing: EASE.out, delay: Math.min(i, 5) * 28, fill: 'backwards' }));
+    } else if (inn) page.animate(inn, { duration: inDur, easing: EASE.out });
+    if (!REDUCED) document.querySelectorAll('#topbar .tb-title, #topbar .tb-sub, #topbar .tb-right .tiny')
+      .forEach(el => el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 200, easing: EASE.out }));
+  },
+
+  /* 每个页面本次打开 app 后第一次出现：数字从 0 滚上来、柱子长出来、班次按天依次冒出来 */
+  seen: new Set(),
+  firstVisit() {
+    if (REDUCED || document.hidden) return;
+    document.querySelectorAll('#page [data-m="num"]').forEach(el => {
+      const to = el.textContent, p = this.parseNum(to);
+      if (p && p.n) this.tweenNumber(el, p.pre + this.fmtNum(0, p) + p.suf, to, 480);
+    });
+    document.querySelectorAll('#page [data-m="filly"]').forEach((el, i) =>
+      el.animate([{ transform: 'scaleY(0)' }, { transform: 'none' }], { duration: 420, easing: EASE.out, delay: 80 + i * 35, fill: 'backwards' }));
+    document.querySelectorAll('#page [data-m="fillx"]').forEach((el, i) =>
+      el.animate([{ transform: 'scaleX(0)' }, { transform: 'none' }], { duration: 420, easing: EASE.out, delay: 80 + Math.min(i, 8) * 25, fill: 'backwards' }));
+    const chips = [...document.querySelectorAll('#page .chip')];
+    const days = [...new Set(chips.map(c => (c.closest('.scell') || { dataset: {} }).dataset.cell).filter(Boolean).map(x => x.split('|')[0]))].sort();
+    chips.forEach(c => {
+      const cell = c.closest('.scell'); if (!cell) return;
+      if (!this.isVisible(c, c.getBoundingClientRect())) return;
+      const di = days.indexOf(cell.dataset.cell.split('|')[0]);
+      c.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'none' }],
+        { duration: 240, easing: EASE.out, delay: 60 + di * 30, fill: 'backwards' });
+    });
+  },
+
+  /* 手机上左右滑动翻周：1:1 跟手，松手按速度投影决定翻不翻，没翻就弹回 */
+  swipeEnabled() {
+    return !sheetStack.length && !!document.querySelector('#topbar [data-act="wk"]') && !(state.mode === 'boss' && state.view === 'sched');
+  },
+  attachSwipe() {
     const page = $('#page');
-    if (REDUCED || kind === 'fade') { page.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: EASE.out }); return; }
-    const from = { fwd: 'translateX(24px)', back: 'translateX(-24px)', zoom: 'scale(0.98)' }[kind];
-    if (from) page.animate([{ opacity: 0, transform: from }, { opacity: 1, transform: 'none' }], { duration: 240, easing: EASE.out });
+    if (!page || page._swipe) return;
+    page._swipe = true;
+    let active = false, lock = null, id = null, sx = 0, sy = 0, dx = 0, lastX = 0, lastT = 0, vx = 0, back = null;
+    const apply = x => {
+      page.style.transform = x ? `translateX(${x}px)` : '';
+      page.style.opacity = x ? String(1 - Math.min(Math.abs(x) / Math.max(page.clientWidth, 1), 1) * 0.35) : '';
+    };
+    const swallowClick = () => {
+      const h = e => { e.stopPropagation(); e.preventDefault(); };
+      document.addEventListener('click', h, true);
+      setTimeout(() => document.removeEventListener('click', h, true), 400);
+    };
+    page.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'touch' || !this.swipeEnabled()) return;
+      if (e.target.closest('.sched,.scrollx,input,select,textarea,.chip')) return;
+      back && back.stop(); back = null;
+      active = true; lock = null; id = e.pointerId; sx = lastX = e.clientX; sy = e.clientY; lastT = performance.now(); dx = 0; vx = 0;
+    });
+    page.addEventListener('pointermove', e => {
+      if (!active || e.pointerId !== id) return;
+      const mx = e.clientX - sx, my = e.clientY - sy;
+      if (!lock) {
+        if (Math.hypot(mx, my) < 10) return;                     // 迟滞：先确认方向
+        lock = Math.abs(mx) > Math.abs(my) * 1.2 ? 'x' : 'y';
+        if (lock === 'x') { try { page.setPointerCapture(id); } catch (err) { } }
+      }
+      if (lock !== 'x') return;
+      const now = performance.now();
+      vx = (e.clientX - lastX) / Math.max(now - lastT, 1) * 1000; lastX = e.clientX; lastT = now;
+      dx = mx; apply(dx);
+    });
+    const finish = (e, cancelled) => {
+      if (!active || e.pointerId !== id) return;
+      active = false;
+      if (lock !== 'x') return;
+      swallowClick();
+      /* 速度设上限（手指抖一下的瞬时速度会离谱），且至少滑过 30px 才翻周，免得轻轻一碰就换了一周 */
+      const w = page.clientWidth, v = clamp(vx, -3000, 3000), proj = dx + project(v);
+      if (!cancelled && Math.abs(dx) >= 30 && Math.abs(proj) > w * 0.25 && Math.sign(proj) === Math.sign(dx)) {
+        const dir = proj < 0 ? 1 : -1;                          // 往左滑 = 下一周
+        state.week = addDays(state.week, dir * 7);
+        render(dir > 0 ? 'fwd' : 'back');
+      } else {
+        back = spring({ from: dx, to: 0, velocity: v, damping: 1, response: 0.3, onUpdate: apply, onDone: () => apply(0) });
+      }
+    };
+    page.addEventListener('pointerup', e => finish(e, false));
+    page.addEventListener('pointercancel', e => finish(e, true));
+  },
+
+  /* 打卡成功：按钮轻按一下 + 一圈绿色光环散开 */
+  pulse(btn) {
+    if (!btn || REDUCED) return;
+    btn.animate([{ transform: 'scale(0.96)' }, { transform: 'none' }], { duration: 260, easing: EASE.out });
+    const ring = document.createElement('span');
+    ring.className = 'pulse-ring';
+    btn.appendChild(ring);
+    const a = ring.animate([{ opacity: 0.6, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.12)' }], { duration: 560, easing: EASE.out, fill: 'forwards' });
+    const k = () => ring.remove();
+    a.finished.then(k, k);
+    setTimeout(k, 900);
   },
 
   segKey(seg) {
@@ -2066,17 +2186,6 @@ const Motion = {
   },
 };
 
-/* 手机端弹出面板时，底下整页往后退一点（iOS 卡片式面板） */
-function setStage(p) {
-  const st = document.getElementById('stage'); if (!st) return;
-  if (REDUCED || p <= 0.001) {
-    st.style.transform = ''; st.classList.remove('presenting'); document.body.classList.remove('presenting');
-    return;
-  }
-  p = clamp(p, 0, 1);
-  st.classList.add('presenting'); document.body.classList.add('presenting');
-  st.style.transform = `translateY(${(p * 10).toFixed(2)}px) scale(${(1 - p * 0.06).toFixed(4)})`;
-}
 
 
 /* =========================================================================
@@ -2097,27 +2206,53 @@ const BOSS_NAV = [
 ];
 const EMP_NAV = [['my', 'emp.my', '▦'], ['ehours', 'emp.hours', '◷'], ['eleave', 'emp.leave', '✈'], ['eme', 'emp.me', '☺']];
 
+/* 结构没变就原地改 class 和内部内容，不替换元素本身 */
+function patchHTML(container, html) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html.trim();
+  const next = [...tpl.content.children], cur = [...container.children];
+  const sig = el => el.tagName + '|' + el.className.replace(/\bon\b/g, '').replace(/\s+/g, ' ').trim() + '|' + (el.dataset.act || '') + '|' + (el.dataset.v || '');
+  if (next.length !== cur.length || next.some((n, i) => sig(n) !== sig(cur[i]))) { container.innerHTML = html; return false; }
+  next.forEach((n, i) => {
+    const c = cur[i];
+    if (c.className !== n.className) c.className = n.className;
+    if (c.innerHTML !== n.innerHTML) c.innerHTML = n.innerHTML;
+  });
+  return true;
+}
+/* 底栏：换了选中项时，新选中的图标轻轻弹一下 */
+function patchTabbar(html) {
+  const bar = $('#tabbar');
+  const before = bar.querySelector('.tab.on');
+  const beforeV = before && before.dataset.v;
+  const inPlace = patchHTML(bar, html);
+  const after = bar.querySelector('.tab.on');
+  if (inPlace && after && after.dataset.v !== beforeV && !REDUCED) {
+    const ico = after.querySelector('.tab-ico');
+    ico && ico.animate([{ transform: 'scale(0.86)' }, { transform: 'none' }], { duration: 240, easing: EASE.out });
+  }
+}
 function renderNav() {
   const emp = state.mode === 'emp';
   const by = notifByView();
   const moreCount = MORE_VIEWS.reduce((n, v) => n + (by[v] || 0), 0);
 
   if (emp) {
-    $('#nav').innerHTML = `<div class="nav-sec">${t('mode.emp')}</div>` + EMP_NAV.map(([id, k, i]) =>
-      `<button class="nav-item ${state.eview === id ? 'on' : ''}" data-act="ego" data-v="${id}" data-m="toggle" data-mk="nav-${id}">
-        <span class="ni-ico">${i}</span><span>${t(k)}</span>${badgeSpan(by[id] || 0, 'nav-' + id)}</button>`).join('');
-    $('#tabbar').innerHTML = EMP_NAV.map(([id, k, i]) =>
-      `<button class="tab ${state.eview === id ? 'on' : ''}" data-act="ego" data-v="${id}" data-m="toggle" data-mk="tab-${id}">
-        <span class="tab-ico">${i}${badgeHTML(by[id] || 0, 'tab-' + id)}</span><span>${t(k)}</span></button>`).join('');
+    patchHTML($('#nav'), `<div class="nav-sec">${t('mode.emp')}</div>` + EMP_NAV.map(([id, k, i]) =>
+      `<button class="nav-item ${state.eview === id ? 'on' : ''}" data-act="ego" data-v="${id}">
+        <span class="ni-ico">${i}</span><span>${t(k)}</span>${badgeSpan(by[id] || 0, 'nav-' + id)}</button>`).join(''));
+    patchTabbar(EMP_NAV.map(([id, k, i]) =>
+      `<button class="tab ${state.eview === id ? 'on' : ''}" data-act="ego" data-v="${id}">
+        <span class="tab-ico">${i}${badgeHTML(by[id] || 0, 'tab-' + id)}</span><span>${t(k)}</span></button>`).join(''));
   } else {
-    $('#nav').innerHTML = BOSS_NAV.map(g =>
+    patchHTML($('#nav'), BOSS_NAV.map(g =>
       `<div class="nav-sec">${t(g.g)}</div>` + g.items.map(([id, k, i]) =>
-        `<button class="nav-item ${state.view === id ? 'on' : ''}" data-act="go" data-v="${id}" data-m="toggle" data-mk="nav-${id}">
-          <span class="ni-ico">${i}</span><span>${t(k)}</span>${badgeSpan(by[id] || 0, 'nav-' + id)}</button>`).join('')).join('');
+        `<button class="nav-item ${state.view === id ? 'on' : ''}" data-act="go" data-v="${id}">
+          <span class="ni-ico">${i}</span><span>${t(k)}</span>${badgeSpan(by[id] || 0, 'nav-' + id)}</button>`).join('')).join(''));
     const tabs = [['dash', 'nav.dash', '◎'], ['sched', 'nav.sched', '▦'], ['time', 'nav.time', '◷'], ['pay', 'nav.pay', '＄'], ['more', 'nav.more', '⋯']];
-    $('#tabbar').innerHTML = tabs.map(([id, k, i]) =>
-      `<button class="tab ${state.view === id ? 'on' : ''}" data-act="${id === 'more' ? 'moreMenu' : 'go'}" data-v="${id}" data-m="toggle" data-mk="tab-${id}">
-        <span class="tab-ico">${i}${badgeHTML(id === 'more' ? moreCount : (by[id] || 0), 'tab-' + id)}</span><span>${t(k)}</span></button>`).join('');
+    patchTabbar(tabs.map(([id, k, i]) =>
+      `<button class="tab ${state.view === id ? 'on' : ''}" data-act="${id === 'more' ? 'moreMenu' : 'go'}" data-v="${id}">
+        <span class="tab-ico">${i}${badgeHTML(id === 'more' ? moreCount : (by[id] || 0), 'tab-' + id)}</span><span>${t(k)}</span></button>`).join(''));
   }
 
   $('#sideFoot').innerHTML =
@@ -2155,17 +2290,17 @@ const viewKeyNow = () => state.mode + ':' + (state.mode === 'emp' ? (state.me &&
    opts.mutate：必须在「旧画面已截图之后」才执行的改动（比如切换深浅色） */
 function render(kind, opts = {}) {
   if (!kind) kind = viewKeyNow() === lastViewKey ? 'update' : 'none';
-  if (REDUCED && NAV_KINDS.has(kind)) kind = 'fade';
   const run = () => {
     try { opts.mutate && opts.mutate(); paint(kind, opts); } catch (e) { console.error(e); }
   };
-  if (!NAV_KINDS.has(kind) || !HAS_VT || document.hidden) return run();   // 后台标签页：没人在看，直接更新，别让 DOM 等下一帧
+  /* 只有换语言/深浅色用 View Transitions 做整屏交叉淡化；后台标签页直接更新 */
+  if (kind !== 'fade' || !HAS_VT || document.hidden) return run();
   const root = document.documentElement;
-  root.dataset.vt = kind;
+  root.dataset.vt = 'fade';
   let vt;
   try { vt = document.startViewTransition(run); }
   catch (e) { delete root.dataset.vt; return run(); }
-  vt.finished.finally(() => { if (root.dataset.vt === kind) delete root.dataset.vt; });
+  vt.finished.finally(() => { if (root.dataset.vt === 'fade') delete root.dataset.vt; });
 }
 
 function paint(kind, opts) {
@@ -2173,6 +2308,8 @@ function paint(kind, opts) {
   const sameView = viewKeyNow() === lastViewKey;
   const snap = kind === 'update' && sameView ? Motion.snapshot(opts.override) : null;
   const scroll = sameView && kind !== 'tab' && kind !== 'zoom' ? Motion.saveScroll() : null;
+  const ghost = PAGE_KINDS.has(kind) && !document.hidden ? Motion.capturePage() : null;
+  $('#page').style.transform = ''; $('#page').style.opacity = '';     // 清掉滑动翻周留下的位移
   renderNav();
   const v = state.mode === 'emp'
     ? (state.me && staffById(state.me) ? EVIEWS[state.eview] : EVIEWS.pick)
@@ -2185,8 +2322,9 @@ function paint(kind, opts) {
   lastViewKey = viewKeyNow();
   Motion.mountSegs(snap);
   if (snap) Motion.play(snap, opts);
-  else if (kind === 'tab') Motion.staggerIn();
-  if (!HAS_VT && NAV_KINDS.has(kind) && kind !== 'tab') Motion.fallbackIn(kind);
+  if (ghost) Motion.pageTransition(kind, ghost);
+  if ((kind === 'tab' || kind === 'zoom') && !Motion.seen.has(lastViewKey)) { Motion.seen.add(lastViewKey); Motion.firstVisit(); }
+  $('#page').style.touchAction = Motion.swipeEnabled() ? 'pan-y pinch-zoom' : '';
   Motion.syncScrollEdge();
 }
 
@@ -4004,7 +4142,8 @@ const ACT = {
       const now = nowHM();
       DB.punches.push({ id: uid(), shiftId: sh.id, staffId: s.id, date: TODAY, in: now, out: null, brk: sh.brk, via });
       save(); render();
-      if (navigator.vibrate) navigator.vibrate(10);
+      if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
+      Motion.pulse(document.querySelector('#page .big-btn'));
       const late = t2m(now) - t2m(sh.start) > DB.settings.lateGrace;
       toast(t('emp.clockInOK', { t: now }) + (late ? ' · ' + t('time.late') : ''), late ? 'warn' : 'ok');
     });
@@ -4013,7 +4152,8 @@ const ACT = {
     const s = me(), p = punchOf(s.id, TODAY); if (!p) return;
     punchGate(via => {
       p.out = nowHM(); p.outVia = via; save(); render();
-      if (navigator.vibrate) navigator.vibrate(10);
+      if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
+      Motion.pulse(document.querySelector('#page .big-btn'));
       toast(t('emp.clockOutOK', { t: p.out, h: hh(workedMin(s.id, TODAY) || 0) }));
     });
   },
@@ -4263,6 +4403,9 @@ addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { i
   render('none');
   markViewSeen(state.mode === 'emp' ? state.eview : state.view);
   render('none');
+  Motion.seen.add(lastViewKey);
+  Motion.firstVisit();
+  Motion.attachSwipe();
   /* 顶栏只在有内容滚到它下面时才显出分隔线 */
   const main = $('#main'); let ticking = false;
   main.addEventListener('scroll', () => {
