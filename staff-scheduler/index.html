@@ -113,7 +113,7 @@ button{border:0;background:none;padding:0;cursor:pointer}
 .card{background:var(--bg-elev);border-radius:var(--r-l);box-shadow:var(--shadow-1);padding:18px;position:relative;
   transition:box-shadow 200ms ease,transform 160ms var(--ease-out)}
 .card[data-act]:active{transform:scale(.99)}
-.card.pad0{padding:0;overflow:hidden}
+.card.pad0{padding:0;overflow:hidden;overflow:clip}   /* clip：裁圆角但不当滚动容器，里面的吸顶表头才吸得住 */
 .card-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .card-t{font-size:16px;font-weight:650;letter-spacing:-.015em}
 .card-s{font-size:12.5px;color:var(--label-2)}
@@ -210,11 +210,19 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
 .tbl .num{text-align:right}
 .tbl tfoot td{font-weight:700;background:var(--fill);border-top:1px solid var(--sep);border-bottom:0}
 .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* 吸顶 / 吸底条：跟着整页滚动钉在顶栏下面（或底栏上面），左右滚动和下面的表同步 */
+.xpin{position:sticky;top:var(--tb-h,0px);z-index:30;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+  scrollbar-width:none;background:var(--bg-elev)}
+.xpin::-webkit-scrollbar{display:none}
+.xpin.foot{top:auto;bottom:var(--tab-h,0px)}
+.tpin{pointer-events:none}
+.tpin .tbl{border-collapse:collapse}
+.ico{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em}
 
 /* ============ Schedule grid ============ */
-.sched-wrap{background:var(--bg-elev);border-radius:var(--r-l);box-shadow:var(--shadow-1);overflow:hidden}
-.sched{overflow:auto;overscroll-behavior:contain;max-height:calc(100dvh - 272px);min-height:300px}
-@media (max-width:900px){.sched{max-height:calc(100dvh - 244px)}}
+.sched-wrap{background:var(--bg-elev);border-radius:var(--r-l);box-shadow:var(--shadow-1);overflow:hidden;overflow:clip}
+/* 排班表只左右滚；上下滑交给整页，所以手指放在表上哪里都能往下翻 */
+.sched{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain}
 .sgrid{display:grid;grid-template-columns:var(--namecol) repeat(7,minmax(122px,1fr));min-width:960px}
 .sh{position:sticky;top:0;z-index:12;background:var(--bg-elev);padding:9px 10px;border-bottom:1px solid var(--sep);
   text-align:center;transition:background .2s;box-shadow:0 1px 0 var(--sep)}
@@ -371,6 +379,8 @@ textarea.inp{height:auto;padding:9px 11px;resize:vertical;min-height:64px}
   .app{display:block;height:auto}.main{overflow:visible}
   body{background:#fff}
   .card,.sched-wrap{box-shadow:none;border:1px solid #ddd}
+  .xpin.tpin{display:none}
+  .xpin{position:static}
 }
 
 /* ============ 通知 / 头像 / 打卡 ============ */
@@ -487,6 +497,12 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
    t('key', {vars}) — 缺失的键回退到中文
    ========================================================================= */
 const LANGS = { zh: '中文', en: 'English', ms: 'Bahasa Melayu' };
+/* 线条图标（跟文字同色、同粗细），代替按钮上的 emoji */
+const svgIco = d => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICON = {
+  wand: svgIco('<path d="M4.5 19.5 14 10"/><path d="m12.5 8.5 3 3"/><path d="M18.5 3v4M16.5 5h4M20 11.5v2.5M18.75 12.75h2.5M9.5 3.5v2.5M8.25 4.75h2.5"/>'),
+  cloud: svgIco('<path d="M7.5 18.5h9.75a4.25 4.25 0 0 0 .55-8.46A6.25 6.25 0 0 0 5.7 9.3a4.6 4.6 0 0 0 1.8 9.2z"/>'),
+};
 let LANG = 'en';
 
 const DOWS = {
@@ -529,7 +545,7 @@ const I18N = {
     'dash.gaps': '排班缺口', 'dash.gapsSub': '需求未排满的岗位', 'dash.noGaps': '本周需求已全部排满',
     'dash.short': '缺 {n} 人',
     'sched.sub': '拖动班次即可换人换天 · 点击班次编辑',
-    'sched.auto': '✨ 一键智能排班', 'sched.copy': '⧉ 复制上周', 'sched.clear': '清空',
+    'sched.auto': '一键智能排班', 'sched.copy': '⧉ 复制上周', 'sched.clear': '清空',
     'sched.weekHours': '周工时 {h}h', 'sched.cost': '人力成本 {v} · {p}%',
     'sched.gapCount': '缺口 {n} 人次', 'sched.filled': '需求已排满', 'sched.printBtn': '打印班表',
     'sched.colHead': '员工 / 日期', 'sched.dayCost': '日成本估算', 'sched.cell': '{n} 班 · {v}',
@@ -756,7 +772,7 @@ const I18N = {
     'dash.gaps': 'Open slots', 'dash.gapsSub': 'Roles that are not fully staffed', 'dash.noGaps': 'Every slot is filled',
     'dash.short': '{n} short',
     'sched.sub': 'Drag a shift to move it · tap to edit',
-    'sched.auto': '✨ Auto-schedule', 'sched.copy': '⧉ Copy last week', 'sched.clear': 'Clear',
+    'sched.auto': 'Auto-schedule', 'sched.copy': '⧉ Copy last week', 'sched.clear': 'Clear',
     'sched.weekHours': 'Week {h}h', 'sched.cost': 'Labor {v} · {p}%',
     'sched.gapCount': '{n} open slots', 'sched.filled': 'Fully staffed', 'sched.printBtn': 'Print schedule',
     'sched.colHead': 'Staff / Date', 'sched.dayCost': 'Daily cost', 'sched.cell': '{n} shifts · {v}',
@@ -983,7 +999,7 @@ const I18N = {
     'dash.gaps': 'Slot kosong', 'dash.gapsSub': 'Jawatan yang belum penuh', 'dash.noGaps': 'Semua slot telah diisi',
     'dash.short': 'kurang {n}',
     'sched.sub': 'Seret syif untuk tukar orang atau hari · ketik untuk sunting',
-    'sched.auto': '✨ Jadual auto', 'sched.copy': '⧉ Salin minggu lalu', 'sched.clear': 'Kosongkan',
+    'sched.auto': 'Jadual auto', 'sched.copy': '⧉ Salin minggu lalu', 'sched.clear': 'Kosongkan',
     'sched.weekHours': 'Minggu {h}j', 'sched.cost': 'Kos buruh {v} · {p}%',
     'sched.gapCount': '{n} slot kosong', 'sched.filled': 'Sudah penuh', 'sched.printBtn': 'Cetak jadual',
     'sched.colHead': 'Pekerja / Tarikh', 'sched.dayCost': 'Kos harian', 'sched.cell': '{n} syif · {v}',
@@ -2221,7 +2237,7 @@ const Motion = {
     };
     page.addEventListener('pointerdown', e => {
       if (e.pointerType !== 'touch' || !this.swipeEnabled()) return;
-      if (e.target.closest('.sched,.scrollx,input,select,textarea,.chip')) return;
+      if (e.target.closest('.sched,.scrollx,.xpin,input,select,textarea,.chip')) return;
       back && back.stop(); back = null;
       active = true; lock = null; id = e.pointerId; sx = lastX = e.clientX; sy = e.clientY; lastT = performance.now(); dx = 0; vx = 0;
     });
@@ -2404,6 +2420,82 @@ function renderNav() {
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
 }
 
+/* ---------------- 吸顶表头 ----------------
+   表格和排班表都在左右滚动的容器里，CSS 的 sticky 只能钉在那个容器上，整页往下滑就跟着走了。
+   所以把表头单独放一条 .xpin，钉在整页（#main）的顶栏下面，左右滚动跟下面的表同步。 */
+const Pin = {
+  ro: null,
+  mount(root) {
+    if (this.ro) this.ro.disconnect();
+    this.ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => this.measureAll()) : null;
+    root.querySelectorAll('.scrollx[data-pin]').forEach(sx => {
+      const tbl = sx.querySelector('table');
+      if (!tbl || !tbl.tHead) return;
+      const key = sx.dataset.pin;
+      sx.dataset.xsync = key;
+      if (!sx.dataset.scroll) sx.dataset.scroll = key;
+      const pin = document.createElement('div');
+      pin.className = 'xpin tpin'; pin.dataset.xsync = key; pin.dataset.scroll = key + 'Head';
+      pin.setAttribute('aria-hidden', 'true');
+      const copy = document.createElement('table');
+      copy.className = tbl.className;
+      copy.appendChild(document.createElement('colgroup'));
+      copy.appendChild(tbl.tHead.cloneNode(true));
+      copy.querySelectorAll('[id],[data-m],[data-mk],[data-act]').forEach(n => {
+        ['id', 'data-m', 'data-mk', 'data-act'].forEach(a => n.removeAttribute(a));
+      });
+      pin.appendChild(copy);
+      sx.parentNode.insertBefore(pin, sx);
+      if (this.ro) [...tbl.tHead.rows[0].cells].forEach(th => this.ro.observe(th));
+    });
+    this.measureAll();
+    this.bindSync(root);
+  },
+  /* 表头副本和原表逐列同宽，并用负外边距盖在原表头上：没滚动时看起来就是原来的表头 */
+  measureAll() {
+    document.querySelectorAll('#page .tpin').forEach(pin => {
+      const sx = pin.nextElementSibling, tbl = sx && sx.querySelector('table'), copy = pin.firstElementChild;
+      if (!tbl || !tbl.tHead || !copy) return;
+      const cells = [...tbl.tHead.rows[0].cells];
+      const h = tbl.tHead.getBoundingClientRect().height;
+      copy.style.width = tbl.getBoundingClientRect().width + 'px';
+      copy.style.tableLayout = 'fixed';
+      copy.firstElementChild.innerHTML = cells.map(c => `<col style="width:${c.getBoundingClientRect().width}px">`).join('');
+      pin.style.height = h + 'px';
+      pin.style.marginBottom = -h + 'px';
+      pin.scrollLeft = sx.scrollLeft;
+    });
+  },
+  /* 同一组（data-xsync 相同）的容器左右滚动互相跟随；自己设出去的值回来时不再转发，避免惯性滚动时来回拉扯 */
+  bindSync(root) {
+    const groups = {};
+    root.querySelectorAll('[data-xsync]').forEach(el => (groups[el.dataset.xsync] = groups[el.dataset.xsync] || []).push(el));
+    Object.values(groups).forEach(els => els.forEach(el => {
+      el._xset = null;
+      el.addEventListener('scroll', () => {
+        const x = el.scrollLeft;
+        if (el._xset != null && Math.abs(x - el._xset) < 1) { el._xset = null; return; }
+        el._xset = null;
+        els.forEach(o => { if (o !== el && Math.abs(o.scrollLeft - x) >= 1) { o._xset = x; o.scrollLeft = x; } });
+      }, { passive: true });
+    }));
+  },
+  /* 顶栏会换行（每个页面的按钮不一样多）、底栏只在手机上有：把它们的实际高度交给 CSS */
+  updateChrome() {
+    const st = document.documentElement.style, tb = $('#topbar'), tab = $('#tabbar');
+    st.setProperty('--tb-h', (tb ? tb.getBoundingClientRect().height : 0) + 'px');
+    st.setProperty('--tab-h', (tab && getComputedStyle(tab).display !== 'none' ? tab.getBoundingClientRect().height : 0) + 'px');
+  },
+  watchChrome() {
+    this.updateChrome();
+    if (typeof ResizeObserver === 'function') {
+      const ro = new ResizeObserver(() => this.updateChrome());
+      ro.observe($('#topbar')); ro.observe($('#tabbar'));
+    }
+    addEventListener('resize', () => this.updateChrome());
+  },
+};
+
 function go(v) {
   const same = state.mode === 'boss' && state.view === v;
   state.view = v; state.mode = 'boss'; dropNotifCache(); markViewSeen(v);
@@ -2454,6 +2546,8 @@ function paint(kind, opts) {
   $('#page').innerHTML = v.body();
   if (kind === 'tab' || kind === 'zoom') $('#main').scrollTop = 0;
   v.after && v.after();
+  Pin.updateChrome();                                // 换页面时顶栏高度立刻变，不等下一帧的 ResizeObserver
+  Pin.mount($('#page'));
   if (scroll) Motion.restoreScroll(scroll);         // 排班表内部的滚动位置不再每次操作都跳回顶部
   lastViewKey = viewKeyNow();
   Motion.mountSegs(snap);
@@ -2498,7 +2592,7 @@ const VIEWS = {}, EVIEWS = {};
    ========================================================================= */
 VIEWS.dash = {
   top: () => topbarHTML(t('nav.dash'), t('dash.sub', { biz: esc(DB.settings.biz), from: fmtMD(state.week), to: fmtMD(addDays(state.week, 6)) }),
-    `${weekNav()}<button class="btn pri" data-act="autoWeek">${t('sched.auto')}</button>`),
+    `${weekNav()}<button class="btn pri" data-act="autoWeek">${ICON.wand}${t('sched.auto')}</button>`),
   body() {
     const ws = state.week, we = addDays(ws, 6);
     const c = weekCost(ws), prev = weekCost(addDays(ws, -7));
@@ -2610,7 +2704,7 @@ VIEWS.sched = {
     `${weekNav()}
      <button class="btn" data-act="copyWeek">${t('sched.copy')}</button>
      <button class="btn" data-act="clearWeek">${t('sched.clear')}</button>
-     <button class="btn pri" data-act="autoWeek">${t('sched.auto')}</button>`),
+     <button class="btn pri" data-act="autoWeek">${ICON.wand}${t('sched.auto')}</button>`),
   body() {
     const ws = state.week;
     const days = rangeDays(ws, 7);
@@ -2670,10 +2764,11 @@ VIEWS.sched = {
       <button class="btn sm" data-act="printPage">${t('sched.printBtn')}</button>
     </div>
     <div class="sched-wrap">
-      <div class="sched" id="schedScroll" data-scroll="sched">
-        <div class="sgrid" style="--namecol:${nc}px">${head}${rows}</div>
-        <div class="costbar" style="--namecol:${nc}px">${costRow}</div>
+      <div class="xpin" data-scroll="schedHead" data-xsync="sched"><div class="sgrid" style="--namecol:${nc}px">${head}</div></div>
+      <div class="sched" id="schedScroll" data-scroll="sched" data-xsync="sched">
+        <div class="sgrid" style="--namecol:${nc}px">${rows}</div>
       </div>
+      <div class="xpin foot" data-scroll="schedFoot" data-xsync="sched"><div class="costbar" style="--namecol:${nc}px">${costRow}</div></div>
     </div>
     <div class="hint" style="margin-top:12px">${t('sched.hint')}</div>`;
   },
@@ -2886,7 +2981,7 @@ VIEWS.time = {
       ${statCard(t('time.lateEarly'), `${tot('late')} / ${tot('early')}`, t('time.grace', { n: DB.settings.lateGrace }))}
       ${statCard(t('time.missing'), String(tot('miss')), tot('miss') ? t('time.missHint') : t('time.complete'))}
     </div>
-    <div class="card pad0"><div class="scrollx"><table class="tbl">
+    <div class="card pad0"><div class="scrollx" data-pin="time"><table class="tbl">
       <thead><tr><th>${t('c.staff')}</th><th>${t('c.role')}</th><th class="num">${t('time.sched')}</th>
         <th class="num">${t('time.actual')}</th><th class="num">${t('time.diff')}</th>
         <th class="num">${t('time.late')}</th><th class="num">${t('time.early')}</th>
@@ -3012,7 +3107,7 @@ VIEWS.pay = {
       <div class="rowline" style="flex-wrap:wrap;gap:8px"><span class="pill o">${t('pay.missWarn', { n: P.tot.missing })}</span>
       <span class="hint">${t('pay.missHint')}</span>
       <div class="spacer"></div><button class="btn sm" data-act="go" data-v="time">${t('pay.goFix')}</button></div></div>` : ''}
-    <div class="card pad0"><div class="scrollx"><table class="tbl">
+    <div class="card pad0"><div class="scrollx" data-pin="pay"><table class="tbl">
       <thead><tr><th>${t('c.staff')}</th><th>${t('pay.method')}</th><th class="num">${t('pay.reg')}</th><th class="num">${t('pay.ot')}</th>
         ${extraCols ? `<th class="num">${t('pay.restDay')}</th><th class="num">${t('pay.ph')}</th>` : ''}
         <th class="num">${t('pay.base')}</th><th class="num">${t('pay.otPay')}</th><th class="num">${t('pay.tips')}</th>
@@ -3473,7 +3568,7 @@ VIEWS.set = {
         </div>` : ''}
 
         <div class="sec-t">${t('set.demand')}</div>
-        <div class="card pad0" style="margin-bottom:16px"><div class="scrollx"><table class="tbl">
+        <div class="card pad0" style="margin-bottom:16px"><div class="scrollx" data-pin="demand"><table class="tbl">
           <thead><tr><th>${t('set.dayCol')}</th><th>${t('set.blockCol')}</th>
             ${Object.keys(ROLES).map(r => `<th class="num">${roleName(r)}</th>`).join('')}</tr></thead>
           <tbody>${[1, 2, 3, 4, 5, 6, 0].map(d => (DB.demand[d] || []).map((blk, bi) => {
@@ -4657,7 +4752,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 't' || e.key === 'T') { state.week = weekStartOf(TODAY); render('none'); }
 });
 let rzT;
-addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (state.mode === 'boss' && state.view === 'sched') render('none'); else Motion.mountSegs(null); }, 220); });
+addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (state.mode === 'boss' && state.view === 'sched') render('none'); else { Motion.mountSegs(null); Pin.measureAll(); } }, 220); });
 
 /* =========================================================================
    云同步（Supabase）· 数据库那边的代码在 supabase.sql
@@ -5058,12 +5153,12 @@ function syncSectionHTML() {
       <div class="row-r"><button class="btn sm pri" data-act="syncSetup">${t('sync.setup')}</button></div></div>`;
   } else if (!Cloud.linked()) {
     rows = `<div class="row stack"><div class="row-m"><div class="row-t">${t('sync.title')}</div>${wrap(t('sync.offSub'))}</div>
-        <div class="row-r"><button class="btn sm pri" data-act="syncCreate">☁︎ ${t('sync.create')}</button>
+        <div class="row-r"><button class="btn sm pri" data-act="syncCreate">${ICON.cloud}${t('sync.create')}</button>
           <button class="btn sm" data-act="syncLink">${t('sync.link')}</button></div></div>
       ${CLOUD.url ? '' : `<div class="row tap" data-act="syncSetup"><div class="row-m"><div class="row-t">${t('sync.cfgTitle')}</div>
         <div class="row-s">${esc(Cloud.cfgRaw().url)}</div></div><span class="chev">›</span></div>`}`;
   } else {
-    rows = `<div class="row"><div class="row-m"><div class="row-t">☁︎ ${t('sync.title')}</div>
+    rows = `<div class="row"><div class="row-m"><div class="row-t">${ICON.cloud} ${t('sync.title')}</div>
           <div class="row-s" data-sync-status>${Cloud.statusText()}</div></div>
         <div class="row-r"><button class="btn sm" data-act="syncNow">${t('sync.now')}</button></div></div>
       <div class="row tap" data-act="syncJoinShow"><div class="row-m"><div class="row-t">${t('sync.staffJoin')}</div>${wrap(t('sync.staffJoinSub'))}</div><span class="chev">›</span></div>
@@ -5171,7 +5266,8 @@ async function joinFromLink(p) {
     if (ticking) return; ticking = true;
     requestAnimationFrame(() => { ticking = false; Motion.syncScrollEdge(); });
   }, { passive: true });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => Motion.mountSegs(null));
+  Pin.watchChrome();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Motion.mountSegs(null); Pin.measureAll(); });
 })();
 </script>
 </body>
