@@ -41,6 +41,11 @@ create or replace function public.pulse__valid(p jsonb) returns boolean
 language sql immutable set search_path = pg_catalog, public
 as $$ select coalesce(p is not null and jsonb_typeof(p) = 'object' and jsonb_typeof(p->'entries') = 'array' and octet_length(p::text) <= 5000000, false) $$;
 
+-- data format version stored in the document as "fv" (missing = 1)
+create or replace function public.pulse__fv(p jsonb) returns int
+language sql immutable set search_path = pg_catalog, public
+as $$ select case when (p->>'fv') ~ '^[0-9]{1,4}$' then (p->>'fv')::int else 1 end $$;
+
 create or replace function public.pulse_create(p_data jsonb) returns jsonb
 language plpgsql security definer set search_path = public
 as $$
@@ -77,6 +82,11 @@ begin
   select * into r from pulse_vaults where key_hash = pulse__hash(p_key) for update;
   if not found then return jsonb_build_object('error', 'bad_key'); end if;
   if not pulse__valid(p_data) then return jsonb_build_object('error', 'bad_data'); end if;
+  -- an outdated page (older data format) must not overwrite data written by a newer one:
+  -- it would silently drop fields it does not know about
+  if pulse__fv(r.data) > pulse__fv(p_data) then
+    return jsonb_build_object('error', 'outdated', 'version', r.version);
+  end if;
   if r.version <> p_base then
     return jsonb_build_object('error', 'conflict', 'data', r.data, 'version', r.version);
   end if;
@@ -128,7 +138,7 @@ begin
   return jsonb_build_object('key', r.sync_key);
 end $$;
 
-revoke all on function public.pulse__hash(text), public.pulse__valid(jsonb) from public, anon, authenticated;
+revoke all on function public.pulse__hash(text), public.pulse__valid(jsonb), public.pulse__fv(jsonb) from public, anon, authenticated;
 revoke all on function public.pulse_create(jsonb), public.pulse_version(text), public.pulse_pull(text),
   public.pulse_push(text, jsonb, bigint), public.pulse_pair_start(text), public.pulse_pair_claim(text) from public;
 grant execute on function public.pulse_create(jsonb), public.pulse_version(text), public.pulse_pull(text),

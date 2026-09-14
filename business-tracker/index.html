@@ -81,6 +81,31 @@ svg{display:block}
 .pill{position:relative;z-index:1;border:0;background:var(--fill);color:var(--text);border-radius:99px;height:32px;padding:0 12px;
   font-size:14px;font-weight:600;transition:transform .15s var(--ease)}
 .pill:active{transform:scale(.94)}
+/* names you can tap to rename — no extra button */
+.ename{border-radius:6px;padding:0 3px;margin:0 -3px;cursor:text;outline:none;transition:background-color .2s ease,box-shadow .2s ease;-webkit-user-select:text;user-select:text}
+.ename:hover{background:var(--fill2)}
+.ename:focus{background:var(--fill);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 35%,transparent);text-overflow:clip}
+.row.tap{cursor:pointer}
+.mview{margin:0 0 14px}
+.vtag{display:inline-block;font-size:11px;font-weight:600;color:var(--purple);background:color-mix(in srgb,var(--purple) 12%,transparent);border-radius:99px;padding:0 6px;margin-right:6px;letter-spacing:0;vertical-align:1px}
+/* A/B test comparison */
+.test .tt1{font-size:17px;letter-spacing:-.02em}
+.tscroll{overflow-x:auto;margin:10px -4px 0;padding:0 4px}
+.ttable{width:100%;border-collapse:collapse}
+.ttable th{font-size:13px;font-weight:600;color:var(--text2);text-align:right;padding:6px 8px;white-space:nowrap;letter-spacing:-.005em}
+.ttable th:first-child,.ttable td:first-child{text-align:left;padding-left:0}
+.ttable td{padding:10px 8px;text-align:right;vertical-align:top;box-shadow:0 -.5px 0 var(--sep) inset;box-shadow:none;border-top:.5px solid var(--sep)}
+.ttable td:first-child{font-size:15px;min-width:118px;letter-spacing:-.015em}
+.ttable tr.tn td{font-size:13px;border-top:0;padding-top:4px;padding-bottom:6px}
+.ttable .tv{font-size:16px;font-weight:600;letter-spacing:-.015em}
+.ttable .tsub{font-size:11px;color:var(--text3);letter-spacing:0}
+.ttable td.best .tv{color:var(--blue)}
+.ttable .tbar{display:block;height:3px;border-radius:2px;background:var(--fill);margin:5px 0 0 auto;width:56px;position:relative;overflow:hidden;color:var(--text3)}
+.ttable .tbar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:currentColor;border-radius:2px;transition:width .6s var(--ease)}
+.ttable td.best .tbar{color:var(--blue)}
+.tbadge{display:inline-block;margin-top:5px;font-size:11px;font-weight:600;padding:1px 7px;border-radius:99px;background:var(--fill2);color:var(--text2);letter-spacing:0;white-space:nowrap}
+.tbadge.sig{color:var(--green);background:color-mix(in srgb,var(--green-t) 15%,transparent)}
+.tbadge.small{color:var(--orange);background:color-mix(in srgb,var(--orange) 12%,transparent)}
 #syncBtn{color:var(--text2)}
 #syncBtn i{position:absolute;right:4px;bottom:5px;width:9px;height:9px;border-radius:50%;background:var(--text3);box-shadow:0 0 0 2px var(--bg);transition:background-color .3s ease}
 #syncBtn[data-s="idle"] i{background:var(--green-t)}
@@ -366,7 +391,7 @@ const I18N = {
     'period.vs':'vs {x}','period.vsToDate':'vs same days of {x}','period.allTime':'All time','period.thisWeek':'This week','period.lastWeek':'Last week',
     'save':'Save','cancel':'Cancel','done':'Done','add':'Add','undo':'Undo','today':'Today','yesterday':'Yesterday','confirm':'Confirm','delete':'Delete',
 
-    'stage.leads':'Leads','stage.contacted':'Contacted','stage.replied':'Replied','stage.meeting':'Meetings','stage.proposal':'Proposals','stage.won':'Won',
+    'stage.leads':'Leads','stage.contacted':'Contacted','stage.opened':'Opened','stage.replied':'Replied','stage.meeting':'Meetings','stage.proposal':'Proposals','stage.won':'Won',
     'f.revNew':'New-client revenue','f.revRec':'Recurring revenue','f.mkt':'Marketing & ads','f.sales':'Sales & tools',
     'f.cogs':'Delivery cost','f.opex':'Other expenses','f.churned':'Clients lost',
     'fh.revNew':'Paid by clients you won','fh.revRec':'Retainers, renewals, repeat buys','fh.mkt':'Ads, boosts, lead lists',
@@ -374,7 +399,7 @@ const I18N = {
     'fh.churned':'Clients who cancelled or didn’t renew',
 
     'g.funnel':'Funnel','g.acq':'Acquisition','g.money':'Revenue & profit','g.ret':'Retention & value','g.custom':'Custom','g.inputs':'Raw numbers',
-    'm.revenue':'Revenue','m.newCust':'New clients','m.convOverall':'Lead → client','m.cpl':'Cost per lead','m.cpm':'Cost per meeting',
+    'm.revenue':'Revenue','m.newCust':'New clients','m.convOverall':'Overall conversion','m.cpl':'Cost per lead','m.cpm':'Cost per meeting',
     'm.cac':'CAC','m.avgDeal':'Avg deal size','m.roas':'ROAS','m.mktRoi':'Acquisition ROI','m.grossProfit':'Gross profit',
     'm.grossMargin':'Gross margin','m.totalCost':'Total costs','m.netProfit':'Net profit','m.netMargin':'Net margin',
     'm.active':'Active clients','m.arpa':'Revenue per client / mo','m.churnRate':'Monthly churn','m.ltv':'LTV','m.ltvCac':'LTV : CAC','m.payback':'CAC payback','m.life':'Client lifetime (1 ÷ churn)',
@@ -459,7 +484,33 @@ const I18N = {
     's.imported':'Backup imported','s.bad':'That file isn’t a valid backup','s.erased':'All data erased','s.sampled':'Sample data loaded',
     's.privacy':'Every change is saved on this device instantly. Cloud sync (above) keeps a copy online for your other devices; a backup file is extra insurance.',
     's.kbd':'Shortcuts','s.kbdF':'N  new entry  ·  1–5  switch tabs  ·  ← →  previous / next period  ·  Esc  close',
-    's.moveUp':'Move up','s.moveDown':'Move down',
+    's.moveUp':'Move up','s.moveDown':'Move down','edit':'Edit',
+
+    'term.contacted':'Contact rate','term.opened':'Open rate','term.replied':'Reply rate','term.meeting':'Booking rate',
+    'term.proposal':'Proposal rate','term.won':'Close rate',
+
+    'mv.tabMetrics':'Metrics','mv.tabTests':'A/B tests',
+    'tv.new':'New test','tv.edit':'Edit test','tv.name':'Name','tv.namePh':'e.g. Email opener',
+    'tv.variants':'Variants','tv.variantPh':'e.g. Compliment opener','tv.addVariant':'Add variant',
+    'tv.variantsF':'Pick the variant when you log numbers. Numbers logged under a variant still count toward your totals.',
+    'tv.delete':'Delete test','tv.deleted':'Test deleted',
+    'tv.delQ':'Delete this test? Numbers already logged stay in your totals — they just won’t be compared by variant anymore.',
+    'tv.empty.h':'Find out what actually works',
+    'tv.empty.p':'Test different openers, subject lines or offers. Log numbers under each variant and Pulse compares open, reply and close rates side by side — and tells you when a difference is real.',
+    'tv.noData':'Nothing logged for this test in this period yet. In Log, pick a variant, then tap +.',
+    'tv.count':'{s}','tv.sig':'{v} wins · 95% confidence','tv.tie':'No clear winner yet','tv.small':'Too few to tell',
+    'tv.foot':'A winner is called with a two-proportion z-test (95% confidence) between the best and runner-up variant, and only once both have at least 30 in the base number.',
+    'tv.variant':'Test variant','tv.none':'No variant','tv.gone':'Deleted variant',
+    'log.qvHint':'Logged under this variant — and counted in your totals.',
+
+    'sync.st.outdated':'Pulse was updated — refresh this page',
+    'sync.askQ':'Does another device already sync?','sync.askF':'If it does, connect to it instead — otherwise you’ll end up with two separate copies that don’t sync with each other.',
+    'sync.askYes':'Yes — connect to it','sync.askNo':'No — this is my first device',
+    'sync.choiceQ':'This device already has data. What should happen to it?','sync.thisDevice':'This device','sync.cloud':'Cloud',
+    'sync.counts':'{e} entries · {g} goals','sync.merge':'Merge both',
+    'sync.mergeF':'Keeps everything from both sides. This device’s data is uploaded too.',
+    'sync.replace':'Use the cloud data here',
+    'sync.replaceF':'This device becomes an exact copy of the cloud; nothing in the cloud changes. A copy of this device’s old data is kept on it.',
 
     'sync.title':'Cloud sync','sync.enable':'Turn on cloud sync','sync.enableSub':'Your computer and phone stay in sync automatically',
     'sync.join':'Join an existing sync','sync.joinSub':'Already on another device? Enter its pairing code',
@@ -490,7 +541,7 @@ const I18N = {
     'period.vs':'对比 {x}','period.vsToDate':'对比 {x} 同期','period.allTime':'全部时间','period.thisWeek':'本周','period.lastWeek':'上周',
     'save':'保存','cancel':'取消','done':'完成','add':'添加','undo':'撤销','today':'今天','yesterday':'昨天','confirm':'确认','delete':'删除',
 
-    'stage.leads':'新线索','stage.contacted':'已触达','stage.replied':'已回复','stage.meeting':'会议 / 通话','stage.proposal':'已报价','stage.won':'成交',
+    'stage.leads':'新线索','stage.contacted':'已触达','stage.opened':'已打开','stage.replied':'已回复','stage.meeting':'会议 / 通话','stage.proposal':'已报价','stage.won':'成交',
     'f.revNew':'新客户收入','f.revRec':'续费 / 老客户收入','f.mkt':'营销与广告','f.sales':'销售与工具',
     'f.cogs':'交付成本','f.opex':'其他支出','f.churned':'流失客户',
     'fh.revNew':'本期新成交客户付的钱','fh.revRec':'月费、续约、回头客','fh.mkt':'广告、推广、购买线索',
@@ -498,7 +549,7 @@ const I18N = {
     'fh.churned':'取消合作或没有续约的客户',
 
     'g.funnel':'转化漏斗','g.acq':'获客','g.money':'收入与利润','g.ret':'留存与价值','g.custom':'自定义','g.inputs':'原始数据',
-    'm.revenue':'总收入','m.newCust':'新客户','m.convOverall':'线索 → 客户','m.cpl':'单条线索成本','m.cpm':'单次会议成本',
+    'm.revenue':'总收入','m.newCust':'新客户','m.convOverall':'总转化率','m.cpl':'单条线索成本','m.cpm':'单次会议成本',
     'm.cac':'获客成本 CAC','m.avgDeal':'平均客单价','m.roas':'广告回报 ROAS','m.mktRoi':'获客投资回报','m.grossProfit':'毛利',
     'm.grossMargin':'毛利率','m.totalCost':'总成本','m.netProfit':'净利润','m.netMargin':'净利率',
     'm.active':'活跃客户','m.arpa':'每客户月均收入','m.churnRate':'月流失率','m.ltv':'客户终身价值 LTV','m.ltvCac':'LTV : CAC','m.payback':'CAC 回本周期','m.life':'客户生命周期（1 ÷ 流失率）',
@@ -583,7 +634,33 @@ const I18N = {
     's.imported':'已导入备份','s.bad':'这不是有效的备份文件','s.erased':'已清除所有数据','s.sampled':'已载入示例数据',
     's.privacy':'每次改动都会立刻保存在这台设备上。开启上面的云同步后，云端也有一份，其他设备都能用；导出备份文件是额外的保险。',
     's.kbd':'快捷键','s.kbdF':'N  新记录  ·  1–5  切换页面  ·  ← →  上一期 / 下一期  ·  Esc  关闭',
-    's.moveUp':'上移','s.moveDown':'下移',
+    's.moveUp':'上移','s.moveDown':'下移','edit':'编辑',
+
+    'term.contacted':'触达率','term.opened':'打开率','term.replied':'回复率','term.meeting':'约见率',
+    'term.proposal':'报价率','term.won':'成交率',
+
+    'mv.tabMetrics':'指标','mv.tabTests':'A/B 测试',
+    'tv.new':'新建测试','tv.edit':'编辑测试','tv.name':'名称','tv.namePh':'例如：开场白',
+    'tv.variants':'版本','tv.variantPh':'例如：赞美式开场','tv.addVariant':'添加版本',
+    'tv.variantsF':'记录数据时选择版本。记在版本下的数字同样计入总数。',
+    'tv.delete':'删除测试','tv.deleted':'已删除测试',
+    'tv.delQ':'删除这个测试？已记录的数字仍会计入总数，只是不再按版本对比。',
+    'tv.empty.h':'找出真正有效的做法',
+    'tv.empty.p':'测试不同的开场白、邮件标题或报价方案。在每个版本下记录数字，Pulse 会并排对比打开率、回复率、成交率，并告诉你差距是不是真的。',
+    'tv.noData':'这段时间还没有这个测试的数据。去「记录」选择版本，再点 +。',
+    'tv.count':'{s}','tv.sig':'{v} 胜出 · 95% 置信','tv.tie':'差距还不显著','tv.small':'样本太少',
+    'tv.foot':'胜出的判断用双比例 z 检验（95% 置信）比较最好和第二好的版本，并且两者的基数都至少 30 才会下结论。',
+    'tv.variant':'测试版本','tv.none':'不分版本','tv.gone':'已删除的版本',
+    'log.qvHint':'记在这个版本下，同时计入总数。',
+
+    'sync.st.outdated':'Pulse 已更新，请刷新页面',
+    'sync.askQ':'另一台设备已经开过云同步了吗？','sync.askF':'如果开过，请连接那台设备的同步；否则会变成两份互不相通的数据。',
+    'sync.askYes':'开过，去连接','sync.askNo':'没有，这是第一台设备',
+    'sync.choiceQ':'这台设备上已经有数据，要怎么处理？','sync.thisDevice':'这台设备','sync.cloud':'云端',
+    'sync.counts':'{e} 条记录 · {g} 个目标','sync.merge':'合并两边的数据',
+    'sync.mergeF':'两边的数据都保留，这台设备的数据也会上传到云端。',
+    'sync.replace':'用云端数据替换这台设备',
+    'sync.replaceF':'这台设备变成和云端一模一样，云端一条都不会变。这台设备原来的数据会在本机另存一份。',
 
     'sync.title':'云同步','sync.enable':'开启云同步','sync.enableSub':'电脑和手机自动同步，数据保存在云端',
     'sync.join':'连接已有同步','sync.joinSub':'另一台设备已经开启？输入它的配对码',
@@ -628,7 +705,11 @@ const div = (a, b) => (b ? a / b : null);
 const parseNum = s => { const n = parseFloat(String(s ?? '').replace(/[,\s]/g, '')); return isFinite(n) ? n : 0; };
 
 const MONEY_FIELDS = ['revNew', 'revRec', 'mkt', 'sales', 'cogs', 'opex'];
-const DEFAULT_STAGES = ['leads', 'contacted', 'replied', 'meeting', 'proposal', 'won'];
+const DEFAULT_STAGES = ['leads', 'contacted', 'opened', 'replied', 'meeting', 'proposal', 'won'];
+const DATA_FV = 2;   // data format version; the server refuses pushes from pages that write an older one
+/* one entry per day per test variant ("t"); untagged entries keep the plain date as their key */
+const entryKey = e => e.t ? e.date + '|' + e.t : e.date;
+const byEntry = (a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.t || '') < (b.t || '') ? -1 : (a.t || '') > (b.t || '') ? 1 : 0;
 const PERIODS = ['week', 'month', 'quarter', 'year', 'all'];
 
 function defaultDB() {
@@ -636,8 +717,8 @@ function defaultDB() {
     v: 1,
     settings: { lang: null, currency: '$', theme: 'auto', biz: '', startCust: 0, lifeCap: 36 },
     stages: DEFAULT_STAGES.map(id => ({ id })),
-    entries: [], goals: [], custom: [],
-    su: 0, setu: 0, del: { e: {}, g: {}, c: {} }
+    entries: [], goals: [], custom: [], tests: [], names: {},
+    fv: DATA_FV, su: 0, setu: 0, nu: 0, del: { e: {}, g: {}, c: {}, t: {} }
   };
 }
 let DB = defaultDB();
@@ -651,20 +732,27 @@ function normalize(d) {
   if (!d || typeof d !== 'object' || !Array.isArray(d.entries)) throw new Error('invalid');
   const base = defaultDB();
   const stages = Array.isArray(d.stages) ? d.stages.filter(s => s && s.id).map(s => ({ id: String(s.id), ...(s.label ? { label: String(s.label) } : {}) })) : [];
-  const byDate = new Map();
+  const byKey = new Map();
   for (const e of d.entries) {
     if (!e || !/^\d{4}-\d{2}-\d{2}$/.test(e.date)) continue;
     const vals = cleanVals(e.v);
-    const prev = byDate.get(e.date);
-    if (prev) { for (const k in vals) prev.v[k] = (prev.v[k] || 0) + vals[k]; if (e.note) prev.note = [prev.note, e.note].filter(Boolean).join(' · '); }
-    else byDate.set(e.date, { id: String(e.id || uid()), date: e.date, v: vals, note: e.note ? String(e.note) : '', u: +e.u || 0 });
+    const rec = { id: String(e.id || uid()), date: e.date, v: vals, note: e.note ? String(e.note) : '', u: +e.u || 0, ...(e.t ? { t: String(e.t) } : {}) };
+    const prev = byKey.get(entryKey(rec));
+    if (prev) { for (const k in vals) prev.v[k] = (prev.v[k] || 0) + vals[k]; if (rec.note) prev.note = [prev.note, rec.note].filter(Boolean).join(' · '); }
+    else byKey.set(entryKey(rec), rec);
   }
+  const names = {};
+  if (d.names && typeof d.names === 'object') for (const k in d.names) { const s = String(d.names[k] || '').trim().slice(0, 60); if (s) names[k] = s; }
   return {
-    v: 1,
+    v: 1, fv: DATA_FV,
     settings: { ...base.settings, ...(d.settings || {}) },
     stages: stages.length >= 2 ? stages : base.stages,
-    entries: [...byDate.values()].sort((a, b) => a.date < b.date ? -1 : 1),
-    su: +d.su || 0, setu: +d.setu || 0, del: cleanDel(d.del),
+    entries: [...byKey.values()].sort(byEntry),
+    su: +d.su || 0, setu: +d.setu || 0, nu: +d.nu || 0, del: cleanDel(d.del), names,
+    tests: (d.tests || []).filter(x => x && x.id && Array.isArray(x.variants)).map(x => ({
+      id: String(x.id), name: String(x.name || ''), u: +x.u || 0,
+      variants: x.variants.filter(v => v && v.id).map(v => ({ id: String(v.id), name: String(v.name || '') }))
+    })),
     goals: (d.goals || []).filter(g => g && g.metric).map(g => ({
       id: String(g.id || uid()), metric: String(g.metric), u: +g.u || 0,
       period: ['week', 'month', 'quarter', 'year'].includes(g.period) ? g.period : 'month', target: +g.target || 0
@@ -683,7 +771,7 @@ function save() { try { localStorage.setItem(LSKEY, JSON.stringify(DB)); } catch
 /* every data mutation goes through commit(): sort, drop caches, stamp what changed (for sync),
    persist locally, then queue a cloud push */
 function commit() {
-  DB.entries.sort((a, b) => a.date < b.date ? -1 : 1);
+  DB.entries.sort(byEntry);
   ctxCache.clear();
   stamp();
   save();
@@ -761,13 +849,15 @@ const stageName = s => s.label || t('stage.' + s.id);
 const stageById = id => DB.stages.find(s => s.id === id);
 function inputKeys() { return [...DB.stages.map(s => s.id), ...MONEY_FIELDS, 'churned']; }
 
-function sumRange(from, to) {
+/* totals include every entry; pass a variant id to sum only that A/B test variant */
+function sumRange(from, to, variant) {
   const S = {};
   for (const k of inputKeys()) S[k] = 0;
   let n = 0;
   for (const e of DB.entries) {
     if (e.date < from) continue;
     if (e.date > to) break;
+    if (variant && e.t !== variant) continue;
     n++;
     for (const k in e.v) if (k in S) S[k] += e.v[k];
   }
@@ -816,9 +906,18 @@ function unit(c) {
   return { arpa, churn, gm, cac, life, ltv };
 }
 
+/* standard names for a conversion step between two known stages */
+const TERMS = {
+  'leads>contacted': 'term.contacted', 'contacted>opened': 'term.opened', 'opened>replied': 'term.replied', 'contacted>replied': 'term.replied',
+  'replied>meeting': 'term.meeting', 'meeting>proposal': 'term.proposal', 'proposal>won': 'term.won', 'meeting>won': 'term.won'
+};
+const convTerm = (a, b) => TERMS[a + '>' + b] ? t(TERMS[a + '>' + b]) : '';
+
 function rebuildMetrics() {
   const L = [];
-  const add = m => L.push({ better: 'up', additive: false, fmt: 'num', desc: () => t('md.' + m.key), formula: () => t('mf.' + m.key), ...m });
+  // a name the user typed (DB.names) wins over the built-in one
+  const add = m => L.push({ better: 'up', additive: false, fmt: 'num', desc: () => t('md.' + m.key), formula: () => t('mf.' + m.key), ...m,
+    baseName: m.name, name: () => (DB.names && DB.names[m.key]) || m.name() });
   const st = DB.stages, won = wonStage(), first = firstStage();
   const sn = id => stageName(stageById(id));
   const fv = { first: () => sn(first), last: () => sn(won) };
@@ -830,7 +929,7 @@ function rebuildMetrics() {
     calc: c => div(c.S[won], c.S[first]), parts: c => [[sn(won), c.S[won], 'num'], [sn(first), c.S[first], 'num']] });
   for (let i = 1; i < st.length; i++) {
     const a = st[i - 1].id, b = st[i].id;
-    add({ key: 'conv:' + b, group: 'funnel', fmt: 'pct', name: () => `${sn(a)} → ${sn(b)}`,
+    add({ key: 'conv:' + b, group: 'funnel', fmt: 'pct', name: () => convTerm(a, b) || `${sn(a)} → ${sn(b)}`,
       formula: () => t('mf.conv', { a: sn(a), b: sn(b) }), desc: () => t('md.conv', { a: sn(a), b: sn(b) }),
       calc: c => div(c.S[b], c.S[a]), parts: c => [[sn(b), c.S[b], 'num'], [sn(a), c.S[a], 'num']] });
   }
@@ -881,7 +980,7 @@ function rebuildMetrics() {
     calc: c => { const u = unit(c); return u.cac != null && u.arpa && u.gm > 0 ? u.cac / (u.arpa * u.gm) : null; },
     parts: c => { const u = unit(c); return [[t('m.cac'), u.cac, 'money'], [t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct']]; } });
 
-  for (const s of st) add({ key: s.id, group: 'inputs', additive: true, name: () => stageName(stageById(s.id)) || s.id,
+  for (const s of st) add({ key: s.id, group: 'inputs', additive: true, stage: s.id, name: () => stageName(stageById(s.id)) || s.id,
     formula: () => '', desc: () => '', calc: c => c.S[s.id] ?? 0, parts: () => [] });
   for (const f of MONEY_FIELDS) add({ key: f, group: 'inputs', fmt: 'money', additive: true, better: ['mkt', 'sales', 'cogs', 'opex'].includes(f) ? 'down' : 'up',
     name: () => t('f.' + f), formula: () => '', desc: () => t('fh.' + f), calc: c => c.S[f], parts: () => [] });
@@ -1015,17 +1114,30 @@ function sampleDB() {
   d.settings = { ...DB.settings, biz: DB.settings.biz || (LANG === 'zh' ? 'Y-Studio 社媒设计' : 'Y-Studio'), startCust: 4, lifeCap: 36 };
   const days = 210, start = addDays(today(), -days + 1);
   let active = 4, accM = 0, accP = 0, accW = 0, prevMonthRev = 0, monthRev = 0;
+  const vA = uid(), vB = uid();   // sample A/B test: two email openers over the last 6 weeks
   for (let i = 0; i < days; i++) {
     const date = addDays(start, i), dt = parseD(date), dow = dt.getDay(), g = 0.6 + 0.75 * (i / days);
     const v = {};
     const weekend = dow === 0 || dow === 6;
     const leads = Math.round((weekend ? R(0, 6) : R(18, 34)) * g);
     const contacted = Math.round(leads * R(.74, .93));
-    const replied = Math.round(contacted * R(.05, .11));
+    const split = i >= days - 42 && !weekend && contacted > 1;
+    let opened, replied;
+    if (split) {
+      const cA = Math.floor(contacted / 2), cB = contacted - cA;
+      const oA = Math.round(cA * R(.4, .5)), oB = Math.round(cB * R(.56, .68));
+      const rA = Math.round(oA * R(.07, .13)), rB = Math.round(oB * R(.12, .2));
+      d.entries.push({ id: uid(), date, t: vA, v: cleanVals({ contacted: cA, opened: oA, replied: rA }), note: '' });
+      d.entries.push({ id: uid(), date, t: vB, v: cleanVals({ contacted: cB, opened: oB, replied: rB }), note: '' });
+      opened = oA + oB; replied = rA + rB;
+    } else {
+      opened = Math.round(contacted * R(.45, .62));
+      replied = Math.round(opened * R(.1, .17));
+    }
     accM += replied * R(.28, .5); const meeting = Math.floor(accM); accM -= meeting;
     accP += meeting * R(.5, .75); const proposal = Math.floor(accP); accP -= proposal;
     accW += proposal * R(.3, .5); const won = Math.floor(accW); accW -= won;
-    Object.assign(v, { leads, contacted, replied, meeting, proposal, won });
+    Object.assign(v, split ? { leads, meeting, proposal, won } : { leads, contacted, opened, replied, meeting, proposal, won });
     if (won) { v.revNew = won * Math.round(R(900, 1900) / 50) * 50; v.sales = Math.round(v.revNew * 0.1); v.cogs = Math.round(v.revNew * R(.22, .32)); }
     if (!weekend) v.mkt = Math.round(R(35, 85) * g);
     if (dt.getDate() === 1) {
@@ -1047,6 +1159,8 @@ function sampleDB() {
     { id: uid(), metric: 'leads', period: 'week', target: 150 }
   ];
   d.custom = [{ id: uid(), name: LANG === 'zh' ? '每次会议带来的收入' : 'Revenue per meeting', a: 'revenue', b: 'meeting', fmt: 'money', better: 'up' }];
+  d.tests = [{ id: uid(), name: LANG === 'zh' ? '开场白' : 'Email opener', variants: [
+    { id: vA, name: LANG === 'zh' ? '赞美式' : 'Compliment' }, { id: vB, name: LANG === 'zh' ? '痛点式' : 'Pain point' }] }];
   return d;
 }
 
@@ -1147,7 +1261,8 @@ const ICON = {
   cloudOff: '<path d="M7.5 18.5h9.5a4 4 0 0 0 .5-7.97 6 6 0 0 0-11.6-1.3A4.6 4.6 0 0 0 7.5 18.5z"/><path d="M4 4l16 16"/>',
   link: '<path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/>',
   refresh: '<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>',
-  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>'
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>',
+  flask: '<path d="M9 3h6M10 3v6L4.5 18.5A1.6 1.6 0 0 0 5.9 21h12.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3"/><path d="M7.5 14h9"/>'
 };
 const icon = (n, w = 2) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 
@@ -1364,13 +1479,13 @@ function toast(msg, action) {
 
 /* ---- sheets: bottom sheet on phones (drag to dismiss), centred dialog on desktop ---- */
 const SHEETS = [];
-function openSheet({ title = '', left, right, body = '', onMount, onClose, small = false }) {
+function openSheet({ title = '', titleHTML, left, right, body = '', onMount, onClose, small = false }) {
   const layer = document.createElement('div');
   layer.className = 'layer';
   layer.style.zIndex = 100 + SHEETS.length * 2;
   layer.innerHTML = `<div class="scrim"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}">
     <div class="grab"></div>
-    <div class="sh">${left ? `<button type="button" class="link" data-act="left">${esc(left.label)}</button>` : '<span class="link"></span>'}<h3>${esc(title)}</h3>${right ? `<button type="button" class="link" data-act="right">${esc(right.label)}</button>` : '<span class="link"></span>'}</div>
+    <div class="sh">${left ? `<button type="button" class="link" data-act="left">${esc(left.label)}</button>` : '<span class="link"></span>'}<h3>${titleHTML ?? esc(title)}</h3>${right ? `<button type="button" class="link" data-act="right">${esc(right.label)}</button>` : '<span class="link"></span>'}</div>
     <div class="sb"></div></div>`;
   document.body.appendChild(layer);
   const scrim = layer.querySelector('.scrim'), sheet = layer.querySelector('.sheet'), sb = layer.querySelector('.sb');
@@ -1452,11 +1567,11 @@ function confirmSheet(msg, okLabel, danger = true) {
 }
 
 /* --------------------------------------------------------------- views -- */
-const UI = { view: 'overview', period: 'month', offset: 0, trend: 'revenue', quick: today(), histLimit: 60 };
+const UI = { view: 'overview', period: 'month', offset: 0, trend: 'revenue', quick: today(), histLimit: 60, mview: 'metrics', qv: '' };
 const VIEW_KEYS = ['overview', 'log', 'metrics', 'goals', 'settings'];
 const COLORS = { revenue: 'var(--blue)', newCust: 'var(--green)', convOverall: 'var(--purple)', cac: 'var(--orange)', netProfit: 'var(--teal)', ltvCac: 'var(--indigo)' };
 const colorOf = k => COLORS[k] || (MX[k] && MX[k].better === 'down' ? 'var(--orange)' : 'var(--blue)');
-function saveUI() { try { localStorage.setItem('pulse.ui', JSON.stringify({ view: UI.view, period: UI.period, trend: UI.trend })); } catch (e) { } }
+function saveUI() { try { localStorage.setItem('pulse.ui', JSON.stringify({ view: UI.view, period: UI.period, trend: UI.trend, mview: UI.mview, qv: UI.qv })); } catch (e) { } }
 const curRange = () => periodRange(UI.period, UI.offset);
 /* While a period is still running, compare it with the same number of days of the previous
    one — 12 days of September vs all of August would always look like a decline. */
@@ -1470,6 +1585,42 @@ const prevRange = () => {
   return p;
 };
 const vsLabel = p => t(p.partial ? 'period.vsToDate' : 'period.vs', { x: periodLabel(p) });
+
+const findEntry = (date, variant) => DB.entries.find(e => e.date === date && (e.t || '') === (variant || ''));
+function variantById(id) {
+  if (!id) return null;
+  for (const ts of DB.tests) { const v = ts.variants.find(x => x.id === id); if (v) return { test: ts, v }; }
+  return null;
+}
+const variantLabel = id => { const f = variantById(id); return f ? `${f.test.name} · ${f.v.name}` : t('tv.gone'); };
+function variantOptions(sel) {
+  return `<option value="">${esc(t('tv.none'))}</option>` +
+    DB.tests.map(ts => `<optgroup label="${esc(ts.name)}">${ts.variants.map(v => `<option value="${esc(v.id)}" ${v.id === sel ? 'selected' : ''}>${esc(v.name)}</option>`).join('')}</optgroup>`).join('') +
+    (sel && !variantById(sel) ? `<option value="${esc(sel)}" selected>${esc(t('tv.gone'))}</option>` : '');
+}
+/* the entry the Log tab points at: the selected day plus the selected test variant */
+const quickKey = () => UI.quick + (variantById(UI.qv) ? '|' + UI.qv : '');
+
+/* a metric name you tap to rename in place */
+const nameHTML = key => `<span class="ename" data-rename="${esc(key)}" contenteditable="true" spellcheck="false" autocapitalize="off" enterkeyhint="done">${esc(MX[key] ? MX[key].name() : key)}</span>`;
+function renameMetric(key, text) {
+  const m = MX[key];
+  if (!m) return;
+  const v = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (m.stage) {                                   // a funnel stage: its name is the stage label
+    const s = stageById(m.stage); if (!s) return;
+    if (v && v !== t('stage.' + s.id)) s.label = v; else delete s.label;
+  } else if (key.startsWith('custom:')) {
+    const cm = DB.custom.find(c => 'custom:' + c.id === key);
+    if (!cm || !v) return;
+    cm.name = v;
+  } else {                                         // clearing the name brings the default back
+    DB.names = DB.names || {};
+    delete DB.names[key];
+    if (v && v !== m.baseName()) DB.names[key] = v;
+  }
+  commit(); rebuildMetrics();
+}
 
 function renderShell() {
   const nav = VIEW_KEYS.map(k => `<button class="nav${UI.view === k ? ' on' : ''}" data-tab="${k}">${icon(k)}<span>${esc(t('nav.' + k))}</span></button>`).join('');
@@ -1648,8 +1799,11 @@ function entrySummary(e) {
   return parts.slice(0, 4).join(' · ');
 }
 function viewLog() {
-  const q = UI.quick, e = DB.entries.find(x => x.date === q);
-  const rows = DB.stages.map(s => `<div class="ctr"><div class="nm">${esc(stageName(s))}</div>
+  const q = UI.quick, qv = variantById(UI.qv) ? UI.qv : '', e = findEntry(q, qv);
+  const vchips = DB.tests.length ? `<div class="chips" style="margin:4px 0 6px">${[['', t('tv.none')], ...DB.tests.flatMap(ts => ts.variants.map(v => [v.id, `${ts.name} · ${v.name}`]))]
+      .map(([id, label]) => `<button class="chip${id === qv ? ' on' : ''}" data-qvpick="${esc(id)}">${esc(label)}</button>`).join('')}</div>
+    ${qv ? `<div class="small muted" style="margin:0 2px 2px">${esc(t('log.qvHint'))}</div>` : ''}` : '';
+  const rows = DB.stages.map(s => `<div class="ctr"><div class="nm">${nameHTML(s.id)}</div>
     <button class="step" data-step="${esc(s.id)}" data-d="-1" aria-label="−">${icon('minus', 2.6)}</button>
     <input class="val num" inputmode="numeric" data-qv="${esc(s.id)}" value="${fmtNum(e && e.v[s.id] || 0)}" aria-label="${esc(stageName(s))}">
     <button class="step" data-step="${esc(s.id)}" data-d="1" aria-label="+">${icon('plus', 2.6)}</button></div>`).join('');
@@ -1659,7 +1813,7 @@ function viewLog() {
     const mk = x.date.slice(0, 7);
     if (mk !== month) { if (month) hist += '</div>'; month = mk; hist += `<div class="gh">${esc(fmtMonth(x.date, true))}</div><div class="list">`; }
     const rev = (x.v.revNew || 0) + (x.v.revRec || 0);
-    hist += `<button class="row" data-open="entry:${esc(x.date)}"><div class="bd"><div class="t1">${esc(fmtDayLong(x.date))}</div><div class="t2">${esc(entrySummary(x) || '—')}</div></div>
+    hist += `<button class="row" data-open="entry:${esc(entryKey(x))}"><div class="bd"><div class="t1">${esc(fmtDayLong(x.date))}</div><div class="t2">${x.t ? `<span class="vtag">${esc(variantLabel(x.t))}</span>` : ''}${esc(entrySummary(x) || '—')}</div></div>
       ${rev ? `<div class="rt"><div class="rv num">${esc(fmtVal(rev, 'money', true))}</div></div>` : ''}<svg class="cv" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l6 6-6 6"/></svg></button>`;
   }
   if (month) hist += '</div>';
@@ -1671,6 +1825,7 @@ function viewLog() {
       <div class="small muted" style="margin-bottom:12px">${esc(t('log.quickSub'))}</div>
       <div class="today-head"><button class="chev" data-qd="-1" aria-label="Previous day">${icon('chevL', 2.4)}</button><div class="lab" id="qlab">${esc(fmtDayLong(q))}</div>
         <button class="chev" data-qd="1" aria-label="Next day" ${q >= today() ? 'disabled' : ''}>${icon('chevR', 2.4)}</button></div>
+      ${vchips}
       ${rows}
       <div class="hint">${icon('info')}<span style="flex:1">${esc(t('log.moneyHint'))}</span><button class="link" data-act="addq" style="font-size:13px">${esc(t('log.full'))}</button></div>
     </div>
@@ -1678,8 +1833,9 @@ function viewLog() {
 }
 function setQuick(stageId, value) {
   const date = UI.quick;
-  let e = DB.entries.find(x => x.date === date);
-  if (!e) { e = { id: uid(), date, v: {}, note: '' }; DB.entries.push(e); }
+  const qv = variantById(UI.qv) ? UI.qv : '';
+  let e = findEntry(date, qv);
+  if (!e) { e = { id: uid(), date, v: {}, note: '', ...(qv ? { t: qv } : {}) }; DB.entries.push(e); }
   const n = Math.max(0, Math.round(value));
   if (n) e.v[stageId] = n; else delete e.v[stageId];
   if (!Object.keys(e.v).length && !e.note) DB.entries.splice(DB.entries.indexOf(e), 1);
@@ -1689,6 +1845,9 @@ function setQuick(stageId, value) {
 
 /* ---- Metrics ---- */
 function viewMetrics() {
+  const head = `<h1 class="lt">${esc(t('mv.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p>
+    <div class="mview" data-mount="seg:mview"></div><div data-mount="period"></div>`;
+  if (UI.mview === 'tests') return head + viewTests();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const groups = ['funnel', 'acq', 'money', 'ret', 'custom', 'inputs'];
   let i = 0;
@@ -1697,14 +1856,65 @@ function viewMetrics() {
     if (!ms.length && g !== 'custom') return '';
     const rows = ms.map(m => {
       const v = m.calc(c), pv = pc ? m.calc(pc) : null;
-      return `<button class="row" data-open="metric:${esc(m.key)}"><div class="bd"><div class="t1">${esc(m.name())}</div>${m.formula() ? `<div class="t2">${esc(m.formula())}</div>` : ''}</div>
-        <div class="rt"><div class="rv">${numHTML('mx:' + m.key, v, m.fmt, true)}</div>${deltaHTML(delta(v, pv, m.fmt, m.better))}</div></button>`;
+      return `<div class="row tap" role="button" tabindex="0" data-open="metric:${esc(m.key)}"><div class="bd"><div class="t1">${nameHTML(m.key)}</div>${m.formula() ? `<div class="t2">${esc(m.formula())}</div>` : ''}</div>
+        <div class="rt"><div class="rv">${numHTML('mx:' + m.key, v, m.fmt, true)}</div>${deltaHTML(delta(v, pv, m.fmt, m.better))}</div></div>`;
     }).join('');
     const add = g === 'custom' ? `<button class="row" data-act="newcustom"><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('s.addCustom'))}</div></div></button>` : '';
     return `<div class="rise" style="--i:${i++}"><div class="gh">${esc(t('g.' + g))}</div><div class="list">${rows}${add}</div></div>`;
   }).join('');
-  return `<h1 class="lt">${esc(t('mv.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p><div data-mount="period"></div>
-    <div class="metrics-cols">${body}</div>`;
+  return head + `<div class="metrics-cols">${body}</div>`;
+}
+
+/* ---- A/B tests ---- */
+/* two-proportion z-test; |z| >= 1.96 means the gap is unlikely to be luck (95% confidence) */
+function zScore(x1, n1, x2, n2) {
+  if (!n1 || !n2) return 0;
+  const p = (x1 + x2) / (n1 + n2), se = Math.sqrt(p * (1 - p) * (1 / n1 + 1 / n2));
+  return se ? Math.abs(x1 / n1 - x2 / n2) / se : 0;
+}
+function testCard(ts, r) {
+  const vs = ts.variants, st = DB.stages;
+  const sums = vs.map(v => sumRange(r.from, r.to, v.id).S);
+  // compare conversion steps from the first stage logged under this test to the last one
+  let last = -1;
+  st.forEach((s, i) => { if (sums.some(S => S[s.id] > 0)) last = i; });
+  const rows = [];
+  for (let i = 1; i <= last; i++) {
+    const a = st[i - 1].id, b = st[i].id;
+    if (sums.some(S => S[a] > 0)) rows.push({ key: 'conv:' + b, a, b });
+  }
+  const head = `<div class="srow"><b class="tt1">${esc(ts.name)}</b><span class="sp"></span><button class="link" data-open="test:${esc(ts.id)}">${esc(t('edit'))}</button></div>`;
+  if (!rows.length) return `<div class="card test">${head}<p class="small muted" style="margin:10px 0 2px">${esc(t('tv.noData'))}</p></div>`;
+  const base = rows[0].a;
+  const body = rows.map(row => {
+    const rates = sums.map(S => div(S[row.b], S[row.a]));
+    const order = rates.map((x, i) => [x, i]).filter(([x]) => x != null).sort((p, q) => q[0] - p[0]);
+    const top = order.length ? order[0][0] : 0;
+    let badge = '', best = -1;
+    if (order.length >= 2) {
+      const i1 = order[0][1], i2 = order[1][1], n1 = sums[i1][row.a], n2 = sums[i2][row.a];
+      if (order[0][0] > order[1][0]) best = i1;
+      if (Math.min(n1, n2) < 30) badge = `<span class="tbadge small">${esc(t('tv.small'))}</span>`;
+      else if (best >= 0 && zScore(sums[i1][row.b], n1, sums[i2][row.b], n2) >= 1.96) badge = `<span class="tbadge sig">${esc(t('tv.sig', { v: vs[i1].name }))}</span>`;
+      else badge = `<span class="tbadge">${esc(t('tv.tie'))}</span>`;
+    }
+    const cells = sums.map((S, i) => `<td class="${i === best ? 'best' : ''}"><div class="num tv">${esc(fmtVal(rates[i], 'pct'))}</div>
+      <div class="tsub num">${fmtNum(S[row.b])} / ${fmtNum(S[row.a])}</div><i class="tbar" style="--w:${top && rates[i] != null ? rates[i] / top * 100 : 0}%"></i></td>`).join('');
+    return `<tr><td><div>${nameHTML(row.key)}</div>${badge}</td>${cells}</tr>`;
+  }).join('');
+  // two variants fit a phone screen; more than that scrolls inside the card, never the page
+  return `<div class="card test">${head}<div class="tscroll"><table class="ttable" style="min-width:${112 + vs.length * 84}px">
+    <thead><tr><th></th>${vs.map(v => `<th>${esc(v.name)}</th>`).join('')}</tr></thead>
+    <tbody><tr class="tn"><td class="muted">${esc(stageName(stageById(base)))}</td>${sums.map(S => `<td class="num muted">${fmtNum(S[base])}</td>`).join('')}</tr>${body}</tbody>
+  </table></div></div>`;
+}
+function viewTests() {
+  const r = curRange();
+  if (!DB.tests.length) return `<div class="card hero-empty rise"><div class="big">${icon('flask', 2)}</div><h3>${esc(t('tv.empty.h'))}</h3><p>${esc(t('tv.empty.p'))}</p>
+    <div class="btns"><button class="btn" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div></div>`;
+  return `<div class="grid">${DB.tests.map((ts, i) => `<div class="rise" style="--i:${i}">${testCard(ts, r)}</div>`).join('')}</div>
+    <div style="text-align:center;margin-top:18px"><button class="btn sec" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div>
+    <p class="gf" style="margin-top:16px">${esc(t('tv.foot'))}</p>`;
 }
 
 /* ---- Settings ---- */
@@ -1757,6 +1967,9 @@ function mountAll(root) {
     else if (k === 'seg:lang' || k === 'seg:lang-side') {
       const s = Segmented([{ value: 'en', label: 'English' }, { value: 'zh', label: '中文' }], LANG, setLang, { full: k === 'seg:lang-side' });
       m.appendChild(s.el);
+    } else if (k === 'seg:mview') {
+      m.appendChild(Segmented([{ value: 'metrics', label: t('mv.tabMetrics') }, { value: 'tests', label: t('mv.tabTests') }], UI.mview,
+        v => { UI.mview = v; saveUI(); render(); }, { full: true }).el);
     } else if (k === 'seg:theme') {
       const s = Segmented(['auto', 'light', 'dark'].map(v => ({ value: v, label: t('s.' + v) })), DB.settings.theme || 'auto', v => { DB.settings.theme = v; applyTheme(); save(); });
       m.appendChild(s.el);
@@ -1792,14 +2005,16 @@ const chevSVG = '<svg class="cv" viewBox="0 0 8 14" fill="none" stroke="currentC
 function unitFor(fmt) { return fmt === 'money' ? (DB.settings.currency || '$') : fmt === 'pct' ? '%' : fmt === 'ratio' ? '×' : fmt === 'months' ? t('u.mo') : ''; }
 
 /* ---- entry form ---- */
-function openEntry(date) {
-  let target = DB.entries.find(e => e.date === (date || today())) || null;
+function openEntry(key) {
+  const [kd, kt] = String(key || '').split('|');
+  const d0 = kd || today(), v0 = kt || '';
+  let target = findEntry(d0, v0) || null;
   const orig = target;
-  const d0 = date || today();
   const field = (key, name, hint, money) => `<label class="row"><div class="bd"><div class="t1">${esc(name)}</div>${hint ? `<div class="t2">${esc(hint)}</div>` : ''}</div>
     ${money ? `<span class="unit">${esc(DB.settings.currency || '$')}</span>` : ''}<input class="inl num" style="max-width:40%" inputmode="decimal" data-f="${esc(key)}" placeholder="0" value="${target && target.v[key] ? target.v[key] : ''}" enterkeyhint="next"></label>`;
   const body = `
-    <div class="list"><label class="row"><span class="lbl">${esc(t('e.date'))}</span><input class="inl" type="date" data-date value="${d0}"></label></div>
+    <div class="list"><label class="row"><span class="lbl">${esc(t('e.date'))}</span><input class="inl" type="date" data-date value="${d0}"></label>
+      ${DB.tests.length || v0 ? `<div class="row"><span class="lbl">${esc(t('tv.variant'))}</span><select class="inl" data-var>${variantOptions(v0)}</select></div>` : ''}</div>
     <div class="gf ${target ? '' : 'hide'}" data-exists style="color:var(--blue)">${esc(t('e.exists'))}</div>
     <div class="gh">${esc(t('e.funnel'))}</div><div class="list">${DB.stages.map(s => field(s.id, stageName(s))).join('')}</div>
     <div class="gh">${esc(t('e.rev'))}</div><div class="list">${['revNew', 'revRec'].map(k => field(k, t('f.' + k), t('fh.' + k), true)).join('')}</div>
@@ -1816,14 +2031,18 @@ function openEntry(date) {
   const sb = sh.body;
   const inputs = $$('[data-f]', sb);
   const fill = e => { inputs.forEach(i => { i.value = e && e.v[i.dataset.f] ? e.v[i.dataset.f] : ''; }); $('[data-note]', sb).value = e ? e.note : ''; };
-  $('[data-date]', sb).addEventListener('change', ev => {
-    const nd = ev.target.value; if (!nd) return;
-    const other = DB.entries.find(e => e.date === nd);
+  // an entry is identified by day + test variant; switching either loads that entry if it exists
+  const keyNow = () => [$('[data-date]', sb).value || d0, $('[data-var]', sb) ? $('[data-var]', sb).value : v0];
+  const onKey = () => {
+    const [nd, nv] = keyNow();
+    const other = findEntry(nd, nv);
     if (other && other !== target) { target = other; fill(other); }
     else if (!other && target && target !== orig) { target = null; }
     $('[data-exists]', sb).classList.toggle('hide', !other);
-    $('[data-delwrap]', sb).classList.toggle('hide', !(other || (orig && nd === orig.date)));
-  });
+    $('[data-delwrap]', sb).classList.toggle('hide', !(other || (orig && nd === orig.date && nv === (orig.t || ''))));
+  };
+  $('[data-date]', sb).addEventListener('change', onKey);
+  $('[data-var]', sb)?.addEventListener('change', onKey);
   inputs.forEach((inp, i) => inp.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
@@ -1836,15 +2055,15 @@ function openEntry(date) {
     toast(t('e.deleted'), { label: t('undo'), fn: () => { DB.entries.push(e); commit(); render(); } });
   });
   function saveEntry(api) {
-    const nd = $('[data-date]', sb).value || d0;
+    const [nd, nv] = keyNow();
     const v = {};
     inputs.forEach(i => { const n = parseNum(i.value); if (n) v[i.dataset.f] = i.dataset.f in { revNew: 1, revRec: 1, mkt: 1, sales: 1, cogs: 1, opex: 1 } ? Math.round(n * 100) / 100 : Math.round(n); });
     const note = $('[data-note]', sb).value.trim();
-    const hit = DB.entries.find(e => e.date === nd);
-    if (orig && orig.date !== nd && orig !== hit) DB.entries.splice(DB.entries.indexOf(orig), 1);
+    const hit = findEntry(nd, nv);
+    if (orig && orig !== hit) DB.entries.splice(DB.entries.indexOf(orig), 1);   // moved to another day or variant
     if (!Object.keys(v).length && !note) { if (hit) DB.entries.splice(DB.entries.indexOf(hit), 1); }
     else if (hit) { hit.v = v; hit.note = note; }
-    else DB.entries.push({ id: uid(), date: nd, v, note });
+    else DB.entries.push({ id: uid(), date: nd, v, note, ...(nv ? { t: nv } : {}) });
     commit(); api.close(); haptic();
     render();
     toast(t('e.saved'));
@@ -1867,7 +2086,7 @@ function openMetric(key) {
     ${winNote}
     ${m.desc() ? `<p class="note">${esc(m.desc())}${m.better ? ` <b>${esc(t('better.' + m.better))}.</b>` : ''}</p>` : ''}
     <div style="margin-top:22px"><button class="btn sec block" data-goal>${icon('goals', 2)}${esc(t('mv.addGoal'))}</button></div>`;
-  const sh = openSheet({ title: m.name(), body, right: { label: t('done'), fn: api => api.close() } });
+  const sh = openSheet({ title: m.name(), titleHTML: nameHTML(key), body, right: { label: t('done'), fn: api => api.close() } });
   const hist = historyRanges(UI.period, UI.offset, 12);
   const ch = new Chart();
   $('[data-chart]', sh.body).appendChild(ch.el);
@@ -1965,6 +2184,48 @@ function openCustom(id) {
   preview();
 }
 
+/* ---- A/B test editor ---- */
+function openTest(id) {
+  const t0 = DB.tests.find(x => x.id === id);
+  const draft = t0 ? { ...t0, variants: t0.variants.map(v => ({ ...v })) } : { id: uid(), name: '', variants: [{ id: uid(), name: 'A' }, { id: uid(), name: 'B' }] };
+  const sh = openSheet({
+    title: t0 ? t('tv.edit') : t('tv.new'), small: true, left: { label: t('cancel') }, right: { label: t('save'), fn: api => save(api) },
+    body: `<div class="list"><div class="row"><span class="lbl">${esc(t('tv.name'))}</span><input class="inl" data-tn maxlength="40" placeholder="${esc(t('tv.namePh'))}" value="${esc(draft.name)}"></div></div>
+      <div class="gh">${esc(t('tv.variants'))}</div><div class="list" data-vl></div><div class="gf">${esc(t('tv.variantsF'))}</div>
+      ${t0 ? `<div style="margin-top:22px"><button class="btn sec block danger" data-del>${icon('trash', 2.2)}${esc(t('tv.delete'))}</button></div>` : ''}`
+  });
+  const sb = sh.body, vl = $('[data-vl]', sb);
+  const draw = () => {
+    const off = draft.variants.length <= 2;
+    vl.innerHTML = draft.variants.map((v, i) => `<div class="row"><span class="small muted num" style="width:16px">${String.fromCharCode(65 + i)}</span>
+        <input class="inl" style="text-align:left" data-vn="${i}" maxlength="40" value="${esc(v.name)}" placeholder="${esc(t('tv.variantPh'))}">
+        <button class="step" style="width:30px;height:30px;color:var(--red)${off ? ';opacity:.3' : ''}" data-vdel="${i}" ${off ? 'disabled' : ''} aria-label="${esc(t('delete'))}">${icon('minus', 2.6)}</button></div>`).join('')
+      + `<button class="row" data-vadd><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('tv.addVariant'))}</div></div></button>`;
+  };
+  vl.addEventListener('input', e => { const i = e.target.dataset.vn; if (i != null) draft.variants[+i].name = e.target.value; });
+  vl.addEventListener('click', e => {
+    const d = e.target.closest('[data-vdel]');
+    if (d && draft.variants.length > 2) { draft.variants.splice(+d.dataset.vdel, 1); draw(); return; }
+    if (e.target.closest('[data-vadd]')) { draft.variants.push({ id: uid(), name: '' }); draw(); const ins = $$('[data-vn]', vl); ins[ins.length - 1].focus(); }
+  });
+  draw();
+  function save(api) {
+    draft.name = $('[data-tn]', sb).value.trim();
+    if (!draft.name) { $('[data-tn]', sb).focus(); return; }
+    draft.variants.forEach((v, i) => { v.name = v.name.trim() || String.fromCharCode(65 + i); });
+    if (t0) Object.assign(t0, draft); else DB.tests.push(draft);
+    commit(); api.close(); render(); toast(t('e.saved'));
+  }
+  $('[data-del]', sb)?.addEventListener('click', async () => {
+    if (!(await confirmSheet(t('tv.delQ'), t('tv.delete')))) return;
+    const i = DB.tests.indexOf(t0);
+    if (i < 0) return;
+    DB.tests.splice(i, 1);
+    commit(); sh.close(); render();
+    toast(t('tv.deleted'), { label: t('undo'), fn: () => { DB.tests.splice(i, 0, t0); commit(); render(); } });
+  });
+}
+
 /* ---- import / export ---- */
 function download(name, text, type) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -1975,8 +2236,8 @@ function download(name, text, type) {
 function exportCSV() {
   const cols = [...DB.stages.map(s => [s.id, stageName(s)]), ...MONEY_FIELDS.map(f => [f, t('f.' + f)]), ['churned', t('f.churned')]];
   const q = s => /[",\n]/.test(s) ? `"${String(s).replace(/"/g, '""')}"` : s;
-  const lines = [[t('e.date'), ...cols.map(c => c[1]), t('e.note')].map(q).join(',')];
-  for (const e of DB.entries) lines.push([e.date, ...cols.map(c => e.v[c[0]] || 0), q(e.note || '')].join(','));
+  const lines = [[t('e.date'), t('tv.variant'), ...cols.map(c => c[1]), t('e.note')].map(q).join(',')];
+  for (const e of DB.entries) lines.push([e.date, q(e.t ? variantLabel(e.t) : ''), ...cols.map(c => e.v[c[0]] || 0), q(e.note || '')].join(','));
   download(`pulse-entries-${today()}.csv`, '﻿' + lines.join('\n'), 'text/csv;charset=utf-8');
 }
 function importJSON() {
@@ -2011,9 +2272,10 @@ const SB_KEY = 'sb_publishable_jTrhtpvVi1vPFMDby_XLEQ_KY2SkXyb';
 const SYNCKEY = 'pulse.sync';
 const TOMB_TTL = 180 * 864e5;
 
+const DEL_BUCKETS = ['e', 'g', 'c', 't'];   // tombstones for entries, goals, custom metrics, tests
 function cleanDel(d) {
-  const out = { e: {}, g: {}, c: {} }, now = Date.now();
-  if (d && typeof d === 'object') for (const b of ['e', 'g', 'c']) for (const k in (d[b] || {})) {
+  const out = { e: {}, g: {}, c: {}, t: {} }, now = Date.now();
+  if (d && typeof d === 'object') for (const b of DEL_BUCKETS) for (const k in (d[b] || {})) {
     const n = +d[b][k];
     if (n > 0 && now - n < TOMB_TTL) out[b][k] = n;
   }
@@ -2026,16 +2288,17 @@ const recSig = r => JSON.stringify({ ...r, u: 0 });
 const settingsSig = s => JSON.stringify({ ...s, lang: null, theme: null });   // language and theme stay per device
 function snapshot() {
   SNAP = {
-    e: new Map(DB.entries.map(r => [r.date, recSig(r)])),
+    e: new Map(DB.entries.map(r => [entryKey(r), recSig(r)])),
     g: new Map(DB.goals.map(r => [r.id, recSig(r)])),
     c: new Map(DB.custom.map(r => [r.id, recSig(r)])),
-    st: JSON.stringify(DB.stages), set: settingsSig(DB.settings), del: cleanDel(DB.del)
+    t: new Map(DB.tests.map(r => [r.id, recSig(r)])),
+    st: JSON.stringify(DB.stages), set: settingsSig(DB.settings), nm: stable(DB.names || {}), del: cleanDel(DB.del)
   };
 }
 function stamp() {
   if (!SNAP) { snapshot(); return; }
   const now = Date.now(), del = cleanDel(DB.del);
-  for (const b of ['e', 'g', 'c']) for (const k in SNAP.del[b]) del[b][k] = Math.max(del[b][k] || 0, SNAP.del[b][k]);
+  for (const b of DEL_BUCKETS) for (const k in SNAP.del[b]) del[b][k] = Math.max(del[b][k] || 0, SNAP.del[b][k]);
   const walk = (list, keyOf, prev, b) => {
     const seen = new Set();
     for (const r of list) {
@@ -2044,12 +2307,15 @@ function stamp() {
     }
     for (const k of prev.keys()) if (!seen.has(k)) del[b][k] = now;
   };
-  walk(DB.entries, r => r.date, SNAP.e, 'e');
+  walk(DB.entries, entryKey, SNAP.e, 'e');
   walk(DB.goals, r => r.id, SNAP.g, 'g');
   walk(DB.custom, r => r.id, SNAP.c, 'c');
+  walk(DB.tests, r => r.id, SNAP.t, 't');
   DB.del = del;
   if (JSON.stringify(DB.stages) !== SNAP.st) DB.su = now;
   if (settingsSig(DB.settings) !== SNAP.set) DB.setu = now;
+  if (stable(DB.names || {}) !== SNAP.nm) DB.nu = now;
+  DB.fv = DATA_FV;
   snapshot();
 }
 
@@ -2057,7 +2323,7 @@ function stamp() {
 function mergeDB(local, remoteRaw) {
   const R = normalize(remoteRaw), L = local;
   const del = cleanDel(L.del), rd = cleanDel(R.del);
-  for (const b of ['e', 'g', 'c']) for (const k in rd[b]) del[b][k] = Math.max(del[b][k] || 0, rd[b][k]);
+  for (const b of DEL_BUCKETS) for (const k in rd[b]) del[b][k] = Math.max(del[b][k] || 0, rd[b][k]);
   const pick = (loc, rem, keyOf, b) => {
     const m = new Map();
     for (const r of rem) m.set(keyOf(r), r);
@@ -2065,15 +2331,18 @@ function mergeDB(local, remoteRaw) {
     return [...m.values()].filter(r => { const tomb = del[b][keyOf(r)]; return !(tomb && tomb >= (r.u || 0)); });
   };
   return {
-    v: 1,
+    v: 1, fv: DATA_FV,
     settings: { ...((L.setu || 0) > (R.setu || 0) ? L.settings : R.settings), lang: L.settings.lang, theme: L.settings.theme },
     stages: (L.su || 0) > (R.su || 0) ? L.stages : R.stages,
-    entries: pick(L.entries, R.entries, r => r.date, 'e').sort((a, b) => a.date < b.date ? -1 : 1),
+    entries: pick(L.entries, R.entries, entryKey, 'e').sort(byEntry),
     goals: pick(L.goals, R.goals, r => r.id, 'g'),
     custom: pick(L.custom, R.custom, r => r.id, 'c'),
-    su: Math.max(L.su || 0, R.su || 0), setu: Math.max(L.setu || 0, R.setu || 0), del
+    tests: pick(L.tests || [], R.tests, r => r.id, 't'),
+    names: (L.nu || 0) > (R.nu || 0) ? (L.names || {}) : R.names,
+    su: Math.max(L.su || 0, R.su || 0), setu: Math.max(L.setu || 0, R.setu || 0), nu: Math.max(L.nu || 0, R.nu || 0), del
   };
 }
+const hasLocalData = () => !!(DB.entries.length || DB.goals.length || DB.custom.length || DB.tests.length);
 /* key-order-independent fingerprint, so two devices never disagree about "same data" and ping-pong */
 function stable(v) {
   if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']';
@@ -2189,31 +2458,37 @@ const Sync = {
       toast(e instanceof TypeError ? t('sync.netErr') : t('sync.st.error', { m: e.message }));
     } finally { this.busy = false; }
   },
-  /* join with a pairing code or a full key; returns an error message, or null on success */
-  async join(raw) {
+  /* joining, step 1: a pairing code (single use) or a full key → the sync key */
+  async resolve(raw) {
     const clean = String(raw || '').replace(/[^A-Za-z0-9]/g, '');
-    let key;
-    if (clean.length >= 40) key = clean.toLowerCase();
-    else {
-      const c = await this.rpc('pulse_pair_claim', { p_code: clean });
-      if (c.error) return t(c.error === 'locked' ? 'sync.locked' : 'sync.badCode');
-      key = c.key;
-    }
+    if (clean.length >= 40) return { key: clean.toLowerCase() };
+    const c = await this.rpc('pulse_pair_claim', { p_code: clean });
+    if (c.error) return { error: t(c.error === 'locked' ? 'sync.locked' : 'sync.badCode') };
+    return { key: c.key };
+  },
+  async peek(key) {
     const p = await this.rpc('pulse_pull', { p_key: key });
-    if (p.error) return t('sync.badKey');
+    return p.error ? { error: t('sync.badKey') } : { p };
+  },
+  /* joining, step 2. merge: fold both together (this device's data gets uploaded).
+     replace: become an exact copy of the cloud — no tombstones are created, so the cloud loses nothing. */
+  attach(key, p, mode) {
     try { localStorage.setItem(LSKEY + '.beforeSync', JSON.stringify(DB)); } catch (e) { }   // safety copy of this device's data
     this.st = { key, version: p.version, dirty: false, last: Date.now() };
-    this.absorb(p.data, p.version);
+    if (mode === 'replace') {
+      const R = normalize(p.data);
+      DB = { ...R, settings: { ...R.settings, lang: DB.settings.lang, theme: DB.settings.theme } };
+      ctxCache.clear(); snapshot(); save(); rebuildMetrics();
+    } else this.absorb(p.data, p.version);
     this.persist(); this.setStatus(this.st.dirty ? 'pending' : 'idle');
     if (this.st.dirty) this.run();
-    return null;
   },
   label() {
     switch (this.status) {
       case 'syncing': return t('sync.st.syncing');
       case 'pending': return t('sync.st.pending');
       case 'offline': return t('sync.st.offline');
-      case 'error': return this.msg === 'bad_key' ? t('sync.st.badKey') : t('sync.st.error', { m: this.msg || '' });
+      case 'error': return this.msg === 'bad_key' ? t('sync.st.badKey') : this.msg === 'outdated' ? t('sync.st.outdated') : t('sync.st.error', { m: this.msg || '' });
       default: return t('sync.st.idle', { ago: ago(this.st && this.st.last) });
     }
   },
@@ -2299,24 +2574,61 @@ function openPair() {
   $('[data-new]', sh.body).addEventListener('click', fetchCode);
   fetchCode();
 }
-function openJoin() {
-  let busy = false;
+/* asked before creating a new vault — joining the existing one is almost always what's wanted */
+function openEnableAsk() {
   const sh = openSheet({
-    title: t('sync.joinTitle'), small: true, left: { label: t('cancel') }, right: { label: t('sync.connect'), fn: submit },
+    title: '', small: true,
+    body: `<p style="text-align:center;margin:4px 8px 6px;font-size:17px;font-weight:600;letter-spacing:-.02em">${esc(t('sync.askQ'))}</p>
+      <p class="muted" style="text-align:center;margin:0 8px 20px;font-size:14px;line-height:1.45">${esc(t('sync.askF'))}</p>
+      <div class="grid"><button class="btn block" data-yes>${esc(t('sync.askYes'))}</button><button class="btn sec block" data-no>${esc(t('sync.askNo'))}</button></div>`
+  });
+  $('[data-yes]', sh.body).addEventListener('click', () => { sh.close(); openJoin(); });
+  $('[data-no]', sh.body).addEventListener('click', () => { sh.close(); Sync.enable(); });
+}
+function openJoin() {
+  let busy = false, key = null;   // the key is kept once resolved: a pairing code only works once
+  const counts = d => t('sync.counts', { e: fmtNum(d.entries.length), g: fmtNum(d.goals.length) });
+  const sh = openSheet({
+    title: t('sync.joinTitle'), small: true, left: { label: t('cancel') }, right: { label: t('sync.connect'), fn: api => submit(api) },
     body: `<div class="list"><div class="row"><input class="inl" data-code placeholder="ABCD-EFGH" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="80" enterkeyhint="go"
         style="text-align:center;font-size:22px;letter-spacing:.08em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace"></div></div>
       <div class="gf danger hide" data-err></div><div class="gf">${esc(t('sync.joinHint'))}</div>`
   });
   const inp = $('[data-code]', sh.body), err = $('[data-err]', sh.body);
+  const finish = api => { inp.blur(); api.close(); renderShell(); render(); toast(t('sync.joined')); };
+  const choose = (api, p) => {
+    api.setRight(true);
+    sh.body.innerHTML = `<p class="note" style="text-align:center;margin:2px 4px 14px;color:var(--text)">${esc(t('sync.choiceQ'))}</p>
+      <div class="list">
+        <div class="row"><div class="bd"><div class="t1">${esc(t('sync.thisDevice'))}</div></div><div class="rv num">${esc(counts(DB))}</div></div>
+        <div class="row"><div class="bd"><div class="t1">${esc(t('sync.cloud'))}</div></div><div class="rv num">${esc(counts(normalize(p.data)))}</div></div>
+      </div>
+      <div style="margin-top:20px">
+        <button class="btn block" data-mode="merge">${esc(t('sync.merge'))}</button><div class="gf" style="margin:6px 4px 18px">${esc(t('sync.mergeF'))}</div>
+        <button class="btn sec block" data-mode="replace">${esc(t('sync.replace'))}</button><div class="gf" style="margin:6px 4px 0">${esc(t('sync.replaceF'))}</div>
+      </div>`;
+    sh.body.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-mode]');
+      if (!b) return;
+      Sync.attach(key, p, b.dataset.mode); finish(api);
+    });
+  };
   async function submit(api) {
     if (busy) return;
-    if (!inp.value.trim()) { inp.focus(); return; }
+    if (!key && !inp.value.trim()) { inp.focus(); return; }
     busy = true; api.setRight(true); err.classList.add('hide');
-    let msg;
-    try { msg = await Sync.join(inp.value); } catch (e) { msg = e instanceof TypeError ? t('sync.netErr') : t('sync.st.error', { m: e.message }); }
+    let msg = null;
+    try {
+      if (!key) { const r = await Sync.resolve(inp.value); if (r.error) msg = r.error; else key = r.key; }
+      if (!msg) {
+        const pk = await Sync.peek(key);
+        if (pk.error) { msg = pk.error; key = null; }
+        else if (hasLocalData()) { busy = false; choose(api, pk.p); return; }
+        else { Sync.attach(key, pk.p, 'merge'); busy = false; finish(api); return; }
+      }
+    } catch (e) { msg = e instanceof TypeError ? t('sync.netErr') : t('sync.st.error', { m: e.message }); }
     busy = false; api.setRight(false);
-    if (msg) { err.textContent = msg; err.classList.remove('hide'); return; }
-    inp.blur(); api.close(); renderShell(); render(); toast(t('sync.joined'));
+    if (msg) { err.textContent = msg; err.classList.remove('hide'); }
   }
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(sh); } });
   if (innerWidth >= 720) setTimeout(() => inp.focus(), 60);
@@ -2361,6 +2673,7 @@ function scheduleLogRefresh() {
 
 document.addEventListener('click', async e => {
   const el = e.target;
+  if (el.closest('[data-rename]')) return;          // tapping a name edits it instead of opening the row
   const tab = el.closest('[data-tab]');
   if (tab) { switchTab(tab.dataset.tab); return; }
   const open = el.closest('[data-open]');
@@ -2370,6 +2683,7 @@ document.addEventListener('click', async e => {
     else if (kind === 'entry') openEntry(id);
     else if (kind === 'goal') openGoal(id);
     else if (kind === 'custom') openCustom(id);
+    else if (kind === 'test') openTest(id);
     return;
   }
   const tr = el.closest('[data-trend]');
@@ -2383,6 +2697,8 @@ document.addEventListener('click', async e => {
     haptic(); scheduleLogRefresh();
     return;
   }
+  const qp = el.closest('[data-qvpick]');
+  if (qp) { UI.qv = qp.dataset.qvpick; saveUI(); haptic(); render(); return; }
   const qd = el.closest('[data-qd]');
   if (qd) { const d = addDays(UI.quick, +qd.dataset.qd); UI.quick = d > today() ? today() : d; render(); return; }
   const sm = el.closest('[data-smove]');
@@ -2405,14 +2721,15 @@ document.addEventListener('click', async e => {
   if (!act) return;
   switch (act.dataset.act) {
     case 'add': openEntry(); break;
-    case 'addq': openEntry(UI.quick); break;
+    case 'addq': openEntry(quickKey()); break;
+    case 'newtest': openTest(); break;
     case 'newgoal': openGoal(); break;
     case 'newcustom': openCustom(); break;
     case 'more': UI.histLimit += 60; render(); break;
     case 'export': download(`pulse-backup-${today()}.json`, JSON.stringify(DB, null, 2), 'application/json'); break;
     case 'import': importJSON(); break;
     case 'csv': exportCSV(); break;
-    case 'sync-enable': Sync.enable(); break;
+    case 'sync-enable': openEnableAsk(); break;
     case 'sync-join': openJoin(); break;
     case 'sync-pair': openPair(); break;
     case 'sync-now': Sync.run(); break;
@@ -2461,14 +2778,47 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('focusin', e => { if (e.target.matches('[data-qv]')) setTimeout(() => e.target.select(), 0); });
 
+/* rename in place: focusing a name selects it, leaving the field saves it */
+document.addEventListener('focusin', e => {
+  const r = e.target.closest && e.target.closest('[data-rename]');
+  if (!r) return;
+  r.dataset.orig = r.textContent;
+  requestAnimationFrame(() => { const s = getSelection(), rg = document.createRange(); rg.selectNodeContents(r); s.removeAllRanges(); s.addRange(rg); });
+});
+document.addEventListener('focusout', e => {
+  const r = e.target.closest && e.target.closest('[data-rename]');
+  if (!r) return;
+  const key = r.dataset.rename;
+  if (r.dataset.cancel) { delete r.dataset.cancel; r.textContent = r.dataset.orig; return; }
+  const txt = r.textContent.replace(/\s+/g, ' ').trim();
+  if (txt === r.dataset.orig) return;
+  renameMetric(key, txt);
+  const name = MX[key] ? MX[key].name() : r.dataset.orig;
+  $$(`[data-rename="${CSS.escape(key)}"]`).forEach(x => { x.textContent = name; });
+  // redraw everything else that shows the name, once focus has settled somewhere that isn't another name
+  setTimeout(() => { const a = document.activeElement; if (!(a && a.closest && a.closest('[data-rename]'))) render(); }, 0);
+});
+document.addEventListener('paste', e => {
+  const r = e.target.closest && e.target.closest('[data-rename]');
+  if (!r) return;
+  e.preventDefault();
+  document.execCommand('insertText', false, (e.clipboardData ? e.clipboardData.getData('text') : '').replace(/\s+/g, ' '));
+});
+
 document.addEventListener('keydown', e => {
+  const ren = document.activeElement;
+  if (ren && ren.matches && ren.matches('[data-rename]')) {   // renaming: Enter saves, Esc puts the old name back
+    if (e.key === 'Enter') { e.preventDefault(); ren.blur(); }
+    else if (e.key === 'Escape') { e.preventDefault(); ren.dataset.cancel = '1'; ren.blur(); }
+    return;
+  }
   if (e.key === 'Escape' && SHEETS.length) { SHEETS[SHEETS.length - 1].close(); return; }
   const ae = document.activeElement;
   if ((e.key === 'Enter' || e.key === ' ') && ae && ae.matches('[role="button"]')) { e.preventDefault(); ae.click(); return; }
   if (e.key === 'Enter' && ae && ae.matches('[data-qv]')) { ae.blur(); return; }
   if (SHEETS.length || e.metaKey || e.ctrlKey || e.altKey) return;
   if (ae && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) return;
-  if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openEntry(UI.view === 'log' ? UI.quick : undefined); }
+  if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openEntry(UI.view === 'log' ? quickKey() : undefined); }
   else if (/^[1-5]$/.test(e.key)) switchTab(VIEW_KEYS[+e.key - 1]);
   else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && (UI.view === 'overview' || UI.view === 'metrics')) { e.preventDefault(); shiftPeriod(e.key === 'ArrowLeft' ? -1 : 1); }
 });
@@ -2478,7 +2828,7 @@ window.addEventListener('scroll', () => {
   if (scrollRaf) return;
   scrollRaf = requestAnimationFrame(() => { scrollRaf = 0; $('#topbar').classList.toggle('scrolled', window.scrollY > 40); });
 }, { passive: true });
-$('#addBtn').addEventListener('click', () => openEntry(UI.view === 'log' ? UI.quick : undefined));
+$('#addBtn').addEventListener('click', () => openEntry(UI.view === 'log' ? quickKey() : undefined));
 $('#langBtn').addEventListener('click', () => setLang(LANG === 'zh' ? 'en' : 'zh'));
 $('#syncBtn').addEventListener('click', () => {
   switchTab('settings');
@@ -2497,6 +2847,8 @@ window.addEventListener('storage', e => {
     if (VIEWS[u.view]) UI.view = u.view;
     if (PERIODS.includes(u.period)) UI.period = u.period;
     if (u.trend) UI.trend = u.trend;
+    if (u.mview === 'tests') UI.mview = 'tests';
+    if (typeof u.qv === 'string') UI.qv = u.qv;
   } catch (e) { }
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
   applyTheme();
