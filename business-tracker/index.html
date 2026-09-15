@@ -115,6 +115,72 @@ svg{display:block}
 @media (prefers-reduced-motion:reduce){ #syncBtn i{animation:none!important} }
 .paircode{font:700 38px/1.1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:.08em;text-align:center;padding:16px 0 6px;transition:opacity .25s ease}
 
+/* ---------- Hormozi mode: coach, Rule of 100, rules ---------- */
+:root{--bubble:#f2f2f7}
+:root[data-theme="dark"]{--bubble:#2c2c2e}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){--bubble:#2c2c2e} }
+.sheet .coach .bubble{background:var(--card)}
+:root[data-theme="dark"] .sheet .coach .bubble{background:#2c2c2e}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .sheet .coach .bubble{background:#2c2c2e} }
+.coach{display:flex;gap:12px;align-items:flex-start}
+.hz-avbtn{border:0;background:none;padding:0;border-radius:50%;flex:none;transition:transform .18s var(--ease)}
+.hz-avbtn:active{transform:scale(.9)}
+.hz-avw{display:block;flex:none;border-radius:50%;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.14)}
+.hz-av{width:100%;height:100%}
+.hz-av .eyes{transform-box:fill-box;transform-origin:center;animation:hzblink 4.8s infinite}
+@keyframes hzblink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.12)}}
+.hz-av .mouth{transform-box:fill-box;transform-origin:center;transform:scaleY(.45)}
+.talking .hz-av .mouth{animation:hztalk .15s ease-in-out infinite alternate}
+@keyframes hztalk{from{transform:scaleY(.35)}to{transform:scaleY(1.5)}}
+.bubble{position:relative;flex:1;min-width:0;background:var(--bubble);border-radius:18px;padding:9px 14px 11px;margin-top:3px;transform-origin:0 22px}
+.bubble[data-act]{cursor:pointer}
+.bubble::before{content:"";position:absolute;left:-5px;top:17px;width:13px;height:13px;background:inherit;border-radius:2px;transform:rotate(45deg)}
+.bubble .bn{position:relative;font-size:12px;font-weight:600;color:var(--text2);letter-spacing:0;margin-bottom:2px}
+.bubble .btw{position:relative;display:grid}
+.bubble .btw>span{grid-area:1/1;font-size:15.5px;line-height:1.45;letter-spacing:-.012em}
+.bubble .bt-ghost{visibility:hidden}
+.bubble .bsrc{position:relative;font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:0}
+.bubble .bsrc:empty{display:none}
+.mbn{display:flex;align-items:center;gap:6px;margin:14px 0 0 68px;flex-wrap:wrap}
+.mbn span{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--fill2);color:var(--text3);letter-spacing:0;transition:background-color .3s ease,color .3s ease}
+.mbn span.past{color:var(--text2)}
+.mbn span.on{background:var(--blue);color:#fff}
+.mbn i{width:10px;height:1.5px;background:var(--sep);border-radius:1px}
+.mbn .sp{flex:1}
+.hz-dots{display:flex;gap:5px}
+.hz-dots i{width:6px;height:6px;border-radius:50%;background:var(--fill);transition:background-color .25s ease,transform .3s var(--ease)}
+.hz-dots i.on{background:var(--text2);transform:scale(1.2)}
+@media (max-width:420px){ .mbn{margin-left:0} }
+.r100 .h3{font-size:17px;letter-spacing:-.02em}
+.r100main{display:flex;align-items:center;gap:16px;margin:12px 0 14px}
+.r100main .bd,.r100mini .bd{flex:1;min-width:0}
+.r100main .t1{font-size:17px;letter-spacing:-.02em}
+.r100main .t2{font-size:13px;color:var(--text2);margin-top:2px}
+.r100 .ring .rt,.r100 .ring .rf{stroke-width:8}
+.r100 .ring span{font-size:24px;letter-spacing:-.03em}
+.r100plus{height:40px;padding:0 15px 0 12px;border-radius:99px;gap:3px;flex:none}
+.r100grid{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:3px}
+.r100grid i{aspect-ratio:1;border-radius:3px;background:var(--fill2);transition:background-color .4s ease}
+.r100grid i.part{background:color-mix(in srgb,var(--green-t) var(--p),var(--fill2))}
+.r100grid i.hit{background:var(--green-t)}
+.r100grid i.off{opacity:.4}
+.r100grid i.td{box-shadow:0 0 0 1.5px var(--text2)}
+.r100mini{display:flex;align-items:center;gap:12px;background:var(--fill2);border-radius:14px;padding:8px 12px;margin:0 0 10px}
+.r100mini .ring .rt,.r100mini .ring .rf{stroke-width:9}
+.r100mini .t1{font-size:15px;letter-spacing:-.015em}
+.r100mini .t2{font-size:12px;color:var(--text2);letter-spacing:-.005em}
+.hzrule{cursor:pointer}
+.hzrule .q{font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.35;margin:0 0 8px}
+.toast.coach-toast{border-radius:22px;padding:8px 18px 8px 8px;gap:12px;line-height:1.35}
+.sw{position:relative;flex:none;width:51px;height:31px}
+.sw input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--fill);transition:background-color .25s ease}
+.sw i::after{content:"";position:absolute;left:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 1px 1px rgba(0,0,0,.06);transition:transform .38s cubic-bezier(.3,1.35,.5,1)}
+.sw input:checked+i{background:var(--green-t)}
+.sw input:checked+i::after{transform:translateX(20px)}
+.sw input:focus-visible+i{box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 40%,transparent)}
+@media (prefers-reduced-motion:reduce){ .hz-av .eyes,.talking .hz-av .mouth{animation:none} }
+
 .page{max-width:1100px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left)) calc(110px + env(safe-area-inset-bottom))}
 .lt{font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.12;margin:2px 0 2px}
 .sub{color:var(--text2);font-size:15px;margin:0 0 20px;letter-spacing:-.01em}
@@ -530,6 +596,85 @@ const I18N = {
     'sync.keyTitle':'Sync key','sync.copy':'Copy','sync.copied':'Copied','sync.working':'Working…',
     'sync.keyNote':'Treat this like a password: anyone with it can see your data. Save it in a password manager — on a new phone you can paste it into “Join an existing sync”.',
 
+    'g.hz':'Hormozi numbers',
+    'm.maxCust':'Client ceiling','m.maxRev':'Revenue ceiling / mo','m.headroom':'Room to ceiling','m.cash30':'30-day cash multiple','m.actions':'{s} per day',
+    'mf.maxCust':'New clients per month ÷ Monthly churn','mf.maxRev':'Client ceiling × Revenue per client / mo',
+    'mf.headroom':'Client ceiling ÷ Active clients − 1','mf.cash30':'New-client revenue (30 days) × Gross margin ÷ Acquisition spend (30 days)','mf.actions':'{s} ÷ Days',
+    'md.maxCust':'The most clients you can hold at today’s pace of new clients and churn (Hormozi’s “hypothetical max”). No ceiling while churn is 0.',
+    'md.maxRev':'Monthly revenue once you reach the client ceiling.',
+    'md.headroom':'How much you can still grow before hitting the ceiling. Near 0 or negative means churn is cancelling out new clients.',
+    'md.cash30':'Gross profit new clients bring in their first 30 days, as a multiple of what it cost to get them (client-financed acquisition). 1× means clients pay for their own acquisition; 2× means you can scale acquisition safely.',
+    'md.actions':'Average core actions per day, against your Rule of 100 target.',
+    'hz.newPerMo':'New clients / mo','hz.acq30':'Acquisition spend (30 days)','hz.rev30':'New-client revenue (30 days)','hz.days':'Days',
+
+    'hz.title':'Hormozi mode','hz.coach':'Coach Hormozi','hz.tapNext':'Next line',
+    'hz.onF':'Adds the coach, bottleneck diagnosis, Rule of 100 scoreboard, Hormozi numbers and rules. Turning it off hides all of it — your data isn’t touched. Inspired by Alex Hormozi’s books and public content; unofficial. The coach’s lines are written from your numbers, not said by him.',
+    'hz.target':'Daily actions','hz.stage':'Counts as an action','hz.wknd':'Weekends don’t break the streak',
+    'hz.targetF':'Rule of 100: hit this many every day for 100 days. Counted from this funnel stage.',
+    'hz.mbn.more':'More','hz.mbn.better':'Better','hz.mbn.new':'New',
+    'hz.r100':'Rule of 100','hz.r100.left':'{n} to go today','hz.r100.done':'Done for today','hz.r100.streak':'{n}-day streak',
+    'hz.r100.best':'best {n} days','hz.r100.day':'Day {n} / 100','hz.r100.grid':'Last 100 days · green = target hit',
+    'hz.rules':'Hormozi rules','hz.next':'Next',
+    'hz.t.hit':'{n} done. Volume negates luck — same again tomorrow.','hz.t.half':'Halfway. {n} to go. Keep going.',
+    'hz.t.streak':'{n} days in a row. Most people quit long before this. You didn’t.',
+
+    'hz.f.noData':'Log your numbers first. Without data I can’t tell you what’s broken.',
+    'hz.f.noActions':'You’re not logging {s} yet. The Rule of 100 is about daily action — tap + in Quick log every time you do one.',
+    'hz.f.losing':'You lose money on every client you win: LTV : CAC is only {r}. Don’t add volume — more volume just means bigger losses. Raise prices or make the offer worth more.',
+    'hz.f.more':'You don’t have a skill problem. You have a volume problem. You averaged {avg} a day ({s}) over the last 14 days; the target is {target}. Get the volume first, then optimise.',
+    'hz.f.leak':'The one thing to fix right now: {name}. It’s at {cur}, and you’ve done {best} before. Fix it and the same volume brings {extra} more clients a month.',
+    'hz.f.leakNoExtra':'The one thing to fix right now: {name}. It’s at {cur}, and you’ve done {best} before. Fix this step. Everything else can wait.',
+    'hz.f.ceiling':'You’re close to your ceiling: at this churn you can hold at most {max} clients, and you have {active}. More leads just refill a leaking bucket — fix churn first.',
+    'hz.f.cash':'Acquisition is eating your cash: new clients pay back only {x} of what they cost within 30 days. Add an upsell or an upfront payment so clients fund the next client.',
+    'hz.f.new':'Volume’s there, conversion’s steady, unit economics are healthy. Now — and only now — try something new: a new channel or a new offer.',
+    'hz.x.left':'{n} to go today ({s}). Finish them first.',
+    'hz.x.done':'Today’s {target} are done. Same again tomorrow — don’t break the chain.',
+    'hz.x.streak':'{n} days in a row. {left} to go until 100.',
+    'hz.x.ceiling':'At your current pace and churn, your ceiling is {max} clients and {rev} a month.',
+    'hz.x.ceilingNoRev':'At your current pace and churn, your ceiling is {max} clients.',
+    'hz.x.ltvGood':'LTV : CAC is {r} — past the 3× line. You can afford to outspend competitors to get clients.',
+    'hz.x.cashGood':'New clients pay back {x} of their acquisition cost within 30 days. Clients are funding your growth — scale it.',
+    'hz.x.winner':'Your test has a winner: “{v}” wins on {m}. Kill the loser and test the next thing.',
+
+    'hz.take.maxCust':'At the ceiling, new clients only replace the ones you lose. To grow: bring in more, or lose fewer.',
+    'hz.take.maxRev':'This is the most the business can make a month as it runs today. Don’t like it? Change acquisition, churn or price.',
+    'hz.take.headroom':'Under 15% means you’re close to the top. Fix churn before adding volume.',
+    'hz.take.cash30':'1× or more: clients pay for their own acquisition within 30 days. 2× or more: you can scale acquisition without running out of cash.',
+    'hz.take.ltvCac':'3× is the floor. Below it, more acquisition means more danger. Above it, you can outspend competitors to get clients.',
+    'hz.take.cac':'A lower CAC isn’t always better. As long as LTV supports it, whoever can spend the most to get a client wins.',
+    'hz.take.churnRate':'Churn is a leaking bucket. Plug the holes before you pour in more.',
+    'hz.take.conv':'Conversion dropped? Don’t switch channels yet. Test the opener or the offer — one variable at a time.',
+    'hz.take.convOverall':'Double conversion on the same leads and you double clients without spending a cent more on acquisition.',
+    'hz.take.avgDeal':'Raising prices is the fastest growth there is: no extra clients, no extra leads.',
+    'hz.take.actions':'Volume negates luck. {target} a day for 100 days — then judge whether it works.',
+    'hz.take.newCust':'Want more clients? Check volume first, then conversion — and only then change the method.',
+
+    'hz.q.1':'Volume negates luck.',
+    'hz.q.2':'Make an offer so good people feel stupid saying no.',
+    'hz.q.3':'Sell them what they want. Give them what they need.',
+    'hz.q.4':'More, then better, then new.',
+    'hz.q.5':'Rule of 100: 100 primary actions a day, for 100 days.',
+    'hz.q.6':'Value = (Dream outcome × Perceived likelihood) ÷ (Time delay × Effort & sacrifice).',
+    'hz.q.7':'There are four core ways to get leads: warm outreach, cold outreach, content and paid ads.',
+    'hz.q.8':'Get clients to pay for the cost of getting clients.',
+    'hz.q.9':'Find the biggest constraint and fix that first. Everything else can wait.',
+    'hz.q.10':'Lifetime gross profit should be at least 3× what it costs to get a client.',
+    'hz.q.11':'Charge more. Higher prices give you the room to deliver better results.',
+    'hz.q.12':'Find a starving crowd: people in pain, with money, who are easy to reach.',
+    'hz.q.13':'Your ceiling: new clients per month ÷ churn rate.',
+    'hz.q.14':'Scarcity, urgency, bonuses, guarantees and naming make an offer irresistible.',
+    'hz.q.15':'Contact new leads fast. Speed to lead wins deals.',
+
+    'hz.ins.up':'{m} is up {p} vs {prev}. Good. Don’t stop.','hz.ins.down':'{m} is down {p} vs {prev}. Find the cause, not an excuse.',
+    'hz.ins.worst':'Money leaks at {a} → {b}: only {p}. That’s your bottleneck.',
+    'hz.ins.ltv.good':'LTV : CAC is {r}, past the 3× line. You can afford to spend more to get clients.',
+    'hz.ins.ltv.bad':'LTV : CAC is only {r}, under 3×. Scale this and you just lose money faster.',
+    'hz.ins.loss':'You lost {v} this period. Stop the bleeding first.','hz.ins.profit':'Net margin {p}. Revenue is vanity; profit is what you keep.',
+    'hz.ins.goals':'{n} of {t} goals on track.',
+    'hz.g.behind':'{n} of your goals are behind pace. Goals don’t hit themselves — what can you do more of today?',
+    'hz.g.ok':'Every goal is on track. If it always feels this easy, your goals are too low.',
+    'hz.tests':'Test one variable at a time. Wait for enough data, then kill the loser.',
+
     'c.new':'New metric','c.edit':'Edit metric','c.name':'Name','c.namePh':'e.g. Revenue per meeting','c.num':'Numerator','c.den':'Denominator',
     'c.fmt':'Format','c.better':'Better when','c.higher':'Higher','c.lower':'Lower','c.delete':'Delete metric',
     'fmt.num':'Number','fmt.money':'Money','fmt.pct':'Percent','fmt.ratio':'Ratio ×',
@@ -680,6 +825,85 @@ const I18N = {
     'sync.keyTitle':'同步密钥','sync.copy':'复制','sync.copied':'已复制','sync.working':'处理中…',
     'sync.keyNote':'把它当作密码：拿到它的人能看到你的数据。建议存进密码管理器；换新手机时，在「连接已有同步」里粘贴它就能连上。',
 
+    'g.hz':'Hormozi 指标',
+    'm.maxCust':'客户天花板','m.maxRev':'月收入天花板','m.headroom':'离天花板还有','m.cash30':'30 天回本倍数','m.actions':'每日{s}',
+    'mf.maxCust':'每月新客户 ÷ 月流失率','mf.maxRev':'客户天花板 × 每客户月均收入',
+    'mf.headroom':'客户天花板 ÷ 活跃客户 − 1','mf.cash30':'近 30 天新客户收入 × 毛利率 ÷ 近 30 天获客花费','mf.actions':'{s} ÷ 天数',
+    'md.maxCust':'按现在的进客速度和流失率，最多能同时留住多少客户（Hormozi 说的 Hypothetical Max）。流失率为 0 时没有上限。',
+    'md.maxRev':'到达客户天花板时的月收入。',
+    'md.headroom':'撞到天花板之前还能涨多少。接近 0 或为负数，说明流失已经抵消了新增。',
+    'md.cash30':'新客户前 30 天带来的毛利，是获客花费的几倍（让客户出钱帮你获客）。≥ 1× 表示客户自己付清了获客成本；≥ 2× 可以放心放大获客。',
+    'md.actions':'平均每天的核心行动次数，对照 100 法则的目标。',
+    'hz.newPerMo':'每月新客户','hz.acq30':'近 30 天获客花费','hz.rev30':'近 30 天新客户收入','hz.days':'天数',
+
+    'hz.title':'Hormozi 模式','hz.coach':'Hormozi 教练','hz.tapNext':'下一句',
+    'hz.onF':'打开后会有教练对话、瓶颈诊断、100 法则计分板、Hormozi 指标和法则。关掉后全部隐藏，数据不受影响。灵感来自 Alex Hormozi 的书和公开内容，非官方；教练的话是根据你的数据写的，不是他本人说的。',
+    'hz.target':'每日核心行动','hz.stage':'算作行动的阶段','hz.wknd':'周末没做不算断',
+    'hz.targetF':'100 法则：每天做满这么多次，连做 100 天。次数取自这个漏斗阶段的记录。',
+    'hz.mbn.more':'做多','hz.mbn.better':'做好','hz.mbn.new':'做新',
+    'hz.r100':'100 法则','hz.r100.left':'今天还差 {n} 次','hz.r100.done':'今天做满了','hz.r100.streak':'连续 {n} 天',
+    'hz.r100.best':'最长 {n} 天','hz.r100.day':'第 {n} / 100 天','hz.r100.grid':'过去 100 天 · 绿色 = 做满',
+    'hz.rules':'Hormozi 法则','hz.next':'下一条',
+    'hz.t.hit':'{n} 次，做满了。Volume negates luck——明天继续。','hz.t.half':'过半了，还差 {n} 次。别停。',
+    'hz.t.streak':'连续 {n} 天做满。大部分人早就放弃了，你没有。',
+
+    'hz.f.noData':'先把数字记下来。没有数据，我没法告诉你问题出在哪。',
+    'hz.f.noActions':'你还没有记录每天的「{s}」。100 法则看的是每天的行动量——每做一次，就在快速记录里点一下 +。',
+    'hz.f.losing':'每拉一个客户你都在亏钱：LTV : CAC 只有 {r}。先别加量，量越大亏越多。去提价，或者把 offer 做得更值钱。',
+    'hz.f.more':'你缺的不是技巧，是量。过去 14 天平均每天只有 {avg} 次「{s}」，目标是 {target}。先把量做够，再谈优化。',
+    'hz.f.leak':'你现在唯一要解决的是「{name}」：现在 {cur}，你自己做到过 {best}。修好它，同样的量每月多 {extra} 个客户。',
+    'hz.f.leakNoExtra':'你现在唯一要解决的是「{name}」：现在 {cur}，你自己做到过 {best}。先修这一步，别的都可以等。',
+    'hz.f.ceiling':'你快撞到天花板了：按现在的流失，最多只能留住 {max} 个客户，你已经有 {active} 个。拉再多客户也只是在补漏——先解决流失。',
+    'hz.f.cash':'获客在吃你的现金：新客户 30 天只赚回获客花费的 {x}。加一个首单加购或预付，让客户出钱帮你买下一个客户。',
+    'hz.f.new':'量够了，转化稳，单位经济健康。现在才是试新东西的时候：新渠道，或者新 offer。',
+    'hz.x.left':'今天还差 {n} 次「{s}」。先做完再说。',
+    'hz.x.done':'今天的 {target} 次做满了。明天同样的量，别断。',
+    'hz.x.streak':'连续 {n} 天做满，离 100 天还有 {left} 天。',
+    'hz.x.ceiling':'按现在的进客速度和流失，你的天花板是 {max} 个客户、每月 {rev}。',
+    'hz.x.ceilingNoRev':'按现在的进客速度和流失，你的天花板是 {max} 个客户。',
+    'hz.x.ltvGood':'LTV : CAC 是 {r}，过了 3 倍的线。你有本钱比对手花更多钱获客。',
+    'hz.x.cashGood':'新客户 30 天就赚回获客花费的 {x}。客户在帮你出钱买客户——放大它。',
+    'hz.x.winner':'测试有结论了：「{v}」在「{m}」上赢了。把输的版本停掉，再测下一个。',
+
+    'hz.take.maxCust':'到了天花板，拉再多客户也只是在补漏。想涨：要么进得更多，要么漏得更少。',
+    'hz.take.maxRev':'这是这门生意按现在的样子，每月最多能做到的收入。不满意？改变进客速度、流失或者价格。',
+    'hz.take.headroom':'低于 15%，说明你快到顶了——先修流失，再加量。',
+    'hz.take.cash30':'≥ 1×：客户在 30 天内付清了自己的获客成本。≥ 2×：获客可以一直放大，现金不会断。',
+    'hz.take.ltvCac':'3 倍是底线。低于 3，获客越多越危险；过了 3，你就有本钱比对手花更多钱获客。',
+    'hz.take.cac':'CAC 不是越低越好。只要 LTV 撑得住，愿意为一个客户花最多钱的人会赢。',
+    'hz.take.churnRate':'流失就是漏水的桶。先堵漏，再加水。',
+    'hz.take.conv':'转化掉了先别换渠道。先测开场白和 offer，一次只改一个变量。',
+    'hz.take.convOverall':'同样的线索，转化率翻倍 = 客户翻倍，一分钱获客费都不用多花。',
+    'hz.take.avgDeal':'提价是最快的增长：不需要多一个客户，也不需要多一条线索。',
+    'hz.take.actions':'Volume negates luck. 每天 {target} 次，连做 100 天，再来判断有没有用。',
+    'hz.take.newCust':'想要更多客户，先看量，再看转化，最后才换方法。',
+
+    'hz.q.1':'量能抵消运气。（Volume negates luck.）',
+    'hz.q.2':'把 offer 做到让人拒绝都觉得自己傻。',
+    'hz.q.3':'卖给他们想要的，交付他们需要的。',
+    'hz.q.4':'先做多，再做好，最后才做新。',
+    'hz.q.5':'100 法则：每天 100 次核心行动，连做 100 天。',
+    'hz.q.6':'价值 =（理想结果 × 成功可能性）÷（等待时间 × 付出努力）。',
+    'hz.q.7':'获客只有四种核心方法：暖触达、冷触达、发内容、投广告。',
+    'hz.q.8':'让客户出钱，帮你买下一个客户。',
+    'hz.q.9':'找到最大的瓶颈，先修它。其他的都可以等。',
+    'hz.q.10':'客户终身毛利，至少要是获客成本的 3 倍。',
+    'hz.q.11':'提价。更高的价格，让你有余力把结果做得更好。',
+    'hz.q.12':'找一群饥饿的人：痛点大、付得起、找得到。',
+    'hz.q.13':'你的天花板 = 每月新客户 ÷ 流失率。',
+    'hz.q.14':'稀缺、紧迫、赠品、保证、命名——让 offer 让人无法拒绝。',
+    'hz.q.15':'新线索要马上联系。速度决定成交。',
+
+    'hz.ins.up':'{m} 比{prev}涨了 {p}。很好，别停。','hz.ins.down':'{m} 比{prev}掉了 {p}。找原因，别找借口。',
+    'hz.ins.worst':'钱漏在 {a} → {b}：只有 {p}。这就是你的瓶颈。',
+    'hz.ins.ltv.good':'LTV : CAC 为 {r}，过了 3 倍的线，可以放心加大获客。',
+    'hz.ins.ltv.bad':'LTV : CAC 只有 {r}，低于 3 倍。不修好就放大，只会亏得更快。',
+    'hz.ins.loss':'这段时间亏了 {v}。先止血。','hz.ins.profit':'净利率 {p}。收入是面子，利润才是里子。',
+    'hz.ins.goals':'{t} 个目标里 {n} 个在轨道上。',
+    'hz.g.behind':'有 {n} 个目标落后了。目标不会自己完成——今天能多做什么？',
+    'hz.g.ok':'目标都在轨道上。要是一直这么轻松，说明目标定低了。',
+    'hz.tests':'一次只测一个变量。样本够了再下结论，赢了就把输的停掉。',
+
     'c.new':'新指标','c.edit':'编辑指标','c.name':'名称','c.namePh':'例如：每次会议带来的收入','c.num':'分子','c.den':'分母',
     'c.fmt':'格式','c.better':'更好的方向','c.higher':'越高越好','c.lower':'越低越好','c.delete':'删除指标',
     'fmt.num':'数字','fmt.money':'金额','fmt.pct':'百分比','fmt.ratio':'倍数 ×',
@@ -715,7 +939,8 @@ const PERIODS = ['week', 'month', 'quarter', 'year', 'all'];
 function defaultDB() {
   return {
     v: 1,
-    settings: { lang: null, currency: '$', theme: 'auto', biz: '', startCust: 0, lifeCap: 36 },
+    // hz* = Hormozi mode (on unless turned off), r100 = Rule of 100 daily target; old pages keep unknown settings keys
+    settings: { lang: null, currency: '$', theme: 'auto', biz: '', startCust: 0, lifeCap: 36, hz: true, r100: 100, r100Stage: '', r100Wknd: true },
     stages: DEFAULT_STAGES.map(id => ({ id })),
     entries: [], goals: [], custom: [], tests: [], names: {},
     fv: DATA_FV, su: 0, setu: 0, nu: 0, del: { e: {}, g: {}, c: {}, t: {} }
@@ -980,6 +1205,26 @@ function rebuildMetrics() {
     calc: c => { const u = unit(c); return u.cac != null && u.arpa && u.gm > 0 ? u.cac / (u.arpa * u.gm) : null; },
     parts: c => { const u = unit(c); return [[t('m.cac'), u.cac, 'money'], [t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct']]; } });
 
+  /* Hormozi numbers. Ceiling ("hypothetical max") = new clients per month ÷ monthly churn, over the
+     same 90-day window as churn. The 30-day cash multiple always looks at the 30 days ending the period. */
+  const newPerMo = c => c.U.S[won] / Math.max(c.U.months, 1);
+  const ceiling = c => { const u = unit(c); return u.churn > 0 ? newPerMo(c) / u.churn : null; };
+  const last30 = c => { let f = addDays(c.effTo, -29); const fd = firstDate(); if (fd && f < fd) f = fd <= c.effTo ? fd : c.effTo; return ctxFor(f, c.effTo, true); };
+  add({ key: 'maxCust', group: 'hz', fmt: 'num1', unit: true, name: () => t('m.maxCust'), calc: ceiling,
+    parts: c => [[t('hz.newPerMo'), newPerMo(c), 'num1'], [t('m.churnRate'), unit(c).churn, 'pct']] });
+  add({ key: 'maxRev', group: 'hz', fmt: 'money', unit: true, name: () => t('m.maxRev'),
+    calc: c => { const h = ceiling(c), a = unit(c).arpa; return h != null && a != null ? h * a : null; },
+    parts: c => [[t('m.maxCust'), ceiling(c), 'num1'], [t('m.arpa'), unit(c).arpa, 'money']] });
+  add({ key: 'headroom', group: 'hz', fmt: 'pct', unit: true, name: () => t('m.headroom'),
+    calc: c => { const h = ceiling(c); return h != null && c.endA > 0 ? h / c.endA - 1 : null; },
+    parts: c => [[t('m.maxCust'), ceiling(c), 'num1'], [t('m.active'), c.endA, 'num']] });
+  add({ key: 'cash30', group: 'hz', fmt: 'ratio', name: () => t('m.cash30'),
+    calc: c => { const w = last30(c), gm = unit(c).gm, sp = acqOf(w.S); return gm != null && sp > 0 && w.S.revNew > 0 ? w.S.revNew * gm / sp : null; },
+    parts: c => { const w = last30(c); return [[t('hz.rev30'), w.S.revNew, 'money'], [t('m.grossMargin'), unit(c).gm, 'pct'], [t('hz.acq30'), acqOf(w.S), 'money']]; } });
+  add({ key: 'actions', group: 'hz', fmt: 'num1', name: () => t('m.actions', { s: sn(r100Stage()) }),
+    formula: () => t('mf.actions', { s: sn(r100Stage()) }),
+    calc: c => c.S[r100Stage()] / c.days, parts: c => [[sn(r100Stage()), c.S[r100Stage()], 'num'], [t('hz.days'), c.days, 'num']] });
+
   for (const s of st) add({ key: s.id, group: 'inputs', additive: true, stage: s.id, name: () => stageName(stageById(s.id)) || s.id,
     formula: () => '', desc: () => '', calc: c => c.S[s.id] ?? 0, parts: () => [] });
   for (const f of MONEY_FIELDS) add({ key: f, group: 'inputs', fmt: 'money', additive: true, better: ['mkt', 'sales', 'cogs', 'opex'].includes(f) ? 'down' : 'up',
@@ -1103,6 +1348,123 @@ function goalStatus(g) {
     } else status = v == null ? 'na' : 'behind';
   }
   return { m, r, v, target, progress, status, projected, daysLeft, fr };
+}
+
+/* ---- Hormozi mode: Rule of 100, bottleneck, coach ---- */
+const hzOn = () => DB.settings.hz !== false;
+function r100Stage() { const id = DB.settings.r100Stage; return id && stageById(id) ? id : stageById('contacted') ? 'contacted' : firstStage(); }
+const r100Target = () => clamp(Math.round(+DB.settings.r100 || 100), 1, 100000);
+const isWeekend = d => { const w = parseD(d).getDay(); return w === 0 || w === 6; };
+/* daily count of the action stage (all variants): today, current and best streak, the last 100 days,
+   and the average of the last 14 days. A missed weekend day skips instead of breaking when allowed. */
+function r100State() {
+  const td = today(), mk = 'r100|' + td, memo = ctxCache.get(mk);
+  if (memo) return memo;
+  const sid = r100Stage(), target = r100Target(), fd = firstDate(), skipW = DB.settings.r100Wknd !== false;
+  const byDay = new Map();
+  for (const e of DB.entries) if (e.v[sid]) byDay.set(e.date, (byDay.get(e.date) || 0) + e.v[sid]);
+  const count = d => byDay.get(d) || 0;
+  const skip = d => skipW && isWeekend(d) && count(d) < target;
+  let streak = 0, best = 0, run = 0;
+  if (fd) {
+    for (let d = count(td) >= target ? td : addDays(td, -1); d >= fd; d = addDays(d, -1)) {
+      if (count(d) >= target) streak++; else if (!skip(d)) break;
+    }
+    for (let d = fd; d <= td; d = addDays(d, 1)) {
+      if (count(d) >= target) best = Math.max(best, ++run); else if (!skip(d) && d !== td) run = 0;
+    }
+  }
+  const grid = [];
+  for (let i = 99; i >= 0; i--) { const d = addDays(td, -i); grid.push({ d, n: count(d), skip: skip(d) }); }
+  let sum = 0, nd = 0;
+  for (let i = 1; i <= 14 && fd; i++) { const d = addDays(td, -i); if (d < fd) break; if (skip(d)) continue; sum += count(d); nd++; }
+  if (count(td) >= target || !nd) { sum += count(td); nd++; }
+  const from30 = addDays(td, -29);
+  let recent = false;
+  for (const d of byDay.keys()) if (d >= from30 && d <= td) { recent = true; break; }
+  const R = { sid, target, td, today: count(td), streak, best, grid, avg14: sum / nd, recent };
+  ctxCache.set(mk, R);
+  return R;
+}
+/* the funnel step that fell furthest below its own best 30-day block of the last 6 (both with 30+ in the base) */
+function findLeak() {
+  const td = today(), fd = firstDate();
+  if (!fd) return null;
+  const f0 = addDays(td, -29), cur = ctxFor(f0 < fd ? fd : f0, td, true);
+  const perMo = cur.S[wonStage()] * 30.4375 / cur.days;
+  let pick = null;
+  for (let i = 1; i < DB.stages.length; i++) {
+    const a = DB.stages[i - 1].id, b = DB.stages[i].id;
+    if (cur.S[a] < 30) continue;
+    const r = cur.S[b] / cur.S[a];
+    let best = 0;
+    for (let k = 1; k <= 6; k++) {
+      const to = addDays(td, -30 * k);
+      if (to < fd) break;
+      const f = addDays(to, -29), w = ctxFor(f < fd ? fd : f, to, true);
+      if (w.S[a] >= 30) best = Math.max(best, w.S[b] / w.S[a]);
+    }
+    if (!best || r >= best * .85) continue;
+    const gain = r > 0 ? best / r : Infinity;   // the same relative gain at any step adds the same share of clients
+    if (!pick || gain > pick.gain) pick = { key: 'conv:' + b, r, best, gain, extra: r > 0 ? perMo * (best / r - 1) : null };
+  }
+  return pick;
+}
+/* first A/B test step with a significant winner, all time */
+function testWinner() {
+  const fd = firstDate();
+  if (!fd) return null;
+  for (const ts of DB.tests) {
+    const sums = ts.variants.map(v => sumRange(fd, today(), v.id).S);
+    for (let i = 1; i < DB.stages.length; i++) {
+      const a = DB.stages[i - 1].id, b = DB.stages[i].id;
+      const order = sums.map((S, j) => [S[a] ? S[b] / S[a] : null, j]).filter(x => x[0] != null).sort((p, q) => q[0] - p[0]);
+      if (order.length < 2 || order[0][0] <= order[1][0]) continue;
+      const x = sums[order[0][1]], y = sums[order[1][1]];
+      if (Math.min(x[a], y[a]) >= 30 && zScore(x[b], x[a], y[b], y[a]) >= 1.96)
+        return { v: ts.variants[order[0][1]].name, m: MX['conv:' + b] ? MX['conv:' + b].name() : stageName(stageById(b)) };
+    }
+  }
+  return null;
+}
+/* what the coach says first, by priority: losing money → not enough volume → a leaking step →
+   near the ceiling → acquisition eating cash → ready for something new. phase: 0 More, 1 Better, 2 New */
+function coachState() {
+  if (!DB.entries.length) return { phase: 0, kind: 'noData', focus: t('hz.f.noData'), extras: [] };
+  const td = today(), fd = firstDate(), f0 = addDays(td, -29);
+  const c = ctxFor(f0 < fd ? fd : f0, td), R = r100State(), s = stageName(stageById(R.sid));
+  const lc = MX.ltvCac.calc(c), maxC = MX.maxCust.calc(c), cash = MX.cash30.calc(c), leak = findLeak();
+  let kind, phase = 1, v = {};
+  if (lc != null && lc < 1) { kind = 'losing'; v = { r: fmtVal(lc, 'ratio') }; }
+  else if (!R.recent) { kind = 'noActions'; phase = 0; v = { s }; }
+  else if (R.avg14 < R.target * .9) { kind = 'more'; phase = 0; v = { avg: fmtNum(R.avg14, R.avg14 < 10 ? 1 : 0), s, target: fmtNum(R.target) }; }
+  else if (leak) {
+    kind = leak.extra >= .1 ? 'leak' : 'leakNoExtra';
+    v = { name: MX[leak.key] ? MX[leak.key].name() : '', cur: fmtVal(leak.r, 'pct'), best: fmtVal(leak.best, 'pct'), extra: leak.extra != null ? fmtNum(leak.extra, 1) : '' };
+  }
+  else if (maxC != null && c.endA >= maxC * .85) { kind = 'ceiling'; v = { max: fmtNum(Math.round(maxC)), active: fmtNum(c.endA) }; }
+  else if (cash != null && cash < 1) { kind = 'cash'; v = { x: fmtVal(cash, 'ratio') }; }
+  else { kind = 'new'; phase = 2; }
+  const x = [];
+  if (R.recent) x.push(R.today >= R.target ? t('hz.x.done', { target: fmtNum(R.target) }) : t('hz.x.left', { n: fmtNum(R.target - R.today), s }));
+  if (R.streak >= 2) x.push(t('hz.x.streak', { n: R.streak, left: Math.max(0, 100 - R.streak) }));
+  if (maxC != null && kind !== 'ceiling') {
+    const rev = MX.maxRev.calc(c);
+    x.push(t(rev != null ? 'hz.x.ceiling' : 'hz.x.ceilingNoRev', { max: fmtNum(Math.round(maxC)), rev: fmtVal(rev, 'money', true) }));
+  }
+  if (lc != null && lc >= 3) x.push(t('hz.x.ltvGood', { r: fmtVal(lc, 'ratio') }));
+  if (cash != null && cash >= 2) x.push(t('hz.x.cashGood', { x: fmtVal(cash, 'ratio') }));
+  const w = testWinner();
+  if (w) x.push(t('hz.x.winner', w));
+  return { phase, kind, focus: t('hz.f.' + kind, v), extras: x };
+}
+/* his core ideas, condensed; the source is shown only where the book is certain */
+const HZ_RULES = [[1, ''], [2, '$100M Offers'], [3, '$100M Offers'], [4, '$100M Leads'], [5, '$100M Leads'], [6, '$100M Offers'], [7, '$100M Leads'],
+  [8, '$100M Money Models'], [9, ''], [10, ''], [11, '$100M Offers'], [12, '$100M Offers'], [13, ''], [14, '$100M Offers'], [15, '']];
+function rule(i) {
+  const n = HZ_RULES.length, day = Math.floor(parseD(today()) / 864e5);
+  const [k, src] = HZ_RULES[((day + i) % n + n) % n];
+  return { text: t('hz.q.' + k), src };
 }
 
 /* ---- sample data (seeded, deterministic) ---- */
@@ -1461,19 +1823,20 @@ function sparkSVG(values, color) {
 
 /* ---- toast ---- */
 let toastState = null;
-function toast(msg, action) {
+function toast(msg, action, coach) {
   const wrap = $('#toastwrap');
   if (toastState) { clearTimeout(toastState.timer); toastState.el.remove(); }
   const el = document.createElement('div');
-  el.className = 'toast'; el.setAttribute('role', 'status');
-  el.innerHTML = `<span>${esc(msg)}</span>${action ? `<button type="button">${esc(action.label)}</button>` : ''}`;
+  el.className = 'toast' + (coach ? ' coach-toast' : ''); el.setAttribute('role', 'status');
+  el.innerHTML = `${coach ? avatarHTML(34, 'talking') : ''}<span>${esc(msg)}</span>${action ? `<button type="button">${esc(action.label)}</button>` : ''}`;
+  if (coach) setTimeout(() => { const a = el.querySelector('.hz-avw'); if (a) a.classList.remove('talking'); }, 1100);
   wrap.appendChild(el);
   const s = new Spring(0);
   s.onUpdate = p => { el.style.opacity = clamp(p, 0, 1); el.style.transform = `translateY(${(1 - p) * 26}px) scale(${.94 + .06 * p})`; };
   s.to(1, { response: .5, damping: .82 });
   const st = toastState = { el, timer: 0 };
   const hide = () => { s.to(0, { response: .35, damping: 1, onRest: () => el.remove() }); if (toastState === st) toastState = null; };
-  st.timer = setTimeout(hide, action ? 5000 : 2200);
+  st.timer = setTimeout(hide, action ? 5000 : coach ? 4200 : 2200);
   if (action) el.querySelector('button').addEventListener('click', () => { clearTimeout(st.timer); action.fn(); hide(); });
 }
 
@@ -1622,6 +1985,141 @@ function renameMetric(key, text) {
   commit(); rebuildMetrics();
 }
 
+/* ---- Hormozi mode: avatar, coach bubble, Rule of 100 card ---- */
+const HZ = { idx: 0, lines: [], qi: 0 };
+let avN = 0;
+/* a Memoji-style coach: bald, full beard, black tee. Ids are unique per copy so gradients never break */
+function avatarSVG() {
+  const n = ++avN;
+  return `<svg class="hz-av" viewBox="0 0 120 120" aria-hidden="true"><defs>
+    <linearGradient id="hzb${n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a4e"/><stop offset="1" stop-color="#1c1c1e"/></linearGradient>
+    <radialGradient id="hzs${n}" cx=".4" cy=".32" r=".78"><stop offset="0" stop-color="#f3c9a4"/><stop offset="1" stop-color="#d0916a"/></radialGradient>
+    <clipPath id="hzc${n}"><circle cx="60" cy="60" r="60"/></clipPath></defs>
+    <circle cx="60" cy="60" r="60" fill="url(#hzb${n})"/>
+    <g clip-path="url(#hzc${n})">
+      <path d="M8 124C10 99 31 88 60 88s50 11 52 36z" fill="#0b0b0c"/>
+      <path d="M48 72h24v17c-6 6-18 6-24 0z" fill="#c1835a"/>
+      <ellipse cx="33.5" cy="55" rx="5.5" ry="8.5" fill="#d69a70"/><ellipse cx="86.5" cy="55" rx="5.5" ry="8.5" fill="#d69a70"/>
+      <ellipse cx="60" cy="49" rx="27" ry="31" fill="url(#hzs${n})"/>
+      <ellipse cx="50" cy="27" rx="11" ry="5" fill="#fff" opacity=".32" transform="rotate(-18 50 27)"/>
+      <path d="M33 50c0 16 3 31 13 38 6 4 22 4 28 0 10-7 13-22 13-38-3 8-6 12-10 14-7-4-27-4-34 0-4-2-7-6-10-14z" fill="#2b1f19"/>
+      <ellipse class="mouth" cx="60" cy="75" rx="6" ry="3.2" fill="#6b2d24"/>
+      <path d="M46 69c5-4 10-4 14-2 4-2 9-2 14 2-5 2-9 2-14 1-5 1-9 1-14-1z" fill="#2b1f19"/>
+      <path d="M40 41q8-5 15-1M65 40q7-4 15 1" stroke="#2b1f19" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+      <g class="eyes"><ellipse cx="48" cy="49" rx="3.2" ry="3.8" fill="#1d1d1f"/><ellipse cx="72" cy="49" rx="3.2" ry="3.8" fill="#1d1d1f"/>
+        <circle cx="49.2" cy="47.6" r="1" fill="#fff"/><circle cx="73.2" cy="47.6" r="1" fill="#fff"/></g>
+      <path d="M60 50q-3 7-2 10q2 1.5 5 0" stroke="#b27550" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+    </g></svg>`;
+}
+const avatarHTML = (size, cls = '') => `<span class="hz-avw ${cls}" style="width:${size}px;height:${size}px">${avatarSVG()}</span>`;
+/* the ghost copy reserves the bubble's final height, so typing the text in never shifts the layout */
+function coachHTML(text, { next = false, src = '', size = 56 } = {}) {
+  const av = avatarHTML(size);
+  return `<div class="coach">${next ? `<button class="hz-avbtn" data-act="coachnext" aria-label="${esc(t('hz.tapNext'))}">${av}</button>` : av}
+    <div class="bubble"${next ? ' data-act="coachnext"' : ''}><div class="bn">${esc(t('hz.coach'))}</div>
+      <div class="btw"><span class="bt-ghost">${esc(text)}</span><span class="bt">${esc(text)}</span></div><div class="bsrc">${esc(src)}</div></div></div>`;
+}
+/* the coach says a line: the bubble pops on a spring, the text types in, the mouth moves while it types */
+function speak(coach, text, src, pop) {
+  if (!coach) return;
+  const bub = $('.bubble', coach), bt = $('.bt', coach), av = $('.hz-avw', coach);
+  $('.bt-ghost', coach).textContent = text;
+  if (src != null) $('.bsrc', coach).textContent = src;
+  clearInterval(coach._typer);
+  if (RM.matches) { bt.textContent = text; return; }
+  if (pop) {
+    const s = coach._pop || (coach._pop = new Spring(1));
+    s.onUpdate = p => { bub.style.transform = `scale(${.9 + .1 * p})`; };
+    s.jump(0); s.to(1, { response: .42, damping: .62 });
+  }
+  const ch = [...text], step = Math.max(1, Math.round(ch.length / 36));
+  let i = 0;
+  bt.textContent = ''; av.classList.add('talking');
+  coach._typer = setInterval(() => {
+    i = Math.min(ch.length, i + step); bt.textContent = ch.slice(0, i).join('');
+    if (i >= ch.length) { clearInterval(coach._typer); av.classList.remove('talking'); }
+  }, 24);
+}
+function coachNext(el) {
+  const card = el.closest('.hzcard');
+  if (!card || !HZ.lines.length) return;
+  HZ.idx = (HZ.idx + 1) % HZ.lines.length;
+  const L = HZ.lines[HZ.idx];
+  speak($('.coach', card), L.text, L.src || '', true);
+  $$('.hz-dots i', card).forEach((d, i) => d.classList.toggle('on', i === HZ.idx));
+  haptic();
+}
+const ruleInner = q => `<p class="q">${esc(q.text)}</p><div class="small muted">${q.src ? esc(q.src) + ' · ' : ''}${esc(t('hz.next'))} ›</div>`;
+function ruleNext(card) {
+  HZ.qi++;
+  card.innerHTML = ruleInner(rule(2 + HZ.qi));
+  const p = $('.q', card), s = new Spring(0);
+  s.onUpdate = x => { p.style.opacity = clamp(x, 0, 1); p.style.transform = `translateY(${(1 - x) * 10}px)`; };
+  s.to(1, { response: .5, damping: .85 });
+  haptic();
+}
+function r100Cells(R) {
+  return R.grid.map(g => {
+    const hit = g.n >= R.target, part = !hit && g.n > 0;
+    return `<i class="${hit ? 'hit' : part ? 'part' : g.skip ? 'off' : ''}${g.d === R.td ? ' td' : ''}"${part ? ` style="--p:${Math.round(18 + 52 * g.n / R.target)}%"` : ''} title="${esc(fmtDay(g.d))} · ${fmtNum(g.n)}"></i>`;
+  }).join('');
+}
+function r100Inner(R, mini) {
+  const hit = R.today >= R.target, s = stageName(stageById(R.sid)), px = mini ? 40 : 92;
+  const status = esc(hit ? t('hz.r100.done') : t('hz.r100.left', { n: fmtNum(R.target - R.today) }));
+  const streak = R.streak ? ' · ' + esc(t('hz.r100.streak', { n: R.streak })) : '';
+  return `<div class="ring" style="width:${px}px;height:${px}px" data-ring="${mini ? 'r100log' : 'r100'}" data-v="${clamp(R.today / R.target, 0, 1)}">
+      <svg viewBox="0 0 66 66"><circle class="rt" cx="33" cy="33" r="28"/><circle class="rf" cx="33" cy="33" r="28" style="stroke:${hit ? 'var(--green-t)' : 'var(--pink)'}"/></svg>
+      ${mini ? '' : `<span>${numHTML('r100c', R.today, 'num')}</span>`}</div>
+    <div class="bd">${mini
+      ? `<div class="t1"><b class="num">${fmtNum(R.today)}</b> / ${fmtNum(R.target)} <span class="muted">· ${esc(s)}</span></div><div class="t2">${status}${streak}</div>`
+      : `<div class="t1">${status}</div><div class="t2">${esc(s)} · <span class="num">${fmtNum(R.today)} / ${fmtNum(R.target)}</span>${streak}</div>`}</div>
+    ${mini ? '' : `<button class="btn r100plus" data-act="r100plus" aria-label="+1">${icon('plus', 2.8)}1</button>`}`;
+}
+function r100CardHTML(R) {
+  return `<div class="card rise r100" style="--i:2">
+    <div class="srow"><b class="h3">${esc(t('hz.r100'))}</b><span class="sp"></span><span class="small muted">${R.streak ? esc(t('hz.r100.day', { n: Math.min(R.streak, 100) })) : ''}</span></div>
+    <div class="r100main" data-r100wrap="big">${r100Inner(R)}</div>
+    <div class="r100grid">${r100Cells(R)}</div>
+    <div class="small muted" style="margin-top:8px">${esc(t('hz.r100.grid'))}${R.best ? ' · ' + esc(t('hz.r100.best', { n: R.best })) : ''}</div></div>`;
+}
+function hzOverviewHTML() {
+  const cs = coachState();
+  HZ.lines = [{ text: cs.focus, src: '' }, ...cs.extras.map(text => ({ text, src: '' })), rule(0), rule(1)];
+  if (HZ.idx >= HZ.lines.length) HZ.idx = 0;
+  const L = HZ.lines[HZ.idx];
+  const steps = ['more', 'better', 'new'].map((k, i) => `<span class="${i === cs.phase ? 'on' : i < cs.phase ? 'past' : ''}">${i + 1} ${esc(t('hz.mbn.' + k))}</span>`).join('<i></i>');
+  return `<div class="grid two" style="margin-bottom:22px">
+    <div class="card rise hzcard" style="--i:1">${coachHTML(L.text, { next: true, src: L.src })}
+      <div class="mbn">${steps}<div class="sp"></div><div class="hz-dots">${HZ.lines.map((_, i) => `<i class="${i === HZ.idx ? 'on' : ''}"></i>`).join('')}</div></div></div>
+    ${r100CardHTML(r100State())}</div>`;
+}
+const rulesCardHTML = () => `<div class="h2 rise" style="--i:13">${esc(t('hz.rules'))}</div>
+  <div class="card rise hzrule press" style="--i:14" data-act="rulenext" role="button" tabindex="0">${ruleInner(rule(2 + HZ.qi))}</div>`;
+/* live update after a +: rings animate from where they were, the grid and texts follow */
+function paintR100() {
+  if (!hzOn()) return;
+  const R = r100State();
+  for (const w of $$('[data-r100wrap]')) { w.innerHTML = r100Inner(R, w.dataset.r100wrap !== 'big'); hydrate(w); }
+  for (const g of $$('.r100grid')) g.innerHTML = r100Cells(R);
+}
+function hzMilestone(before, after) {
+  const target = r100Target(), half = Math.ceil(target / 2);
+  if (before < target && after >= target) {
+    const n = r100State().streak;
+    toast([7, 14, 30, 50, 100].includes(n) ? t('hz.t.streak', { n }) : t('hz.t.hit', { n: fmtNum(target) }), null, true);
+  } else if (target >= 10 && before < half && after >= half) toast(t('hz.t.half', { n: fmtNum(target - after) }), null, true);
+}
+function hzSettingsHTML() {
+  const on = hzOn();
+  return `<div class="rise" style="--i:1"><div class="gh">${esc(t('hz.title'))}</div><div class="list">
+    <label class="row ind">${avatarHTML(30)}<div class="bd"><div class="t1">${esc(t('hz.title'))}</div></div><span class="sw"><input type="checkbox" data-hz="hz" ${on ? 'checked' : ''} aria-label="${esc(t('hz.title'))}"><i></i></span></label>
+    ${on ? `<div class="row"><span class="lbl">${esc(t('hz.target'))}</span><input class="inl num" inputmode="numeric" data-set="r100" value="${esc(r100Target())}"></div>
+    <div class="row"><span class="lbl">${esc(t('hz.stage'))}</span><select class="inl" data-set="r100Stage">${DB.stages.map(s => `<option value="${esc(s.id)}" ${s.id === r100Stage() ? 'selected' : ''}>${esc(stageName(s))}</option>`).join('')}</select></div>
+    <label class="row"><span class="lbl">${esc(t('hz.wknd'))}</span><span style="flex:1"></span><span class="sw"><input type="checkbox" data-hz="r100Wknd" ${DB.settings.r100Wknd !== false ? 'checked' : ''} aria-label="${esc(t('hz.wknd'))}"><i></i></span></label>` : ''}
+  </div><div class="gf">${on ? esc(t('hz.targetF')) + ' ' : ''}${esc(t('hz.onF'))}</div></div>`;
+}
+
 function renderShell() {
   const nav = VIEW_KEYS.map(k => `<button class="nav${UI.view === k ? ' on' : ''}" data-tab="${k}">${icon(k)}<span>${esc(t('nav.' + k))}</span></button>`).join('');
   $('#side').innerHTML = `<div class="brand"><i>${icon('pulse', 2.4).replace('<svg', '<svg style="width:18px;height:18px;color:#fff"')}</i><div>Pulse<small>${esc(DB.settings.biz || t('s.bizPh'))}</small></div></div>${nav}<div class="grow"></div><div class="langsw" data-mount="seg:lang-side"></div>`;
@@ -1682,7 +2180,7 @@ function emptyHero() {
 }
 function viewOverview() {
   const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p>`;
-  if (!DB.entries.length) return head + emptyHero();
+  if (!DB.entries.length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const hist = historyRanges(UI.period, UI.offset, 8).map(h => ctxFor(h.from, h.to));
   const kpis = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltvCac'].map((k, i) => {
@@ -1710,7 +2208,7 @@ function viewOverview() {
   const goals = gs.length ? `<div class="grid gg">${gs.map((s, i) => goalCard(DB.goals[i], s)).join('')}</div>`
     : `<div class="card srow"><span class="muted small" style="flex:1">${esc(t('ov.noGoals'))}</span><button class="btn sec" data-act="newgoal">${esc(t('ov.addGoal'))}</button></div>`;
 
-  return `${head}<div data-mount="period"></div>
+  return `${head}${hzOn() ? hzOverviewHTML() : ''}<div data-mount="period"></div>
     <div class="grid kpis">${kpis}</div>
     <div class="grid two" style="margin-top:12px">
       <div class="card rise" style="--i:7"><div class="srow"><b style="font-size:17px;letter-spacing:-.02em">${esc(t('ov.trend'))}</b></div>
@@ -1722,7 +2220,8 @@ function viewOverview() {
     <div class="h2 rise" style="--i:9">${esc(t('ov.goals'))}<span class="sp"></span>${gs.length ? `<button class="link" data-tab="goals">${esc(t('ov.seeAll'))}</button>` : ''}</div>
     <div class="rise" style="--i:10">${goals}</div>
     <div class="h2 rise" style="--i:11">${esc(t('ov.ins'))}</div>
-    <div class="card rise" style="--i:12">${insights(c, pc, p)}</div>`;
+    <div class="card rise" style="--i:12">${insights(c, pc, p)}</div>
+    ${hzOn() ? rulesCardHTML() : ''}`;
 }
 function mountTrend() {
   const r = curRange(), m = MX[UI.trend] || MX.revenue, td = today();
@@ -1735,6 +2234,7 @@ function mountTrend() {
 }
 function insights(c, pc, p) {
   const out = [];
+  const K = k => hzOn() ? 'hz.' + k : k;   // Hormozi mode says the same things, bluntly
   const I = (kind, text) => out.push(`<div class="ins"><i style="background:color-mix(in srgb,${kind === 'good' ? 'var(--green-t)' : kind === 'bad' ? 'var(--red)' : 'var(--blue)'} 15%,transparent);color:${kind === 'good' ? 'var(--green)' : kind === 'bad' ? 'var(--red)' : 'var(--blue)'}">${icon(kind === 'good' ? 'up' : kind === 'bad' ? 'down' : 'spark', 2.6)}</i><span>${esc(text)}</span></div>`);
   if (pc && pc.n) {
     const moves = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit'].map(k => {
@@ -1742,22 +2242,22 @@ function insights(c, pc, p) {
       const mag = v != null && pv ? Math.abs((v - pv) / pv) : 0;
       return { m, dl, mag };
     }).filter(x => x.dl && x.dl.dir && x.mag >= .05).sort((a, b) => b.mag - a.mag).slice(0, 2);
-    for (const x of moves) I(x.dl.cls || 'info', t(x.dl.dir > 0 ? 'ins.up' : 'ins.down', { m: x.m.name(), p: x.dl.text.replace(/^[+−]/, ''), prev: periodLabel(p) }));
+    for (const x of moves) I(x.dl.cls || 'info', t(K(x.dl.dir > 0 ? 'ins.up' : 'ins.down'), { m: x.m.name(), p: x.dl.text.replace(/^[+−]/, ''), prev: periodLabel(p) }));
   }
   let worst = null;
   for (let i = 1; i < DB.stages.length; i++) {
     const a = DB.stages[i - 1], b = DB.stages[i], r = div(c.S[b.id], c.S[a.id]);
     if (r != null && c.S[a.id] >= 5 && (!worst || r < worst.r)) worst = { a, b, r };
   }
-  if (worst) I('info', t('ins.worst', { a: stageName(worst.a), b: stageName(worst.b), p: fmtVal(worst.r, 'pct') }));
+  if (worst) I('info', t(K('ins.worst'), { a: stageName(worst.a), b: stageName(worst.b), p: fmtVal(worst.r, 'pct') }));
   const lc = MX.ltvCac.calc(c);
-  if (lc != null) I(lc >= 3 ? 'good' : 'bad', t(lc >= 3 ? 'ins.ltv.good' : 'ins.ltv.bad', { r: fmtVal(lc, 'ratio') }));
+  if (lc != null) I(lc >= 3 ? 'good' : 'bad', t(K(lc >= 3 ? 'ins.ltv.good' : 'ins.ltv.bad'), { r: fmtVal(lc, 'ratio') }));
   const np = MX.netProfit.calc(c), nm = MX.netMargin.calc(c);
-  if (c.n && np < 0) I('bad', t('ins.loss', { v: fmtVal(-np, 'money') }));
-  else if (nm != null) I(nm >= .2 ? 'good' : 'info', t('ins.profit', { p: fmtVal(nm, 'pct') }));
+  if (c.n && np < 0) I('bad', t(K('ins.loss'), { v: fmtVal(-np, 'money') }));
+  else if (nm != null) I(nm >= .2 ? 'good' : 'info', t(K('ins.profit'), { p: fmtVal(nm, 'pct') }));
   if (DB.goals.length) {
     const st = DB.goals.map(goalStatus).filter(Boolean);
-    I('info', t('ins.goals', { n: st.filter(s => s.status === 'done' || s.status === 'onTrack').length, t: st.length }));
+    I('info', t(K('ins.goals'), { n: st.filter(s => s.status === 'done' || s.status === 'onTrack').length, t: st.length }));
   }
   return out.length ? out.join('') : `<p class="muted small" style="margin:4px 0">${esc(t('ins.none'))}</p>`;
 }
@@ -1783,7 +2283,12 @@ function goalCard(g, s) {
 function viewGoals() {
   const head = `<div class="srow"><h1 class="lt" style="flex:1">${esc(t('gv.title'))}</h1><button class="btn sec" data-act="newgoal">${icon('plus', 2.4)}${esc(t('gv.add'))}</button></div><p class="sub">&nbsp;</p>`;
   if (!DB.goals.length) return head + `<div class="card hero-empty rise"><div class="big">${icon('goals', 2)}</div><h3>${esc(t('gv.empty.h'))}</h3><p>${esc(t('gv.empty.p'))}</p><div class="btns"><button class="btn" data-act="newgoal">${esc(t('gv.add'))}</button></div></div>`;
-  return head + `<div class="grid gg">${DB.goals.map((g, i) => { const s = goalStatus(g); return s ? `<div class="rise" style="--i:${i}">${goalCard(g, s)}</div>` : ''; }).join('')}</div>`;
+  let coach = '';
+  if (hzOn()) {
+    const behind = DB.goals.map(goalStatus).filter(s => s && (s.status === 'behind' || s.status === 'over')).length;
+    coach = `<div class="card rise" style="margin-bottom:12px">${coachHTML(behind ? t('hz.g.behind', { n: behind }) : t('hz.g.ok'))}</div>`;
+  }
+  return head + coach + `<div class="grid gg">${DB.goals.map((g, i) => { const s = goalStatus(g); return s ? `<div class="rise" style="--i:${i}">${goalCard(g, s)}</div>` : ''; }).join('')}</div>`;
 }
 
 /* ---- Log ---- */
@@ -1823,6 +2328,7 @@ function viewLog() {
     <div class="grid two"><div class="card rise" style="--i:1">
       <div class="srow" style="margin-bottom:2px"><b style="font-size:17px;letter-spacing:-.02em">${esc(t('log.quick'))}</b></div>
       <div class="small muted" style="margin-bottom:12px">${esc(t('log.quickSub'))}</div>
+      ${hzOn() ? `<div class="r100mini" data-r100wrap="log">${r100Inner(r100State(), true)}</div>` : ''}
       <div class="today-head"><button class="chev" data-qd="-1" aria-label="Previous day">${icon('chevL', 2.4)}</button><div class="lab" id="qlab">${esc(fmtDayLong(q))}</div>
         <button class="chev" data-qd="1" aria-label="Next day" ${q >= today() ? 'disabled' : ''}>${icon('chevR', 2.4)}</button></div>
       ${vchips}
@@ -1831,15 +2337,17 @@ function viewLog() {
     </div>
     <div class="rise" style="--i:2">${DB.entries.length ? `<div class="h2" style="margin:0 0 -14px">${esc(t('log.history'))}</div>${hist}${more}` : `<div class="card hero-empty"><p style="margin:0">${esc(t('log.empty'))}</p></div>`}</div></div>`;
 }
-function setQuick(stageId, value) {
-  const date = UI.quick;
+function setQuick(stageId, value, date = UI.quick) {
   const qv = variantById(UI.qv) ? UI.qv : '';
+  const watch = hzOn() && date === today() && stageId === r100Stage();   // Rule of 100 milestones
+  const before = watch ? r100State().today : 0;
   let e = findEntry(date, qv);
   if (!e) { e = { id: uid(), date, v: {}, note: '', ...(qv ? { t: qv } : {}) }; DB.entries.push(e); }
   const n = Math.max(0, Math.round(value));
   if (n) e.v[stageId] = n; else delete e.v[stageId];
   if (!Object.keys(e.v).length && !e.note) DB.entries.splice(DB.entries.indexOf(e), 1);
   commit();
+  if (watch) hzMilestone(before, r100State().today);
   return n;
 }
 
@@ -1849,7 +2357,7 @@ function viewMetrics() {
     <div class="mview" data-mount="seg:mview"></div><div data-mount="period"></div>`;
   if (UI.mview === 'tests') return head + viewTests();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
-  const groups = ['funnel', 'acq', 'money', 'ret', 'custom', 'inputs'];
+  const groups = [...(hzOn() ? ['hz'] : []), 'funnel', 'acq', 'money', 'ret', 'custom', 'inputs'];
   let i = 0;
   const body = groups.map(g => {
     const ms = METRICS.filter(m => m.group === g);
@@ -1912,7 +2420,7 @@ function viewTests() {
   const r = curRange();
   if (!DB.tests.length) return `<div class="card hero-empty rise"><div class="big">${icon('flask', 2)}</div><h3>${esc(t('tv.empty.h'))}</h3><p>${esc(t('tv.empty.p'))}</p>
     <div class="btns"><button class="btn" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div></div>`;
-  return `<div class="grid">${DB.tests.map((ts, i) => `<div class="rise" style="--i:${i}">${testCard(ts, r)}</div>`).join('')}</div>
+  return `${hzOn() ? `<div class="card rise" style="margin-bottom:12px">${coachHTML(t('hz.tests'))}</div>` : ''}<div class="grid">${DB.tests.map((ts, i) => `<div class="rise" style="--i:${i}">${testCard(ts, r)}</div>`).join('')}</div>
     <div style="text-align:center;margin-top:18px"><button class="btn sec" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div>
     <p class="gf" style="margin-top:16px">${esc(t('tv.foot'))}</p>`;
 }
@@ -1935,6 +2443,7 @@ function viewSettings() {
       <div class="row"><span class="lbl">${esc(t('s.cur'))}</span><select class="inl" data-set="currency">${[...new Set([st.currency, ...curs])].map(c => `<option ${c === st.currency ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
       <div class="row"><span class="lbl">${esc(t('s.theme'))}</span><span style="flex:1"></span><div data-mount="seg:theme"></div></div>
     </div></div>
+    ${hzSettingsHTML()}
     <div class="rise" style="--i:1"><div class="gh">${esc(t('s.clients'))}</div><div class="list">
       <div class="row"><span class="lbl">${esc(t('s.start'))}</span><input class="inl num" inputmode="numeric" data-set="startCust" value="${esc(st.startCust)}"></div>
       <div class="row"><span class="lbl">${esc(t('s.life'))}</span><input class="inl num" inputmode="numeric" data-set="lifeCap" value="${esc(st.lifeCap)}"><span class="unit">${esc(t('s.months'))}</span></div>
@@ -1991,6 +2500,7 @@ function render(enter = false, dir = 0) {
   if (page.contains(PB && PB.el)) updatePeriodBar(dir);
   if (page.querySelector('.chart')) mountTrend();
   hydrate(page);
+  if (enter) $$('.coach', page).forEach(co => speak(co, $('.bt-ghost', co).textContent, null, true));
 }
 function switchTab(v) {
   if (!VIEWS[v]) return;
@@ -2076,11 +2586,15 @@ function openMetric(key) {
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const v = m.calc(c), pv = pc ? m.calc(pc) : null;
   const parts = m.parts(c);
+  const tk = !hzOn() ? null : key.startsWith('conv:') ? 'conv' : key === 'actions' || key === r100Stage() ? 'actions'
+    : ['maxCust', 'maxRev', 'headroom', 'cash30', 'ltvCac', 'cac', 'churnRate', 'convOverall', 'avgDeal', 'newCust'].includes(key) ? key : null;
+  const take = tk ? t('hz.take.' + tk, { target: fmtNum(r100Target()) }) : '';
   const winNote = m.unit && c.U !== c ? `<div class="hint">${icon('info')}<span>${esc(t('mv.window', { a: fmtDay(c.U.from, { month: 'short', day: 'numeric', year: 'numeric' }), b: fmtDay(c.U.to, { month: 'short', day: 'numeric', year: 'numeric' }) }))}</span></div>` : '';
   const body = `<div class="bigval"><div class="small muted">${esc(periodLabel(r))}</div>
       <div class="v" style="color:${colorOf(key)}">${numHTML('sheet:' + key, v, m.fmt)}</div>${deltaHTML(delta(v, pv, m.fmt, m.better))}
       ${p ? `<div class="small muted" style="margin-top:6px">${esc(vsLabel(p))}: ${esc(fmtVal(pv, m.fmt))}</div>` : ''}</div>
     <div class="card" style="margin-top:14px;padding-top:62px"><div data-chart></div></div>
+    ${take ? `<div style="margin-top:16px">${coachHTML(take, { size: 44 })}</div>` : ''}
     ${m.formula() ? `<div class="gh">${esc(t('mv.formula'))}</div><div class="formula">${esc(m.name())} = ${esc(m.formula())}</div>` : ''}
     ${parts.length ? `<div class="gh">${esc(t('mv.inputs'))}</div><div class="list">${parts.map(([l, pvv, f]) => `<div class="row"><div class="bd"><div class="t1">${esc(l)}</div></div><div class="rv num">${esc(fmtVal(pvv, f))}</div></div>`).join('')}</div>` : ''}
     ${winNote}
@@ -2095,12 +2609,15 @@ function openMetric(key) {
   const src = KV.get('n:kpi:' + key) || KV.get('n:mx:' + key);
   if (src) { const s = KV.get('n:sheet:' + key) || new Spring(); s.jump(src.x); s.onUpdate = null; KV.set('n:sheet:' + key, s); }
   hydrate(sh.body);
+  if (take) speak($('.coach', sh.body), take, null, true);
   $('[data-goal]', sh.body).addEventListener('click', () => { sh.close(); openGoal(null, key); });
 }
 
 /* ---- metric <select> options, grouped ---- */
 function metricOptions(selected, exclude) {
-  return ['funnel', 'acq', 'money', 'ret', 'custom', 'inputs'].map(g => {
+  // keep the Hormozi group when a saved goal already uses one of its metrics, even with the mode off
+  const hz = hzOn() || (MX[selected] && MX[selected].group === 'hz');
+  return [...(hz ? ['hz'] : []), 'funnel', 'acq', 'money', 'ret', 'custom', 'inputs'].map(g => {
     const ms = METRICS.filter(m => m.group === g && m.key !== exclude);
     return ms.length ? `<optgroup label="${esc(t('g.' + g))}">${ms.map(m => `<option value="${esc(m.key)}" ${m.key === selected ? 'selected' : ''}>${esc(m.name())}</option>`).join('')}</optgroup>` : '';
   }).join('');
@@ -2665,7 +3182,6 @@ let logRefresh = 0;
 function scheduleLogRefresh() {
   clearTimeout(logRefresh);
   logRefresh = setTimeout(() => {
-    if (UI.view !== 'log') return;
     if (document.activeElement && document.activeElement.matches('[data-qv]')) return scheduleLogRefresh();
     render();
   }, 900);
@@ -2694,7 +3210,7 @@ document.addEventListener('click', async e => {
     const n = setQuick(id, parseNum(inp.value) + +step.dataset.d);
     inp.value = fmtNum(n);
     inp.classList.remove('bump'); void inp.offsetWidth; inp.classList.add('bump');
-    haptic(); scheduleLogRefresh();
+    haptic(); paintR100(); scheduleLogRefresh();
     return;
   }
   const qp = el.closest('[data-qvpick]');
@@ -2723,6 +3239,14 @@ document.addEventListener('click', async e => {
     case 'add': openEntry(); break;
     case 'addq': openEntry(quickKey()); break;
     case 'newtest': openTest(); break;
+    case 'coachnext': coachNext(act); break;
+    case 'rulenext': ruleNext(act); break;
+    case 'r100plus': {
+      const sid = r100Stage(), td = today(), e = findEntry(td, variantById(UI.qv) ? UI.qv : '');
+      setQuick(sid, (e && e.v[sid] || 0) + 1, td);
+      haptic(); paintR100(); scheduleLogRefresh();
+      break;
+    }
     case 'newgoal': openGoal(); break;
     case 'newcustom': openCustom(); break;
     case 'more': UI.histLimit += 60; render(); break;
@@ -2763,10 +3287,18 @@ document.addEventListener('change', e => {
     let v = el.value;
     if (k === 'startCust') v = Math.max(0, Math.round(parseNum(v)));
     else if (k === 'lifeCap') v = clamp(Math.round(parseNum(v)) || 36, 1, 240);
+    else if (k === 'r100') v = clamp(Math.round(parseNum(v)) || 100, 1, 100000);
     else v = v.trim();
     DB.settings[k] = v; commit();
     if (k === 'biz') renderShell();
+    if (k === 'r100Stage') rebuildMetrics();
     render(); return;
+  }
+  if (el.dataset.hz) {
+    DB.settings[el.dataset.hz] = el.checked; commit();
+    // let the switch finish sliding before the section redraws
+    if (el.dataset.hz === 'hz') setTimeout(render, 340);
+    return;
   }
   if (el.dataset.stage) {
     const s = stageById(el.dataset.stage); if (!s) return;
@@ -2774,7 +3306,7 @@ document.addEventListener('change', e => {
     if (v && v !== t('stage.' + s.id)) s.label = v; else delete s.label;
     commit(); rebuildMetrics(); return;
   }
-  if (el.dataset.qv) { el.value = fmtNum(setQuick(el.dataset.qv, parseNum(el.value))); scheduleLogRefresh(); }
+  if (el.dataset.qv) { el.value = fmtNum(setQuick(el.dataset.qv, parseNum(el.value))); paintR100(); scheduleLogRefresh(); }
 });
 document.addEventListener('focusin', e => { if (e.target.matches('[data-qv]')) setTimeout(() => e.target.select(), 0); });
 
