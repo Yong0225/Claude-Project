@@ -169,8 +169,16 @@ svg{display:block}
 .r100mini .ring .rt,.r100mini .ring .rf{stroke-width:9}
 .r100mini .t1{font-size:15px;letter-spacing:-.015em}
 .r100mini .t2{font-size:12px;color:var(--text2);letter-spacing:-.005em}
-.hzrule{cursor:pointer}
-.hzrule .q{font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.35;margin:0 0 8px}
+.hzquote{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.hzquote .bd{flex:1;min-width:0}
+.hzquote .q{font-size:17px;font-weight:600;letter-spacing:-.02em;line-height:1.42;margin:0 0 5px}
+.hzquote.big .q{font-size:21px;line-height:1.35;margin-bottom:8px}
+.hz-avw.photo{position:relative;overflow:visible;box-shadow:none}
+.hz-avw.photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;box-shadow:0 2px 10px rgba(0,0,0,.14)}
+.hz-avw.photo::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2.5px solid var(--green-t);opacity:0;transform:scale(.94);transition:opacity .3s ease,transform .3s var(--ease)}
+.hz-avw.photo.talking::after{opacity:1;animation:hzspk .5s ease-in-out infinite alternate}
+@keyframes hzspk{from{transform:scale(.96)}to{transform:scale(1.07)}}
+@media (prefers-reduced-motion:reduce){ .hz-avw.photo.talking::after{animation:none} }
 .toast.coach-toast{border-radius:22px;padding:8px 18px 8px 8px;gap:12px;line-height:1.35}
 .sw{position:relative;flex:none;width:51px;height:31px}
 .sw input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer;z-index:1}
@@ -649,21 +657,10 @@ const I18N = {
     'hz.take.actions':'Volume negates luck. {target} a day for 100 days — then judge whether it works.',
     'hz.take.newCust':'Want more clients? Check volume first, then conversion — and only then change the method.',
 
-    'hz.q.1':'Volume negates luck.',
-    'hz.q.2':'Make an offer so good people feel stupid saying no.',
-    'hz.q.3':'Sell them what they want. Give them what they need.',
-    'hz.q.4':'More, then better, then new.',
-    'hz.q.5':'Rule of 100: 100 primary actions a day, for 100 days.',
-    'hz.q.6':'Value = (Dream outcome × Perceived likelihood) ÷ (Time delay × Effort & sacrifice).',
-    'hz.q.7':'There are four core ways to get leads: warm outreach, cold outreach, content and paid ads.',
-    'hz.q.8':'Get clients to pay for the cost of getting clients.',
-    'hz.q.9':'Find the biggest constraint and fix that first. Everything else can wait.',
-    'hz.q.10':'Lifetime gross profit should be at least 3× what it costs to get a client.',
-    'hz.q.11':'Charge more. Higher prices give you the room to deliver better results.',
-    'hz.q.12':'Find a starving crowd: people in pain, with money, who are easy to reach.',
-    'hz.q.13':'Your ceiling: new clients per month ÷ churn rate.',
-    'hz.q.14':'Scarcity, urgency, bonuses, guarantees and naming make an offer irresistible.',
-    'hz.q.15':'Contact new leads fast. Speed to lead wins deals.',
+    'hz.photo':'Coach photo','hz.photoPick':'Choose','hz.photoDel':'Remove','hz.photoOn':'Using your photo','hz.photoOff':'Using the illustrated avatar',
+    'hz.photoF':'Pick a photo of Alex Hormozi (e.g. a screenshot from his YouTube or Instagram). It’s cropped to a circle, saved in your own data and synced to your devices — it never goes on the public site.',
+    'hz.photoSaved':'Photo updated.','hz.photoBad':'Couldn’t open that image',
+    'hz.quotesF':'{n} rules in total: ideas from his books and public content, condensed into short lines (not word-for-word quotes). Each device shows ones you haven’t seen first; they only repeat after a full round.',
 
     'hz.ins.up':'{m} is up {p} vs {prev}. Good. Don’t stop.','hz.ins.down':'{m} is down {p} vs {prev}. Find the cause, not an excuse.',
     'hz.ins.worst':'Money leaks at {a} → {b}: only {p}. That’s your bottleneck.',
@@ -878,21 +875,10 @@ const I18N = {
     'hz.take.actions':'Volume negates luck. 每天 {target} 次，连做 100 天，再来判断有没有用。',
     'hz.take.newCust':'想要更多客户，先看量，再看转化，最后才换方法。',
 
-    'hz.q.1':'量能抵消运气。（Volume negates luck.）',
-    'hz.q.2':'把 offer 做到让人拒绝都觉得自己傻。',
-    'hz.q.3':'卖给他们想要的，交付他们需要的。',
-    'hz.q.4':'先做多，再做好，最后才做新。',
-    'hz.q.5':'100 法则：每天 100 次核心行动，连做 100 天。',
-    'hz.q.6':'价值 =（理想结果 × 成功可能性）÷（等待时间 × 付出努力）。',
-    'hz.q.7':'获客只有四种核心方法：暖触达、冷触达、发内容、投广告。',
-    'hz.q.8':'让客户出钱，帮你买下一个客户。',
-    'hz.q.9':'找到最大的瓶颈，先修它。其他的都可以等。',
-    'hz.q.10':'客户终身毛利，至少要是获客成本的 3 倍。',
-    'hz.q.11':'提价。更高的价格，让你有余力把结果做得更好。',
-    'hz.q.12':'找一群饥饿的人：痛点大、付得起、找得到。',
-    'hz.q.13':'你的天花板 = 每月新客户 ÷ 流失率。',
-    'hz.q.14':'稀缺、紧迫、赠品、保证、命名——让 offer 让人无法拒绝。',
-    'hz.q.15':'新线索要马上联系。速度决定成交。',
+    'hz.photo':'教练照片','hz.photoPick':'选择照片','hz.photoDel':'移除','hz.photoOn':'正在使用你选的照片','hz.photoOff':'目前是卡通头像',
+    'hz.photoF':'选一张 Alex Hormozi 的照片（比如他 YouTube 或 Instagram 的截图），会自动裁成圆形。照片保存在你自己的数据里、跟着云同步到你的设备，不会放到公开网站上。',
+    'hz.photoSaved':'照片换好了。','hz.photoBad':'这张图片打不开',
+    'hz.quotesF':'法则共 {n} 条：他书里和公开内容里的观点，浓缩成短句（不是逐字原文）。每台设备优先显示没看过的，全部看完一轮才会重复。',
 
     'hz.ins.up':'{m} 比{prev}涨了 {p}。很好，别停。','hz.ins.down':'{m} 比{prev}掉了 {p}。找原因，别找借口。',
     'hz.ins.worst':'钱漏在 {a} → {b}：只有 {p}。这就是你的瓶颈。',
@@ -1458,13 +1444,216 @@ function coachState() {
   if (w) x.push(t('hz.x.winner', w));
   return { phase, kind, focus: t('hz.f.' + kind, v), extras: x };
 }
-/* his core ideas, condensed; the source is shown only where the book is certain */
-const HZ_RULES = [[1, ''], [2, '$100M Offers'], [3, '$100M Offers'], [4, '$100M Leads'], [5, '$100M Leads'], [6, '$100M Offers'], [7, '$100M Leads'],
-  [8, '$100M Money Models'], [9, ''], [10, ''], [11, '$100M Offers'], [12, '$100M Offers'], [13, ''], [14, '$100M Offers'], [15, '']];
-function rule(i) {
-  const n = HZ_RULES.length, day = Math.floor(parseD(today()) / 864e5);
-  const [k, src] = HZ_RULES[((day + i) % n + n) % n];
-  return { text: t('hz.q.' + k), src };
+/* ---- Hormozi rules: his ideas condensed into short lines, not word-for-word quotes ----
+   [topic, English, 中文, source]. Topics: v volume · o offer · p price · l leads · s sales · r retention ·
+   m money & unit economics · t testing & constraints · k mindset · b running the business.
+   Source only where the book is certain. APPEND ONLY: a rule's position is its id in each device's seen list. */
+const HZ_SRC = { O: '$100M Offers', L: '$100M Leads', M: '$100M Money Models' };
+const HZ_QUOTES = [
+  ['v', 'Volume negates luck.', '量能抵消运气。', ''],
+  ['v', 'Rule of 100: 100 primary actions every day, for 100 days.', '100 法则：每天 100 次核心行动，连做 100 天。', 'L'],
+  ['v', 'More, then better, then new.', '先做多，再做好，最后才做新。', 'L'],
+  ['v', 'Your first hundred reach-outs will be bad. Do them anyway.', '你的前 100 次触达会很烂，照样去做。', 'L'],
+  ['v', 'Most people don’t have a strategy problem. They have a volume problem.', '大部分人不是策略有问题，是量不够。', ''],
+  ['v', 'Do so much that it would be unreasonable for you to fail.', '做到多得离谱，多到失败都不合理。', ''],
+  ['v', 'Before you change what you’re doing, do more of it.', '换方法之前，先把现在的做多。', 'L'],
+  ['v', 'If it isn’t working, the first question is: did you do enough?', '没效果的时候，先问自己：做得够多吗？', ''],
+  ['k', 'Reps build skill. Skill builds confidence.', '次数练出技能，技能带来自信。', ''],
+  ['v', 'You can’t think your way to results. You act your way there.', '结果不是想出来的，是做出来的。', ''],
+  ['v', 'Boring work done every day beats brilliant work done once in a while.', '每天做的无聊工作，胜过偶尔做的聪明工作。', ''],
+  ['v', 'The work you avoid is usually the work that grows the business.', '你逃避的那件事，通常就是能让生意增长的那件事。', ''],
+  ['v', 'Don’t judge a method until you’ve given it enough volume.', '量没做够之前，别评判一个方法有没有用。', ''],
+  ['t', 'Consistency is what makes your numbers mean something.', '只有持续去做，数字才有意义。', ''],
+  ['v', 'Double the input before you ask for a better output.', '想要更好的结果，先把投入翻倍。', ''],
+  ['k', 'Show up every day, especially on the days you don’t feel like it.', '每天都要做，尤其是不想做的那天。', ''],
+  ['k', 'Motivation follows action, not the other way around.', '先行动，动力才会来，不是反过来。', ''],
+  ['v', 'The math only works for people who keep doing it.', '数学只对坚持做下去的人成立。', ''],
+  ['v', 'Luck finds the people who do the most.', '运气会找上做得最多的人。', ''],
+  ['o', 'Make an offer so good people feel stupid saying no.', '把 offer 做到让人拒绝都觉得自己傻。', 'O'],
+  ['o', 'Value = (Dream outcome × Perceived likelihood) ÷ (Time delay × Effort & sacrifice).', '价值 =（理想结果 × 成功可能性）÷（等待时间 × 付出努力）。', 'O'],
+  ['o', 'Make the dream outcome bigger and more certain. Make the wait shorter and the effort smaller.', '把理想结果做大、做得更有把握；把等待缩短、把付出减少。', 'O'],
+  ['o', 'People don’t buy products. They buy the result they believe they’ll get.', '人买的不是产品，是他们相信自己会得到的结果。', 'O'],
+  ['o', 'Sell them what they want. Give them what they need.', '卖给他们想要的，交付他们需要的。', 'O'],
+  ['o', 'List every problem your client will face, then solve each one.', '把客户会遇到的每个问题都列出来，然后逐一解决。', 'O'],
+  ['o', 'Every obstacle between your client and the result is a chance to add value.', '客户和结果之间的每个障碍，都是你增加价值的机会。', 'O'],
+  ['o', 'Trim what costs you a lot and matters little. Stack what costs little and matters a lot.', '砍掉成本高、价值低的，堆上成本低、价值高的。', 'O'],
+  ['p', 'If people compare you on price, you’ve become a commodity.', '被人拿来比价，说明你已经变成了大路货。', 'O'],
+  ['o', 'Build a category of one, so there’s nothing to compare you to.', '做到独一份，让人没得比。', 'O'],
+  ['o', 'Find a starving crowd: massive pain, money to spend, easy to reach, and growing.', '找一群饥饿的人：痛点大、有钱、找得到、还在增长。', 'O'],
+  ['o', 'The market matters more than the offer. The offer matters more than persuasion.', '市场比 offer 重要，offer 比说服技巧重要。', 'O'],
+  ['o', 'Niche down until your message sounds written for one person.', '把定位做窄，窄到你的话像是写给某一个人的。', 'O'],
+  ['o', 'A good bonus solves the next problem your client is about to have.', '好的赠品，解决客户接下来马上会遇到的问题。', 'O'],
+  ['o', 'Give every bonus a clear value and a clear reason it matters.', '每个赠品都要写清楚价值，以及它为什么重要。', 'O'],
+  ['o', 'Scarcity and urgency only work when they’re real.', '稀缺和紧迫，只有是真的才管用。', 'O'],
+  ['o', 'A strong guarantee moves the risk from the buyer to you.', '好的保证，把风险从买家身上转到你身上。', 'O'],
+  ['o', 'The more specific the guarantee, the more people believe it.', '保证写得越具体，越有人相信。', ''],
+  ['o', 'Name your offer so the right people instantly know it’s for them.', '给 offer 起个好名字，让对的人一眼就知道是给他们的。', 'O'],
+  ['o', 'Proof beats promises.', '证据胜过承诺。', ''],
+  ['o', 'Take away the effort and the waiting, and people will pay more.', '把麻烦和等待拿掉，人愿意付更多的钱。', 'O'],
+  ['r', 'Get clients an early win. Fast wins keep people around.', '尽早让客户赢一次，快速见效的客户才会留下。', ''],
+  ['o', 'If your offer needs a great salesperson to sell, fix the offer.', '如果 offer 要靠顶尖销售才卖得动，问题出在 offer。', ''],
+  ['p', 'Don’t cut the price. Add value.', '别降价，去加价值。', ''],
+  ['o', 'Sell the outcome, not the process.', '卖结果，不卖过程。', ''],
+  ['o', 'If you’d hesitate to buy your own offer, it isn’t good enough.', '如果你自己都犹豫要不要买，这个 offer 就还不够好。', ''],
+  ['p', 'Charge more. Higher prices give you room to deliver better results.', '提价。更高的价格，让你有余力把结果做得更好。', 'O'],
+  ['p', 'Clients who pay more tend to commit more — and get better results.', '付得多的客户更投入，结果也更好。', 'O'],
+  ['p', 'People value what they pay for.', '人会珍惜自己花钱买来的东西。', 'O'],
+  ['p', 'Low prices leave no room to deliver well, so results get worse.', '价格太低就没余力好好交付，结果只会更差。', 'O'],
+  ['p', 'Raising prices is the fastest way to more profit.', '提价是增加利润最快的方法。', ''],
+  ['p', 'Price is only a problem when the value isn’t clear.', '价值没讲清楚的时候，价格才会是问题。', ''],
+  ['p', 'Compete on value. Never on price.', '拼价值，永远不拼价格。', ''],
+  ['p', 'If nobody ever says you’re too expensive, you’re too cheap.', '如果从来没人嫌你贵，说明你定价太低了。', ''],
+  ['p', 'The cheapest option rarely wins the best clients.', '最便宜的选项，很少能赢到最好的客户。', ''],
+  ['l', 'There are four core ways to get leads: warm outreach, cold outreach, content and paid ads.', '获客有四种核心方法：暖触达、冷触达、发内容、投广告。', 'L'],
+  ['l', 'Start with warm outreach — the people who already know you.', '从暖触达开始：先找已经认识你的人。', 'L'],
+  ['l', 'Give away the secrets. Sell the implementation.', '把秘诀免费送出去，靠帮人落地赚钱。', 'L'],
+  ['l', 'A good lead magnet solves a narrow problem and reveals a bigger one.', '好的引流品解决一个小问题，同时让人看到一个更大的问题。', 'L'],
+  ['l', 'Make your free stuff better than other people’s paid stuff.', '把你的免费内容做得比别人付费的还好。', 'L'],
+  ['l', 'Content that works hooks attention, keeps it, and rewards it.', '有用的内容：抓住注意力、留住注意力、给注意力回报。', 'L'],
+  ['l', 'Give far more than you ask for.', '给出去的，要远多于你开口要的。', 'L'],
+  ['l', 'Warm outreach: acknowledge them, compliment them, then ask.', '暖触达：先认可对方，再称赞，最后才提问。', 'L'],
+  ['l', 'Cold outreach is a volume game. Personalise just enough to earn a reply.', '冷触达拼的是量，个性化到能换来回复就够了。', 'L'],
+  ['l', 'Paid ads make sense once a client is worth more than they cost to get.', '客户的价值高过获客成本，投广告才有意义。', 'L'],
+  ['l', 'Lead getters multiply you: referrals, employees, agencies and affiliates.', '帮你拉客的人能放大你：转介绍、员工、代理、联盟伙伴。', 'L'],
+  ['l', 'Your best source of new clients is clients who got results.', '最好的新客户来源，是拿到结果的老客户。', 'L'],
+  ['l', 'Ask for referrals when a client is happiest.', '在客户最满意的时候请他转介绍。', ''],
+  ['l', 'Count engaged leads — people who raised their hand — not just names on a list.', '要数的是举手表示感兴趣的人，不是名单上的名字。', 'L'],
+  ['l', 'Master one channel before you add another.', '先把一个渠道做透，再加第二个。', 'L'],
+  ['l', 'Always tell people exactly what to do next.', '永远明确告诉对方下一步要做什么。', 'L'],
+  ['l', 'Ads don’t fix a bad offer. They just expose it faster.', '广告救不了烂 offer，只会让它更快暴露。', ''],
+  ['l', 'Post consistently. An audience grows around proof of work.', '持续发内容，受众会围着你的作品长出来。', ''],
+  ['l', 'Help first. Sell second.', '先帮人，再卖东西。', ''],
+  ['t', 'Test your hooks. The first seconds decide whether anyone stays.', '测试你的开头，前几秒决定有没有人留下来。', ''],
+  ['s', 'Speed to lead: contact new leads within minutes, not hours.', '线索要快：几分钟内联系新线索，而不是几小时后。', ''],
+  ['s', 'Most leads need several follow-ups. Most people stop after one.', '大部分线索要跟进好几次，大部分人跟进一次就停了。', ''],
+  ['s', 'A lead you don’t follow up is money you set on fire.', '不跟进的线索，等于把钱烧掉。', ''],
+  ['s', 'Follow up until they buy or tell you to stop.', '一直跟进，直到对方买单，或者叫你别再联系。', ''],
+  ['s', 'Make the next step easy to say yes to.', '让下一步变得很容易答应。', ''],
+  ['s', 'On a sales call, first find out why they’re here and name the problem.', '销售通话里，先弄清对方为什么来，再把问题说出来。', ''],
+  ['s', 'Sell the vacation, not the plane flight.', '卖度假，不卖飞机航程。', ''],
+  ['s', 'Concerns are just questions that haven’t been answered yet.', '顾虑只是还没被回答的问题。', ''],
+  ['s', 'Reinforce the decision right after someone buys.', '客户一买单，马上肯定他做了对的决定。', ''],
+  ['s', 'People rarely object to the price. They object to not believing it will work.', '客户很少真的嫌贵，他们是不相信会有效。', ''],
+  ['s', 'Ask more questions than you answer.', '问的问题，要比回答的多。', ''],
+  ['s', 'Whoever asks the questions controls the conversation.', '问问题的人，掌控整场对话。', ''],
+  ['s', 'Don’t argue with an objection. Find out what’s behind it.', '别和异议争论，找出它背后的原因。', ''],
+  ['s', 'Selling is helping someone make a decision that’s good for them.', '销售，是帮对方做出对他有利的决定。', ''],
+  ['s', 'Closing is a skill. Practise it like one.', '成交是一种技能，要像练技能一样去练。', ''],
+  ['s', 'Every no teaches you something — if you ask why.', '每一次被拒绝都能学到东西，前提是你问了为什么。', ''],
+  ['s', 'Booking a call is half the job. Getting them to show up is the other half.', '约到通话只完成了一半，让人准时出现是另一半。', ''],
+  ['s', 'Record your sales calls and study them.', '把销售通话录下来，反复研究。', ''],
+  ['s', 'Your close rate tells you how good your offer and your pitch really are.', '成交率会告诉你，offer 和话术到底有多好。', ''],
+  ['s', 'Keep it simple. A confused buyer doesn’t buy.', '保持简单，搞不清楚的人不会买。', ''],
+  ['s', 'Make buying easy: fewer steps, fewer choices.', '让购买变简单：步骤少一点，选项少一点。', ''],
+  ['r', 'Churn is a leaking bucket. Plug the holes before you pour in more.', '流失就是漏水的桶，先堵漏，再加水。', ''],
+  ['r', 'The best marketing is a client who gets results.', '最好的营销，是一个拿到结果的客户。', ''],
+  ['r', 'Onboarding decides retention. Make the first week great.', '入门体验决定留存，把第一周做好。', ''],
+  ['r', 'Clients stay when they can feel their progress.', '客户感觉得到进步，才会留下来。', ''],
+  ['r', 'Keep clients longer and every number in the business gets better.', '客户留得越久，生意里的每个数字都会变好。', ''],
+  ['r', 'Your ceiling is new clients per month divided by churn.', '你的天花板 = 每月新客户 ÷ 流失率。', ''],
+  ['r', 'At your ceiling, new clients only replace the ones you lose.', '到了天花板，新客户只是在补流失掉的那些。', ''],
+  ['r', 'Find out why clients leave, then fix that reason.', '找出客户离开的原因，然后把它解决掉。', ''],
+  ['r', 'People stay for people. Build community.', '人会因为人而留下，去建立社群。', ''],
+  ['r', 'Check in before they check out.', '在客户想走之前，先主动关心他。', ''],
+  ['r', 'Deliver more than you promised, and deliver it early.', '交付超出承诺的东西，而且要早点交付。', ''],
+  ['r', 'Make results visible. Clients forget progress they can’t see.', '让结果看得见，看不见的进步，客户很快就忘了。', ''],
+  ['r', 'Reward loyalty so staying is the easy choice.', '奖励忠诚，让留下来成为最轻松的选择。', ''],
+  ['r', 'If the client doesn’t get results, nothing else matters.', '客户没拿到结果，其他一切都不重要。', ''],
+  ['r', 'Don’t grow faster than you can deliver.', '增长别快过你的交付能力。', ''],
+  ['r', 'Talk to your clients every week.', '每周都和客户聊一聊。', ''],
+  ['r', 'A reputation is built one kept promise at a time.', '口碑是一次次兑现承诺攒出来的。', ''],
+  ['m', 'Get clients to pay for the cost of getting clients.', '让客户出钱，帮你买下一个客户。', 'M'],
+  ['m', 'Aim to make back more than twice your acquisition cost in a client’s first 30 days.', '目标：客户进来的前 30 天，赚回两倍以上的获客成本。', 'M'],
+  ['m', 'Attraction offers bring people in. Upsells, downsells and continuity make the money.', '引流 offer 把人带进来，加购、降级和续费负责赚钱。', 'M'],
+  ['m', 'The best time to sell more is right after someone buys.', '卖更多的最佳时机，是对方刚买完的那一刻。', 'M'],
+  ['m', 'Every solution creates a new problem. Sell the solution to that one too.', '每个解决方案都会带来新问题，把那个问题的解决方案也卖给他。', 'M'],
+  ['m', 'When they say no, offer a smaller yes.', '对方说不的时候，给他一个更小的“好”。', 'M'],
+  ['m', 'A payment plan turns “I can’t afford it” into “yes”.', '分期付款，能把“买不起”变成“买”。', 'M'],
+  ['m', 'Continuity turns one sale into income every month.', '续费模式，把一次成交变成每个月的收入。', 'M'],
+  ['m', 'Menu upsell: tell them what they don’t need, then recommend what they do.', '菜单式加购：先告诉他不需要什么，再推荐他真正需要的。', 'M'],
+  ['m', 'Anchor with the premium option first. The next one suddenly looks reasonable.', '先报最高档做锚点，下一个选项马上显得合理。', 'M'],
+  ['m', 'A free trial with conditions beats a free trial with none.', '有条件的免费试用，胜过没有条件的。', 'M'],
+  ['m', 'Cash collected in the first 30 days decides how fast you can grow.', '前 30 天收回的现金，决定你能长得多快。', 'M'],
+  ['m', 'Don’t leave money on the table after the first sale.', '第一次成交之后，别把钱留在桌上。', ''],
+  ['m', 'The business that can afford to spend the most to get a client wins.', '能为一个客户花最多钱的生意，最后会赢。', ''],
+  ['m', 'Lifetime gross profit should be at least 3× what it costs to get a client.', '客户终身毛利，至少要是获客成本的 3 倍。', ''],
+  ['m', 'Profit is what you keep. Revenue is just a number.', '利润才是你留下的，收入只是一个数字。', ''],
+  ['m', 'Know your CAC, your LTV and your churn. Guessing is expensive.', '搞清楚你的 CAC、LTV 和流失率，靠猜的代价很高。', ''],
+  ['m', 'Spend on acquisition only when you know what a client is worth.', '知道一个客户值多少钱之后，再去花钱获客。', ''],
+  ['t', 'Find the biggest constraint and fix that first. Everything else can wait.', '找到最大的瓶颈，先修它，其他的都可以等。', ''],
+  ['t', 'Change one variable at a time.', '一次只改一个变量。', ''],
+  ['t', 'Let the data decide, not your feelings.', '让数据做决定，不是让感觉做决定。', ''],
+  ['t', 'What worked at 10 clients may break at 100. Go find the new constraint.', '10 个客户时有效的，到 100 个可能就不行了，去找新的瓶颈。', ''],
+  ['t', 'Double down on what works. Cut what doesn’t.', '有效的加倍做，没效果的直接砍掉。', ''],
+  ['t', 'Don’t get bored of what works.', '别因为做腻了，就放弃有效的方法。', ''],
+  ['t', 'Test small. Scale what wins.', '小规模测试，赢了再放大。', ''],
+  ['t', 'Measure every step, not just the final result.', '每一步都要量，不是只看最后的结果。', ''],
+  ['t', 'Done and good enough beats perfect and waiting.', '做完的“够好”，胜过还在等的“完美”。', ''],
+  ['t', 'Your numbers tell you where to look. Your clients tell you why.', '数字告诉你往哪里看，客户告诉你为什么。', ''],
+  ['t', 'Track your daily actions. You can’t improve what you don’t count.', '记录每天的行动，不去数的东西没法改进。', ''],
+  ['t', 'The market will tell you what it wants. Listen.', '市场会告诉你它要什么，认真听。', ''],
+  ['t', 'An owner’s real job is removing constraints.', '老板真正的工作，是清除瓶颈。', ''],
+  ['b', 'Don’t chase shiny objects. Finish what’s already working.', '别追新鲜玩意，把已经有效的做透。', ''],
+  ['b', 'Most businesses don’t need more ideas. They need fewer, done well.', '大部分生意不缺点子，缺的是把少数几件事做好。', ''],
+  ['b', 'Say no to good opportunities so you can say yes to great ones.', '对好机会说不，才能对最好的机会说好。', ''],
+  ['b', 'Focus means saying no to almost everything.', '专注，就是对几乎所有事说不。', ''],
+  ['b', 'The goal isn’t to be busy. It’s to move the number that matters.', '目标不是忙，是推动最关键的那个数字。', ''],
+  ['b', 'Do one thing well before you add a second.', '一件事做好之前，别加第二件。', ''],
+  ['b', 'If you do everything yourself, the business is capped at your hours.', '什么都自己做，生意就被你的时间封顶了。', ''],
+  ['b', 'Write down what works so someone else can do it.', '把有效的做法写下来，让别人也能做。', ''],
+  ['b', 'Hire people who want to learn, then teach them.', '招想学习的人，然后教会他们。', ''],
+  ['b', 'Grow profit before you grow headcount.', '先把利润做上去，再增加人手。', ''],
+  ['b', 'Simple scales. Complicated breaks.', '简单的能放大，复杂的会崩。', ''],
+  ['b', 'Reinvest in the business before you reward yourself.', '先把钱投回生意里，再奖励自己。', ''],
+  ['b', 'The first sale proves the offer. The hundredth proves the business.', '第一单证明 offer，第一百单才证明生意。', ''],
+  ['b', 'Solve a painful problem for people who can pay for it.', '为付得起钱的人，解决让他们痛苦的问题。', ''],
+  ['k', 'No one is coming to build this for you.', '没有人会替你把这件事做成。', ''],
+  ['k', 'Be willing to look stupid in the short term to win in the long term.', '愿意短期看起来很蠢，才能长期赢。', ''],
+  ['k', 'Be willing to be bad at something long enough to get good at it.', '愿意烂得够久，才能变好。', ''],
+  ['k', 'Confidence comes from keeping promises to yourself.', '自信来自对自己说到做到。', ''],
+  ['k', 'Hard doesn’t mean wrong.', '难，不代表错。', ''],
+  ['k', 'Patience is a competitive advantage. Most people quit too early.', '耐心是竞争优势，大部分人放弃得太早。', ''],
+  ['k', 'Skills compound. Start stacking them now.', '技能会复利，现在就开始累积。', ''],
+  ['k', 'Stop waiting to feel ready.', '别再等“准备好了”的感觉。', ''],
+  ['k', 'You don’t have to be the best. You have to be willing to keep going.', '你不需要是最强的，你需要愿意一直做下去。', ''],
+  ['k', 'Before you envy someone’s results, look at how much work they did.', '羡慕别人的结果之前，先看看他做了多少事。', ''],
+  ['k', 'Judge yourself on the inputs you control, not the outcomes you don’t.', '用你能控制的投入评价自己，而不是控制不了的结果。', ''],
+  ['k', 'Every expert was bad at the start. They just didn’t stop.', '每个高手一开始都很烂，只是他们没有停下来。', ''],
+  ['k', 'Don’t ask if it’s easy. Ask if it’s worth it.', '别问容不容易，问值不值得。', ''],
+  ['k', 'Quitting is the only guaranteed way to fail.', '放弃，是唯一保证失败的方法。', ''],
+  ['k', 'Stay in the game long enough to get lucky.', '在牌桌上待得够久，运气才会来。', ''],
+  ['k', 'Other people’s opinions don’t pay your bills.', '别人的看法，不会帮你付账单。', ''],
+  ['k', 'If you want to earn more, become more useful.', '想赚更多，就让自己变得更有用。', ''],
+  ['k', 'Keep score. What you track is what you take seriously.', '给自己记分，你记录的才是你真正在乎的。', ''],
+  ['k', 'Your future self is built by what you do today, not what you plan.', '未来的你，是今天做出来的，不是计划出来的。', ''],
+  ['k', 'Work on the business when you don’t feel like it. That’s where the gap opens.', '不想做的时候照样做，差距就是从这里拉开的。', '']
+];
+const HZQ = { seen: null, slots: new Map() };
+function hzSeen() {
+  if (!HZQ.seen) {
+    HZQ.seen = [];
+    try { const a = JSON.parse(localStorage.getItem('pulse.hzseen') || '[]'); if (Array.isArray(a)) HZQ.seen = a.filter(i => Number.isInteger(i) && i >= 0 && i < HZ_QUOTES.length); } catch (e) { }
+  }
+  return HZQ.seen;
+}
+/* a rule this device hasn't shown yet, preferring the given topics. After a full round everything
+   comes back except the last 20 shown, so you never see the same line twice in a row. */
+function pickQuote(topics = '') {
+  const seen = hzSeen();
+  let pool = HZ_QUOTES.map((q, i) => i).filter(i => !seen.includes(i));
+  if (!pool.length) { seen.splice(0, Math.max(0, seen.length - 20)); pool = HZ_QUOTES.map((q, i) => i).filter(i => !seen.includes(i)); }
+  const fit = topics ? pool.filter(i => topics.includes(HZ_QUOTES[i][0])) : [];
+  const from = fit.length ? fit : pool;
+  const i = from[Math.floor(Math.random() * from.length)];
+  seen.push(i);
+  try { localStorage.setItem('pulse.hzseen', JSON.stringify(seen)); } catch (e) { }
+  return i;
+}
+const quoteOf = i => { const q = HZ_QUOTES[i] || HZ_QUOTES[0]; return { text: LANG === 'zh' ? q[2] : q[1], src: HZ_SRC[q[3]] || '' }; };
+/* one rule per spot, kept while you stay on the page; coming back to the page brings new ones */
+function slotQuote(slot, topics) {
+  if (!HZQ.slots.has(slot)) HZQ.slots.set(slot, pickQuote(topics));
+  return quoteOf(HZQ.slots.get(slot));
 }
 
 /* ---- sample data (seeded, deterministic) ---- */
@@ -1986,7 +2175,7 @@ function renameMetric(key, text) {
 }
 
 /* ---- Hormozi mode: avatar, coach bubble, Rule of 100 card ---- */
-const HZ = { idx: 0, lines: [], qi: 0 };
+const HZ = { idx: 0, lines: [], q: null };
 let avN = 0;
 /* a Memoji-style coach: bald, full beard, black tee. Ids are unique per copy so gradients never break */
 function avatarSVG() {
@@ -2011,20 +2200,27 @@ function avatarSVG() {
       <path d="M60 50q-3 7-2 10q2 1.5 5 0" stroke="#b27550" stroke-width="1.7" fill="none" stroke-linecap="round"/>
     </g></svg>`;
 }
-const avatarHTML = (size, cls = '') => `<span class="hz-avw ${cls}" style="width:${size}px;height:${size}px">${avatarSVG()}</span>`;
+/* the user can drop in a real photo (Settings → Hormozi mode); it stays in their own data */
+const PHOTO_RE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]{100,400000}$/;
+const coachPhoto = () => { const p = DB.settings.hzPhoto; return typeof p === 'string' && PHOTO_RE.test(p) ? p : ''; };
+const avatarHTML = (size, cls = '') => {
+  const p = coachPhoto();
+  return `<span class="hz-avw ${p ? 'photo ' : ''}${cls}" style="width:${size}px;height:${size}px">${p ? `<img src="${p}" alt="" draggable="false">` : avatarSVG()}</span>`;
+};
 /* the ghost copy reserves the bubble's final height, so typing the text in never shifts the layout */
-function coachHTML(text, { next = false, src = '', size = 56 } = {}) {
+function coachHTML(text, { next = false, src = '', size = 56, label = '' } = {}) {
   const av = avatarHTML(size);
   return `<div class="coach">${next ? `<button class="hz-avbtn" data-act="coachnext" aria-label="${esc(t('hz.tapNext'))}">${av}</button>` : av}
-    <div class="bubble"${next ? ' data-act="coachnext"' : ''}><div class="bn">${esc(t('hz.coach'))}</div>
+    <div class="bubble"${next ? ' data-act="coachnext"' : ''}><div class="bn">${esc(label || t('hz.coach'))}</div>
       <div class="btw"><span class="bt-ghost">${esc(text)}</span><span class="bt">${esc(text)}</span></div><div class="bsrc">${esc(src)}</div></div></div>`;
 }
 /* the coach says a line: the bubble pops on a spring, the text types in, the mouth moves while it types */
-function speak(coach, text, src, pop) {
+function speak(coach, text, src, pop, label) {
   if (!coach) return;
   const bub = $('.bubble', coach), bt = $('.bt', coach), av = $('.hz-avw', coach);
   $('.bt-ghost', coach).textContent = text;
   if (src != null) $('.bsrc', coach).textContent = src;
+  if (label) $('.bn', coach).textContent = label;
   clearInterval(coach._typer);
   if (RM.matches) { bt.textContent = text; return; }
   if (pop) {
@@ -2040,19 +2236,25 @@ function speak(coach, text, src, pop) {
     if (i >= ch.length) { clearInterval(coach._typer); av.classList.remove('talking'); }
   }, 24);
 }
+/* the coach's own lines first; keep tapping and he hands out rules you haven't seen */
+const coachLine = i => i < HZ.lines.length ? { text: HZ.lines[i], src: '', label: t('hz.coach') } : { ...quoteOf(HZ.q), label: t('hz.rules') };
 function coachNext(el) {
   const card = el.closest('.hzcard');
-  if (!card || !HZ.lines.length) return;
-  HZ.idx = (HZ.idx + 1) % HZ.lines.length;
-  const L = HZ.lines[HZ.idx];
-  speak($('.coach', card), L.text, L.src || '', true);
-  $$('.hz-dots i', card).forEach((d, i) => d.classList.toggle('on', i === HZ.idx));
+  if (!card) return;
+  HZ.idx++;
+  if (HZ.idx >= HZ.lines.length) { HZ.idx = HZ.lines.length; HZ.q = pickQuote(); }
+  const L = coachLine(HZ.idx), dots = $$('.hz-dots i', card);
+  speak($('.coach', card), L.text, L.src, true, L.label);
+  dots.forEach((d, i) => d.classList.toggle('on', i === Math.min(HZ.idx, dots.length - 1)));
   haptic();
 }
-const ruleInner = q => `<p class="q">${esc(q.text)}</p><div class="small muted">${q.src ? esc(q.src) + ' · ' : ''}${esc(t('hz.next'))} ›</div>`;
-function ruleNext(card) {
-  HZ.qi++;
-  card.innerHTML = ruleInner(rule(2 + HZ.qi));
+const quoteInner = q => `${avatarHTML(40)}<div class="bd"><p class="q">${esc(q.text)}</p><div class="small muted">${esc(t('hz.rules'))}${q.src ? ' · ' + esc(q.src) : ''} · ${esc(t('hz.next'))} ›</div></div>`;
+const quoteCardHTML = (slot, topics = '', { big = false, i = 0, style = '' } = {}) =>
+  `<div class="card rise hzquote press${big ? ' big' : ''}" style="--i:${i};${style}" data-act="quotenext" data-slot="${esc(slot)}" data-topics="${esc(topics)}" role="button" tabindex="0">${quoteInner(slotQuote(slot, topics))}</div>`;
+function quoteNext(card) {
+  const slot = card.dataset.slot, topics = card.dataset.topics || '';
+  HZQ.slots.set(slot, pickQuote(topics));
+  card.innerHTML = quoteInner(slotQuote(slot, topics));
   const p = $('.q', card), s = new Spring(0);
   s.onUpdate = x => { p.style.opacity = clamp(x, 0, 1); p.style.transform = `translateY(${(1 - x) * 10}px)`; };
   s.to(1, { response: .5, damping: .85 });
@@ -2085,17 +2287,17 @@ function r100CardHTML(R) {
 }
 function hzOverviewHTML() {
   const cs = coachState();
-  HZ.lines = [{ text: cs.focus, src: '' }, ...cs.extras.map(text => ({ text, src: '' })), rule(0), rule(1)];
-  if (HZ.idx >= HZ.lines.length) HZ.idx = 0;
-  const L = HZ.lines[HZ.idx];
+  HZ.lines = [cs.focus, ...cs.extras];
+  if (HZ.idx > HZ.lines.length) HZ.idx = HZ.lines.length;
+  if (HZ.idx >= HZ.lines.length && HZ.q == null) HZ.q = pickQuote();
+  const L = coachLine(HZ.idx), dots = HZ.lines.length + 1;
   const steps = ['more', 'better', 'new'].map((k, i) => `<span class="${i === cs.phase ? 'on' : i < cs.phase ? 'past' : ''}">${i + 1} ${esc(t('hz.mbn.' + k))}</span>`).join('<i></i>');
   return `<div class="grid two" style="margin-bottom:22px">
-    <div class="card rise hzcard" style="--i:1">${coachHTML(L.text, { next: true, src: L.src })}
-      <div class="mbn">${steps}<div class="sp"></div><div class="hz-dots">${HZ.lines.map((_, i) => `<i class="${i === HZ.idx ? 'on' : ''}"></i>`).join('')}</div></div></div>
+    <div class="card rise hzcard" style="--i:1">${coachHTML(L.text, { next: true, src: L.src, label: L.label })}
+      <div class="mbn">${steps}<div class="sp"></div><div class="hz-dots">${Array.from({ length: dots }, (_, i) => `<i class="${i === Math.min(HZ.idx, dots - 1) ? 'on' : ''}"></i>`).join('')}</div></div></div>
     ${r100CardHTML(r100State())}</div>`;
 }
-const rulesCardHTML = () => `<div class="h2 rise" style="--i:13">${esc(t('hz.rules'))}</div>
-  <div class="card rise hzrule press" style="--i:14" data-act="rulenext" role="button" tabindex="0">${ruleInner(rule(2 + HZ.qi))}</div>`;
+const quoteSectionHTML = () => `<div class="h2 rise" style="--i:13">${esc(t('hz.rules'))}</div>${quoteCardHTML('ov', '', { big: true, i: 14 })}`;
 /* live update after a +: rings animate from where they were, the grid and texts follow */
 function paintR100() {
   if (!hzOn()) return;
@@ -2103,6 +2305,8 @@ function paintR100() {
   for (const w of $$('[data-r100wrap]')) { w.innerHTML = r100Inner(R, w.dataset.r100wrap !== 'big'); hydrate(w); }
   for (const g of $$('.r100grid')) g.innerHTML = r100Cells(R);
 }
+/* saving something is a good moment for a rule */
+const savedToast = topics => hzOn() ? toast(t('e.saved') + ' ' + quoteOf(pickQuote(topics)).text, null, true) : toast(t('e.saved'));
 function hzMilestone(before, after) {
   const target = r100Target(), half = Math.ceil(target / 2);
   if (before < target && after >= target) {
@@ -2110,14 +2314,39 @@ function hzMilestone(before, after) {
     toast([7, 14, 30, 50, 100].includes(n) ? t('hz.t.streak', { n }) : t('hz.t.hit', { n: fmtNum(target) }), null, true);
   } else if (target >= 10 && before < half && after >= half) toast(t('hz.t.half', { n: fmtNum(target - after) }), null, true);
 }
+/* the photo is cropped to a square in the browser and stored as a small JPEG in the user's own data */
+function pickPhoto() {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.addEventListener('change', () => {
+    const f = inp.files && inp.files[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f), img = new Image();
+    img.onload = () => {
+      const S = 200, w = img.naturalWidth, h = img.naturalHeight, side = Math.min(w, h);
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = S;
+      cv.getContext('2d').drawImage(img, (w - side) / 2, (h - side) * (h > w ? .2 : .5), side, side, 0, 0, S, S);   // portraits: crop nearer the top, where the face is
+      URL.revokeObjectURL(url);
+      DB.settings.hzPhoto = cv.toDataURL('image/jpeg', .85);
+      commit(); render(); toast(t('hz.photoSaved'), null, true);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); toast(t('hz.photoBad')); };
+    img.src = url;
+  });
+  inp.click();
+}
 function hzSettingsHTML() {
-  const on = hzOn();
+  const on = hzOn(), photo = !!coachPhoto();
   return `<div class="rise" style="--i:1"><div class="gh">${esc(t('hz.title'))}</div><div class="list">
     <label class="row ind">${avatarHTML(30)}<div class="bd"><div class="t1">${esc(t('hz.title'))}</div></div><span class="sw"><input type="checkbox" data-hz="hz" ${on ? 'checked' : ''} aria-label="${esc(t('hz.title'))}"><i></i></span></label>
-    ${on ? `<div class="row"><span class="lbl">${esc(t('hz.target'))}</span><input class="inl num" inputmode="numeric" data-set="r100" value="${esc(r100Target())}"></div>
+    ${on ? `<div class="row ind">${avatarHTML(30)}<div class="bd"><div class="t1">${esc(t('hz.photo'))}</div><div class="t2">${esc(t(photo ? 'hz.photoOn' : 'hz.photoOff'))}</div></div>
+      ${photo ? `<button class="pill" data-act="hzphotodel">${esc(t('hz.photoDel'))}</button>` : ''}<button class="pill" data-act="hzphoto">${esc(t('hz.photoPick'))}</button></div>
+    <div class="row"><span class="lbl">${esc(t('hz.target'))}</span><input class="inl num" inputmode="numeric" data-set="r100" value="${esc(r100Target())}"></div>
     <div class="row"><span class="lbl">${esc(t('hz.stage'))}</span><select class="inl" data-set="r100Stage">${DB.stages.map(s => `<option value="${esc(s.id)}" ${s.id === r100Stage() ? 'selected' : ''}>${esc(stageName(s))}</option>`).join('')}</select></div>
     <label class="row"><span class="lbl">${esc(t('hz.wknd'))}</span><span style="flex:1"></span><span class="sw"><input type="checkbox" data-hz="r100Wknd" ${DB.settings.r100Wknd !== false ? 'checked' : ''} aria-label="${esc(t('hz.wknd'))}"><i></i></span></label>` : ''}
-  </div><div class="gf">${on ? esc(t('hz.targetF')) + ' ' : ''}${esc(t('hz.onF'))}</div></div>`;
+  </div><div class="gf">${on ? esc(t('hz.photoF')) + ' ' + esc(t('hz.targetF')) + ' ' : ''}${esc(t('hz.onF'))}</div>
+  ${on ? `<div class="gf" style="margin-top:10px">${esc(t('hz.quotesF', { n: HZ_QUOTES.length }))}</div>${quoteCardHTML('set', 'kb', { style: 'margin-top:12px' })}` : ''}</div>`;
 }
 
 function renderShell() {
@@ -2221,7 +2450,7 @@ function viewOverview() {
     <div class="rise" style="--i:10">${goals}</div>
     <div class="h2 rise" style="--i:11">${esc(t('ov.ins'))}</div>
     <div class="card rise" style="--i:12">${insights(c, pc, p)}</div>
-    ${hzOn() ? rulesCardHTML() : ''}`;
+    ${hzOn() ? quoteSectionHTML() : ''}`;
 }
 function mountTrend() {
   const r = curRange(), m = MX[UI.trend] || MX.revenue, td = today();
@@ -2288,7 +2517,8 @@ function viewGoals() {
     const behind = DB.goals.map(goalStatus).filter(s => s && (s.status === 'behind' || s.status === 'over')).length;
     coach = `<div class="card rise" style="margin-bottom:12px">${coachHTML(behind ? t('hz.g.behind', { n: behind }) : t('hz.g.ok'))}</div>`;
   }
-  return head + coach + `<div class="grid gg">${DB.goals.map((g, i) => { const s = goalStatus(g); return s ? `<div class="rise" style="--i:${i}">${goalCard(g, s)}</div>` : ''; }).join('')}</div>`;
+  return head + coach + `<div class="grid gg">${DB.goals.map((g, i) => { const s = goalStatus(g); return s ? `<div class="rise" style="--i:${i}">${goalCard(g, s)}</div>` : ''; }).join('')}</div>
+    ${hzOn() ? quoteCardHTML('goals', 'kv', { i: 6, style: 'margin-top:14px' }) : ''}`;
 }
 
 /* ---- Log ---- */
@@ -2325,7 +2555,7 @@ function viewLog() {
   const more = DB.entries.length > UI.histLimit ? `<div style="text-align:center;margin-top:14px"><button class="btn sec" data-act="more">+ ${DB.entries.length - UI.histLimit}</button></div>` : '';
   return `<div class="srow"><h1 class="lt" style="flex:1">${esc(t('log.title'))}</h1><button class="btn sec" data-act="add">${icon('plus', 2.4)}${esc(t('log.full'))}</button></div>
     <p class="sub">${esc(t('log.count', { n: DB.entries.length }))}</p>
-    <div class="grid two"><div class="card rise" style="--i:1">
+    <div class="grid two"><div><div class="card rise" style="--i:1">
       <div class="srow" style="margin-bottom:2px"><b style="font-size:17px;letter-spacing:-.02em">${esc(t('log.quick'))}</b></div>
       <div class="small muted" style="margin-bottom:12px">${esc(t('log.quickSub'))}</div>
       ${hzOn() ? `<div class="r100mini" data-r100wrap="log">${r100Inner(r100State(), true)}</div>` : ''}
@@ -2334,8 +2564,8 @@ function viewLog() {
       ${vchips}
       ${rows}
       <div class="hint">${icon('info')}<span style="flex:1">${esc(t('log.moneyHint'))}</span><button class="link" data-act="addq" style="font-size:13px">${esc(t('log.full'))}</button></div>
-    </div>
-    <div class="rise" style="--i:2">${DB.entries.length ? `<div class="h2" style="margin:0 0 -14px">${esc(t('log.history'))}</div>${hist}${more}` : `<div class="card hero-empty"><p style="margin:0">${esc(t('log.empty'))}</p></div>`}</div></div>`;
+    </div>${hzOn() ? quoteCardHTML('log', 'vlk', { i: 2, style: 'margin-top:12px' }) : ''}</div>
+    <div class="rise" style="--i:3">${DB.entries.length ? `<div class="h2" style="margin:0 0 -14px">${esc(t('log.history'))}</div>${hist}${more}` : `<div class="card hero-empty"><p style="margin:0">${esc(t('log.empty'))}</p></div>`}</div></div>`;
 }
 function setQuick(stageId, value, date = UI.quick) {
   const qv = variantById(UI.qv) ? UI.qv : '';
@@ -2370,7 +2600,7 @@ function viewMetrics() {
     const add = g === 'custom' ? `<button class="row" data-act="newcustom"><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('s.addCustom'))}</div></div></button>` : '';
     return `<div class="rise" style="--i:${i++}"><div class="gh">${esc(t('g.' + g))}</div><div class="list">${rows}${add}</div></div>`;
   }).join('');
-  return head + `<div class="metrics-cols">${body}</div>`;
+  return head + `<div class="metrics-cols">${body}</div>${hzOn() ? quoteCardHTML('mx', 'tmb', { i: 9, style: 'margin-top:18px' }) : ''}`;
 }
 
 /* ---- A/B tests ---- */
@@ -2419,10 +2649,12 @@ function testCard(ts, r) {
 function viewTests() {
   const r = curRange();
   if (!DB.tests.length) return `<div class="card hero-empty rise"><div class="big">${icon('flask', 2)}</div><h3>${esc(t('tv.empty.h'))}</h3><p>${esc(t('tv.empty.p'))}</p>
-    <div class="btns"><button class="btn" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div></div>`;
+    <div class="btns"><button class="btn" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div></div>
+    ${hzOn() ? quoteCardHTML('tests', 'to', { style: 'margin-top:14px' }) : ''}`;
   return `${hzOn() ? `<div class="card rise" style="margin-bottom:12px">${coachHTML(t('hz.tests'))}</div>` : ''}<div class="grid">${DB.tests.map((ts, i) => `<div class="rise" style="--i:${i}">${testCard(ts, r)}</div>`).join('')}</div>
     <div style="text-align:center;margin-top:18px"><button class="btn sec" data-act="newtest">${icon('plus', 2.4)}${esc(t('tv.new'))}</button></div>
-    <p class="gf" style="margin-top:16px">${esc(t('tv.foot'))}</p>`;
+    <p class="gf" style="margin-top:16px">${esc(t('tv.foot'))}</p>
+    ${hzOn() ? quoteCardHTML('tests', 'to', { style: 'margin-top:14px' }) : ''}`;
 }
 
 /* ---- Settings ---- */
@@ -2506,7 +2738,7 @@ function switchTab(v) {
   if (!VIEWS[v]) return;
   const same = UI.view === v;
   UI.view = v; saveUI();
-  if (!same) window.scrollTo(0, 0);
+  if (!same) { window.scrollTo(0, 0); HZQ.slots.clear(); }   // new rules every time you open a page
   render(!same);
 }
 
@@ -2576,7 +2808,7 @@ function openEntry(key) {
     else DB.entries.push({ id: uid(), date: nd, v, note, ...(nv ? { t: nv } : {}) });
     commit(); api.close(); haptic();
     render();
-    toast(t('e.saved'));
+    savedToast('vks');
   }
 }
 
@@ -2589,12 +2821,17 @@ function openMetric(key) {
   const tk = !hzOn() ? null : key.startsWith('conv:') ? 'conv' : key === 'actions' || key === r100Stage() ? 'actions'
     : ['maxCust', 'maxRev', 'headroom', 'cash30', 'ltvCac', 'cac', 'churnRate', 'convOverall', 'avgDeal', 'newCust'].includes(key) ? key : null;
   const take = tk ? t('hz.take.' + tk, { target: fmtNum(r100Target()) }) : '';
+  const qTopics = key.startsWith('conv:') ? 'so' : ({ cac: 'lm', cpl: 'l', cpm: 'l', roas: 'l', mktRoi: 'lm', avgDeal: 'p', grossMargin: 'p',
+    revenue: 'm', grossProfit: 'm', netProfit: 'm', netMargin: 'm', totalCost: 'm', ltvCac: 'm', payback: 'm', cash30: 'm',
+    active: 'r', arpa: 'r', churnRate: 'r', ltv: 'r', maxCust: 'r', maxRev: 'r', headroom: 'r', newCust: 's', convOverall: 'so', actions: 'v' })[key] || 'vk';
+  HZQ.slots.delete('sheet');   // a new rule each time a metric is opened
   const winNote = m.unit && c.U !== c ? `<div class="hint">${icon('info')}<span>${esc(t('mv.window', { a: fmtDay(c.U.from, { month: 'short', day: 'numeric', year: 'numeric' }), b: fmtDay(c.U.to, { month: 'short', day: 'numeric', year: 'numeric' }) }))}</span></div>` : '';
   const body = `<div class="bigval"><div class="small muted">${esc(periodLabel(r))}</div>
       <div class="v" style="color:${colorOf(key)}">${numHTML('sheet:' + key, v, m.fmt)}</div>${deltaHTML(delta(v, pv, m.fmt, m.better))}
       ${p ? `<div class="small muted" style="margin-top:6px">${esc(vsLabel(p))}: ${esc(fmtVal(pv, m.fmt))}</div>` : ''}</div>
     <div class="card" style="margin-top:14px;padding-top:62px"><div data-chart></div></div>
     ${take ? `<div style="margin-top:16px">${coachHTML(take, { size: 44 })}</div>` : ''}
+    ${hzOn() ? quoteCardHTML('sheet', qTopics, { style: 'margin-top:14px' }) : ''}
     ${m.formula() ? `<div class="gh">${esc(t('mv.formula'))}</div><div class="formula">${esc(m.name())} = ${esc(m.formula())}</div>` : ''}
     ${parts.length ? `<div class="gh">${esc(t('mv.inputs'))}</div><div class="list">${parts.map(([l, pvv, f]) => `<div class="row"><div class="bd"><div class="t1">${esc(l)}</div></div><div class="rv num">${esc(fmtVal(pvv, f))}</div></div>`).join('')}</div>` : ''}
     ${winNote}
@@ -2640,7 +2877,7 @@ function openGoal(id, presetMetric) {
     g.target = m && m.fmt === 'pct' ? raw / 100 : raw;
     if (!(g.target > 0)) return;
     if (g0) Object.assign(g0, g); else DB.goals.push(g);
-    commit(); api.close(); haptic(); render(); toast(t('e.saved'));
+    commit(); api.close(); haptic(); render(); savedToast('kv');
   } } });
   const sb = sh.body;
   const seg = Segmented(['week', 'month', 'quarter', 'year'].map(p => ({ value: p, label: t('period.' + p) })), g.period, v => { g.period = v; refresh(); });
@@ -3240,7 +3477,9 @@ document.addEventListener('click', async e => {
     case 'addq': openEntry(quickKey()); break;
     case 'newtest': openTest(); break;
     case 'coachnext': coachNext(act); break;
-    case 'rulenext': ruleNext(act); break;
+    case 'quotenext': quoteNext(act); break;
+    case 'hzphoto': pickPhoto(); break;
+    case 'hzphotodel': delete DB.settings.hzPhoto; commit(); render(); break;
     case 'r100plus': {
       const sid = r100Stage(), td = today(), e = findEntry(td, variantById(UI.qv) ? UI.qv : '');
       setQuick(sid, (e && e.v[sid] || 0) + 1, td);
