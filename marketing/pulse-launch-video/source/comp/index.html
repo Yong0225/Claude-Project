@@ -1,0 +1,567 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pulse launch video</title>
+<style>
+:root{--blue:#0a84ff;--green:#30d158;--red:#ff453a;--orange:#ff9f0a;--purple:#bf5af2;--indigo:#5e5ce6;--teal:#40c8e0;--t1:#f5f5f7;--t2:#a1a1a6;--t3:#6e6e73}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
+body{font-family:"Inter Variable","Inter",sans-serif;color:var(--t1);-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+#stage{position:absolute;inset:0;overflow:hidden;background:#000}
+.abs{position:absolute;will-change:transform,opacity}
+.hd{font-family:"Inter Display","Inter Variable",sans-serif;font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.center{left:0;right:0;text-align:center}
+.grad{background:linear-gradient(95deg,#64d2ff 0%,#0a84ff 45%,#7d7aff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.warm{background:linear-gradient(95deg,#ffd60a,#ff9f0a 50%,#ff453a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{font-size:21px;font-weight:650;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+.sub{font-size:36px;line-height:1.3;color:var(--t2);font-weight:450;letter-spacing:-.01em}
+.sub b{color:var(--t1);font-weight:600}
+.w{display:inline-block;will-change:transform,opacity,filter}
+.mono{font-family:"DejaVu Sans Mono",monospace}
+/* background */
+.orb{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform,opacity}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.65) 100%);pointer-events:none}
+/* phone */
+#phone{position:absolute;left:0;top:0;width:376px;height:824px;transform-origin:50% 50%;will-change:transform,opacity}
+#phone .body{position:absolute;inset:0;border-radius:62px;background:#0c0c0e;padding:12px;
+  box-shadow:0 0 0 1.5px #4a4a4e,0 0 0 5px #1d1d20,0 0 0 6.5px #3a3a3d,0 50px 110px rgba(0,0,0,.7),0 0 140px rgba(10,132,255,.18)}
+#phone .scr{position:relative;width:352px;height:800px;border-radius:50px;overflow:hidden;background:#000}
+#phone .sb{position:absolute;left:0;right:0;top:0;height:38px;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 34px;font-size:15px;font-weight:650;z-index:3}
+#phone .isl{position:absolute;top:10px;left:50%;width:108px;height:31px;margin-left:-54px;border-radius:20px;background:#000;z-index:4}
+#phone .lay{position:absolute;left:0;top:38px;width:352px;height:762px;object-fit:cover}
+#phone .ov{position:absolute;left:0;top:38px;width:352px;height:762px;z-index:2;pointer-events:none}
+.tap{position:absolute;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(255,255,255,.35);border:2px solid rgba(255,255,255,.7)}
+.plus1{position:absolute;font-weight:750;font-size:22px;color:#64d2ff;text-shadow:0 2px 10px rgba(10,132,255,.8)}
+.hl{position:absolute;border-radius:14px;border:3px solid var(--blue);box-shadow:0 0 0 6px rgba(10,132,255,.25),0 0 40px rgba(10,132,255,.6)}
+/* cards */
+.card{background:rgba(28,28,30,.92);border:1px solid rgba(255,255,255,.08);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.pill{display:inline-flex;align-items:center;gap:12px;border-radius:999px;padding:14px 26px;font-size:26px;font-weight:600;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.ico{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;flex:none}
+.ico svg{width:30px;height:30px}
+.logoic{border-radius:24%;display:grid;place-items:center;background:linear-gradient(145deg,#5ac8fa,#0071e3 55%,#5856d6);box-shadow:0 20px 60px rgba(0,113,227,.45),inset 0 1px 0 rgba(255,255,255,.3)}
+.chip{display:flex;align-items:center;justify-content:space-between;gap:24px;width:760px;padding:20px 28px;border-radius:20px;background:rgba(28,28,30,.85);border:1.5px solid rgba(255,255,255,.07)}
+.chip .n{font-size:30px;font-weight:650;letter-spacing:-.02em}
+.chip .f{font-size:21px;color:var(--t2)}
+.stage{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:14px;background:rgba(255,255,255,.07);font-size:24px;font-weight:600;border:1px solid rgba(255,255,255,.08)}
+.stage i{font-style:normal;color:var(--t3);font-size:22px}
+.cell{display:inline-block;width:26px;height:44px;border-radius:6px;margin-right:6px;background:rgba(255,255,255,.07);vertical-align:middle}
+</style></head>
+<body><div id="stage">
+  <div id="bg">
+    <div class="orb" id="orbA" style="width:1100px;height:1100px"></div>
+    <div class="orb" id="orbB" style="width:900px;height:900px"></div>
+  </div>
+
+  <!-- ============ S1 HOOK ============ -->
+  <div id="s1" class="abs" style="inset:0">
+    <div class="abs hd center" id="qmark" style="top:40px;font-size:980px;line-height:1;color:rgba(255,255,255,.035)">?</div>
+    <div class="abs center" id="h1grp" style="top:330px">
+      <div class="hd" id="h1a" style="font-size:92px">What did your last customer</div>
+      <div class="hd" id="h1b" style="font-size:132px;margin-top:10px">actually <span class="warm">cost you?</span></div>
+    </div>
+    <div class="abs hd center" id="h1c" style="top:640px;font-size:84px">Had to think about it?</div>
+    <div class="abs hd center" id="h1d" style="top:770px;font-size:64px"><span class="grad">Then this is for you.</span></div>
+  </div>
+
+  <!-- ============ S2 PROBLEM ============ -->
+  <div id="s2" class="abs" style="inset:0">
+    <div class="abs hd center" id="p1" style="top:470px;font-size:120px">Running on <span class="warm">gut feel.</span></div>
+    <!-- spreadsheet -->
+    <div class="abs card" id="cSheet" style="left:250px;top:440px;width:470px;padding:22px;background:#1b1d1c">
+      <div class="mono" style="font-size:20px;color:#8e8e93;display:grid;grid-template-columns:40px repeat(4,1fr);gap:6px;text-align:center" id="sheetGrid"></div>
+      <div style="margin-top:16px;font-size:26px;font-weight:650;color:#30d158">Spreadsheets</div>
+    </div>
+    <!-- sticky note -->
+    <div class="abs" id="cNote" style="left:790px;top:470px;width:340px;height:330px;padding:30px 30px;background:linear-gradient(170deg,#ffe36e,#f5c542);color:#3a2f00;border-radius:6px;box-shadow:0 30px 70px rgba(0,0,0,.55);font-size:28px;line-height:1.45;font-style:italic;font-weight:560">
+      <div>leads this wk ~40??</div><div style="text-decoration:line-through;opacity:.7">call back Tue</div><div>ad spend — ask Sam</div><div>sales: 3? 4?</div>
+      <div style="position:absolute;bottom:18px;left:30px;font-style:normal;font-weight:700;font-size:24px;color:#6b5500">Notes</div>
+    </div>
+    <!-- memory bubble -->
+    <div class="abs" id="cMem" style="left:1220px;top:430px;width:440px">
+      <div class="card" style="border-radius:120px;padding:48px 44px;text-align:center;font-size:32px;font-weight:560;line-height:1.35;color:#d1d1d6">Was it 12 sales last month…<br><span style="color:#8e8e93">or 20?</span></div>
+      <div class="card" style="position:absolute;left:70px;bottom:-50px;width:44px;height:44px;border-radius:50%"></div>
+      <div class="card" style="position:absolute;left:40px;bottom:-86px;width:24px;height:24px;border-radius:50%"></div>
+      <div style="margin-top:100px;text-align:center;font-size:26px;font-weight:650;color:#bf5af2">Memory</div>
+    </div>
+    <div class="abs hd center" id="p2" style="top:120px;font-size:88px">Where is your funnel <span class="warm">leaking?</span></div>
+    <svg class="abs" id="funnel" width="1000" height="640" viewBox="0 0 1000 640" style="left:460px;top:300px;overflow:visible"></svg>
+    <div class="abs hd center" id="p3" style="top:120px;font-size:88px">Is your marketing <span class="warm">paying for itself?</span></div>
+    <div class="abs card" id="mCard" style="left:1060px;top:420px;width:620px;padding:40px 44px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sub" style="font-size:30px">Ad spend</span><span class="hd" style="font-size:60px;color:#ff453a">−$1,334</span></div>
+      <div style="height:1px;background:rgba(255,255,255,.1);margin:26px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="sub" style="font-size:30px">Came back</span><span class="hd" id="qq" style="font-size:60px;color:#8e8e93">$ ???</span></div>
+    </div>
+  </div>
+
+  <!-- ============ S3 REVEAL ============ -->
+  <div id="s3" class="abs" style="inset:0">
+    <svg class="abs" id="ecg" width="1920" height="400" viewBox="0 0 1920 400" style="left:0;top:340px;overflow:visible">
+      <defs><filter id="glow" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <path id="ecgp" d="M0 200 H820 L860 200 L890 90 L950 330 L995 140 L1020 200 H1920" fill="none" stroke="#0a84ff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+    </svg>
+    <div class="abs" id="logo" style="left:0;right:0;top:360px;display:flex;justify-content:center;align-items:center;gap:44px">
+      <div class="logoic" id="logoIc" style="width:190px;height:190px"><svg viewBox="0 0 24 24" width="118" height="118" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"/></svg></div>
+      <div class="hd" id="logoTx" style="font-size:210px;letter-spacing:-.045em">Pulse</div>
+    </div>
+    <div class="abs sub center" id="tagline" style="top:650px;font-size:50px">The simplest way to track the numbers that <b>grow your business.</b></div>
+  </div>
+
+  <!-- ============ S4 LOG ============ -->
+  <div id="s4" class="abs" style="inset:0">
+    <div class="abs" id="lTxt" style="left:1030px;top:250px;width:800px">
+      <div class="eyebrow" id="lEb">Quick log</div>
+      <div class="hd" id="lH" style="font-size:104px;margin-top:22px">Log your day<br><span class="grad">in seconds.</span></div>
+      <div class="sub" id="lSub" style="margin-top:34px">Tap <b style="color:#0a84ff">+</b> the moment something happens.<br>It saves instantly.</div>
+      <div id="lStages" style="margin-top:56px;display:flex;flex-wrap:wrap;gap:14px;width:760px"></div>
+    </div>
+  </div>
+
+  <!-- ============ S5 METRICS ============ -->
+  <div id="s5" class="abs" style="inset:0">
+    <div class="abs" style="left:150px;top:150px;width:820px">
+      <div class="eyebrow" id="mEb">Automatic metrics</div>
+      <div class="hd" id="mH" style="font-size:104px;margin-top:22px">Pulse does<br><span class="grad">the math.</span></div>
+      <div id="mChips" style="margin-top:46px;display:flex;flex-direction:column;gap:14px"></div>
+      <div class="sub" id="mMore" style="margin-top:22px;font-size:30px">+ 20 more metrics, <b>all calculated for you</b></div>
+    </div>
+  </div>
+
+  <!-- ============ S6 OVERVIEW ============ -->
+  <div id="s6" class="abs" style="inset:0">
+    <div class="abs" style="left:120px;top:300px;width:560px">
+      <div class="eyebrow" id="oEb">Overview</div>
+      <div class="hd" id="oH" style="font-size:96px;margin-top:22px">
+        <div id="oL1">Your</div>
+        <div id="oRoll" style="height:1.1em;overflow:hidden;position:relative"><div id="oRollIn" style="position:absolute;left:0;top:0">
+          <div class="grad" style="height:1.1em">business</div><div class="grad" style="height:1.1em">week</div><div class="grad" style="height:1.1em">month</div><div class="grad" style="height:1.1em">quarter</div><div class="grad" style="height:1.1em">year</div></div></div>
+        <div id="oL3">at a glance.</div>
+      </div>
+    </div>
+    <div class="abs card" id="k1" style="left:1290px;top:250px;width:400px;padding:30px 34px"><div style="font-size:24px;color:var(--t2);font-weight:560"><span style="color:#0a84ff">●</span> Revenue</div><div class="hd" style="font-size:72px;margin-top:6px">$13,850</div><div class="pill" style="font-size:22px;padding:6px 14px;margin-top:10px;color:#30d158;background:rgba(48,209,88,.14);border:0">↑ +48%</div></div>
+    <div class="abs card" id="k2" style="left:1380px;top:560px;width:400px;padding:30px 34px"><div style="font-size:24px;color:var(--t2);font-weight:560"><span style="color:#5e5ce6">●</span> LTV : CAC</div><div class="hd" style="font-size:72px;margin-top:6px">15.1×</div><div class="pill" style="font-size:22px;padding:6px 14px;margin-top:10px;color:#30d158;background:rgba(48,209,88,.14);border:0">↑ +79%</div></div>
+    <div class="abs" id="oFeat" style="left:1270px;top:300px;width:560px;display:flex;flex-direction:column;gap:40px"></div>
+  </div>
+
+  <!-- ============ S7 HONEST ============ -->
+  <div id="s7" class="abs" style="inset:0">
+    <div class="abs card" id="lens" style="left:560px;top:300px;width:460px;height:124px;border-radius:24px;overflow:hidden;border:3px solid #0a84ff;box-shadow:0 0 0 8px rgba(10,132,255,.2),0 30px 90px rgba(0,0,0,.7)">
+      <div id="lensImg" style="position:absolute;inset:0;background-repeat:no-repeat"></div>
+    </div>
+    <div class="abs" style="left:1060px;top:170px;width:780px">
+      <div class="eyebrow" id="hEb">Honest numbers</div>
+      <div class="hd" id="hH" style="font-size:96px;margin-top:22px">Like for like.<br><span class="grad">Always.</span></div>
+      <div id="hBars" style="margin-top:56px"></div>
+      <div id="hPills" style="margin-top:40px;display:flex;flex-direction:column;gap:16px"></div>
+    </div>
+  </div>
+
+  <!-- ============ S8 GOALS ============ -->
+  <div id="s8" class="abs" style="inset:0">
+    <div class="abs" style="left:150px;top:190px;width:900px">
+      <div class="eyebrow" id="gEb">Goals</div>
+      <div class="hd" id="gH" style="font-size:104px;margin-top:22px">Know if you’re<br><span class="grad">on pace.</span></div>
+      <div id="gRing" style="margin-top:60px;display:flex;align-items:center;gap:40px">
+        <svg width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="92" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="20"/><circle id="gArc" cx="110" cy="110" r="92" fill="none" stroke="#0a84ff" stroke-width="20" stroke-linecap="round" transform="rotate(-90 110 110)" stroke-dasharray="578" stroke-dashoffset="578"/><text id="gPct" x="110" y="124" text-anchor="middle" fill="#f5f5f7" font-size="44" font-weight="700" font-family="Inter Display">0%</text></svg>
+        <div><div style="font-size:34px;font-weight:650">Revenue goal</div><div class="sub" style="font-size:30px;margin-top:6px"><b>$13,850</b> of $14,000</div><div id="gPace" style="margin-top:14px;font-size:28px;font-weight:600;color:#0a84ff">On track · pace for $17,313</div></div>
+      </div>
+      <div class="sub" id="gSub" style="margin-top:50px">…while there’s still <b>time to act.</b></div>
+    </div>
+  </div>
+
+  <!-- ============ S9 SYNC ============ -->
+  <div id="s9" class="abs" style="inset:0">
+    <div class="abs" id="laptop" style="left:760px;top:250px;width:980px">
+      <div style="margin:0 auto;width:880px;height:562px;border-radius:26px 26px 0 0;background:#0c0c0e;padding:16px;box-shadow:0 0 0 2px #3a3a3d,0 40px 100px rgba(0,0,0,.6)">
+        <div style="width:100%;height:100%;border-radius:10px;overflow:hidden;background:url(desktop.jpg) center/cover"></div></div>
+      <div style="height:26px;border-radius:0 0 30px 30px;background:linear-gradient(#58585c,#2c2c2e);box-shadow:0 20px 50px rgba(0,0,0,.6)"></div>
+    </div>
+    <svg class="abs" id="arc" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0;overflow:visible">
+      <path id="arcp" d="M440 215 C 520 40, 1050 30, 1200 240" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3" stroke-dasharray="4 12" stroke-linecap="round"/>
+      <g id="dots"></g>
+    </svg>
+    <div class="abs card" id="code" style="left:640px;top:70px;width:460px;padding:22px 30px;text-align:center">
+      <div style="font-size:20px;color:var(--t2);font-weight:600;letter-spacing:.12em;text-transform:uppercase">Pairing code</div>
+      <div class="mono" id="codeTx" style="font-size:52px;font-weight:700;letter-spacing:.12em;margin-top:6px;min-height:62px">&nbsp;</div>
+    </div>
+    <div class="abs" id="badges" style="left:0;right:0;top:900px;display:flex;justify-content:center;gap:26px"></div>
+  </div>
+
+  <!-- ============ S10 CTA ============ -->
+  <div id="s10" class="abs" style="inset:0">
+    <div class="abs hd center" id="c1" style="top:360px;font-size:150px">Stop guessing.</div>
+    <div class="abs hd center" id="c2" style="top:540px;font-size:150px"><span class="grad">Start knowing.</span></div>
+    <div class="abs" id="end" style="left:170px;top:210px;width:1000px">
+      <div style="display:flex;align-items:center;gap:34px"><div class="logoic" style="width:140px;height:140px"><svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"/></svg></div><div class="hd" style="font-size:160px;letter-spacing:-.045em">Pulse</div></div>
+      <div class="sub" id="eTag" style="margin-top:30px;font-size:44px">Track the numbers that <b>grow your business.</b></div>
+      <div id="eBadges" style="margin-top:44px;display:flex;gap:16px;flex-wrap:wrap"></div>
+      <div id="eUrl" class="pill" style="margin-top:44px;font-size:30px;padding:18px 30px;background:rgba(10,132,255,.14);border-color:rgba(10,132,255,.4)"><span style="color:#64d2ff">yong0225.github.io/Claude-Project/business-tracker</span></div>
+      <div id="eHome" class="sub" style="margin-top:28px;font-size:28px;display:flex;align-items:center;gap:12px">Open it on your phone → <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> <b>Share</b> → <b>Add to Home Screen</b></div>
+    </div>
+    <div class="abs" id="qr" style="left:1330px;top:300px;width:420px;text-align:center">
+      <div style="background:#fff;border-radius:34px;padding:34px;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 8px rgba(255,255,255,.06)"><img src="qr.svg" style="width:100%;display:block"></div>
+      <div class="sub" style="margin-top:24px;font-size:30px"><b>Scan to open Pulse</b></div>
+    </div>
+  </div>
+
+  <!-- ============ PHONE (shared across scenes) ============ -->
+  <div id="phone"><div class="body"><div class="scr">
+    <div class="sb"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".5"/><rect x="2.5" y="2.5" width="17" height="8" rx="2" fill="#fff"/><rect x="25" y="4.5" width="1.6" height="4" rx=".8" fill="#fff" opacity=".5"/></svg></span></div>
+    <div class="isl"></div>
+    <img class="lay" id="layA"><img class="lay" id="layB">
+    <div class="ov" id="pov"></div>
+  </div></div></div>
+
+  <div id="vig"></div>
+  <div class="abs" id="flash" style="inset:0;background:radial-gradient(circle at 50% 50%,rgba(120,190,255,.9),rgba(10,132,255,.25) 40%,transparent 70%);opacity:0"></div>
+</div>
+
+<script>
+/* ---------------- helpers ---------------- */
+const $ = s => document.querySelector(s);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const E = {
+  lin: x => x,
+  out: x => 1 - Math.pow(1 - x, 3),
+  outExpo: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  inOut: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  in: x => x * x * x,
+  spring: x => x >= 1 ? 1 : 1 - Math.exp(-6.5 * x) * Math.cos(9.5 * x),   // gentle overshoot
+};
+// keyframed transform: kf = [[time, {x,y,s,r,o,b,ry}, ease?], ...]  (ease applies to the segment ending at that key)
+const DEF = { x: 0, y: 0, s: 1, r: 0, o: 1, b: 0, ry: 0 };
+function sample(kf, t) {
+  // each key inherits every value set by earlier keys, so {} means "hold"
+  let acc = { ...DEF, ...kf[0][1] };
+  if (t <= kf[0][0]) return acc;
+  for (let i = 1; i < kf.length; i++) {
+    const [t1, v1, e] = kf[i], next = { ...acc, ...v1 };
+    if (t <= t1) {
+      const t0 = kf[i - 1][0], k = (E[e || 'inOut'])((t - t0) / (t1 - t0)), o = {};
+      for (const key in next) o[key] = lerp(acc[key], next[key], k);
+      return o;
+    }
+    acc = next;
+  }
+  return acc;
+}
+function apply(el, v) {
+  el.style.transform = `translate(${v.x}px,${v.y}px)` + (v.ry ? ` perspective(1600px) rotateY(${v.ry}deg)` : '') + ` rotate(${v.r}deg) scale(${v.s})`;
+  el.style.opacity = clamp(v.o);
+  el.style.filter = v.b > 0.05 ? `blur(${v.b}px)` : 'none';
+}
+const A = (el, t, kf) => apply(typeof el === 'string' ? $(el) : el, sample(kf, t));
+// fade/rise in at t0, optional out at t1
+function inOut(el, t, t0, t1, { dy = 40, blur = 12, d = .7, out = .45, dyOut = -30, s0 = 1 } = {}) {
+  const kf = [[t0, { y: dy, o: 0, b: blur, s: s0 }], [t0 + d, { y: 0, o: 1, b: 0, s: 1 }, 'outExpo']];
+  if (t1 != null) kf.push([t1, {}], [t1 + out, { y: dyOut, o: 0, b: blur }, 'in']);
+  A(el, t, kf);
+}
+// split an element's text nodes into word spans (keeps inner spans for colour)
+function splitWords(el) {
+  if (el._w) return el._w;
+  const walk = node => {
+    for (const n of [...node.childNodes]) {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(p => { if (!p) return; if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p)); else { const s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); } });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.tagName !== 'BR' && !n.classList.contains('w')) {
+        if (n.classList.contains('grad') || n.classList.contains('warm')) { n.classList.add('w'); } else walk(n);
+      }
+    }
+  };
+  walk(el); el._w = [...el.querySelectorAll('.w')]; return el._w;
+}
+function words(el, t, t0, stagger = .09, d = .55) {
+  el = typeof el === 'string' ? $(el) : el;
+  splitWords(el).forEach((w, i) => {
+    const k = E.outExpo(P(t, t0 + i * stagger, t0 + i * stagger + d));
+    w.style.opacity = k; w.style.transform = `translateY(${(1 - k) * 36}px)`; w.style.filter = k < .98 ? `blur(${(1 - k) * 10}px)` : 'none';
+  });
+}
+const show = (id, t, a, b) => { const el = $(id); const on = t >= a && t < b; el.style.display = on ? '' : 'none'; return on; };
+const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+/* ---------------- static content ---------------- */
+(() => {
+  // spreadsheet
+  const g = $('#sheetGrid'); const rows = [['', 'A', 'B', 'C', 'D'], ['1', 'Leads', '42', '??', '#REF!'], ['2', 'Calls', '', '17', ''], ['3', 'Sales', '4?', '', '#DIV/0!'], ['4', 'Ads $', '1,334', '', '???'], ['5', 'CAC', '#N/A', '', '']];
+  g.innerHTML = rows.map((r, i) => r.map((c, j) => `<div style="padding:7px 2px;border-radius:4px;${i === 0 || j === 0 ? 'color:#636366' : 'background:rgba(255,255,255,.04);color:' + (/[#?]/.test(c) ? '#ff453a' : '#d1d1d6')}">${c || '&nbsp;'}</div>`).join('')).join('');
+  // funnel: stages narrowing, with red leak labels
+  const st = [['Leads', 614], ['Contacted', 513], ['Opened', 271], ['Replied', 35], ['Meetings', 15], ['Won', 4]];
+  const f = $('#funnel'); let h = '';
+  st.forEach(([n, v], i) => {
+    const w = 900 - i * 125, y = 20 + i * 100, x = (1000 - w) / 2;
+    h += `<g class="fb" data-i="${i}"><rect x="${x}" y="${y}" width="${w}" height="72" rx="18" fill="url(#fg${i})"/>
+      <text x="500" y="${y + 47}" text-anchor="middle" fill="#fff" font-size="28" font-weight="650" font-family="Inter Variable">${n} · ${v}</text></g>`;
+    if (i) { const pct = Math.round((1 - v / st[i - 1][1]) * 100); h += `<text class="lk" data-i="${i}" x="${x + w + 40}" y="${y - 2}" fill="#ff453a" font-size="26" font-weight="700" font-family="Inter Variable">−${pct}%</text>`; }
+  });
+  let defs = '<defs>'; const cols = ['#0a84ff', '#5e5ce6', '#bf5af2', '#ff375f', '#ff9f0a', '#30d158'];
+  cols.forEach((c, i) => { defs += `<linearGradient id="fg${i}" x1="0" x2="1"><stop offset="0" stop-color="${c}" stop-opacity=".55"/><stop offset=".5" stop-color="${c}" stop-opacity=".9"/><stop offset="1" stop-color="${c}" stop-opacity=".55"/></linearGradient>`; });
+  f.innerHTML = defs + '</defs>' + h + '<g id="drops"></g>';
+  // log stages
+  $('#lStages').innerHTML = ['Leads', 'Contacted', 'Opened', 'Replied', 'Meetings', 'Proposals', 'Won'].map((s, i) => `<span class="stage" data-i="${i}">${s}</span>${i < 6 ? '<span class="stage" style="background:none;border:0;padding:12px 0;color:#6e6e73" data-i="' + i + '">→</span>' : ''}`).join('');
+  // metric chips
+  const mc = [['Conversion rate', 'Won ÷ Leads'], ['Customer acquisition cost', 'Spend ÷ New clients'], ['Return on ad spend', 'New revenue ÷ Ad spend'], ['Profit margin', 'Net profit ÷ Revenue'], ['Lifetime value', 'Revenue/client × Margin × Lifetime']];
+  $('#mChips').innerHTML = mc.map(([n, fm]) => `<div class="chip"><span class="n">${n}</span><span class="f mono">${fm}</span></div>`).join('');
+  // overview features
+  const ic = {
+    trend: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
+    funnel: '<path d="M3 4h18l-7 8v6l-4 2v-8z"/>',
+    spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+    wifi: '<path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1"/><path d="M3 3l18 18"/>',
+    sync: '<path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M3 3l18 18"/>',
+    free: '<path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z"/>',
+    lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    dev: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  };
+  const svg = (k, c = '#fff') => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic[k]}</svg>`;
+  const feat = [['trend', '#0a84ff', 'Trends', 'Revenue, clients, leads over time'], ['funnel', '#bf5af2', 'Funnel', 'See exactly where leads drop off'], ['spark', '#ff9f0a', 'Highlights', 'Plain-English insights, written for you']];
+  $('#oFeat').innerHTML = feat.map(([k, c, n, d]) => `<div class="feat" style="display:flex;gap:24px;align-items:center"><div class="ico" style="width:76px;height:76px;border-radius:20px;background:${c}">${svg(k)}</div><div><div style="font-size:42px;font-weight:700;letter-spacing:-.02em">${n}</div><div class="sub" style="font-size:26px">${d}</div></div></div>`).join('');
+  // honest bars
+  const bar = (label, n, id) => `<div style="display:flex;align-items:center;gap:22px;margin-bottom:20px"><div style="width:170px;font-size:28px;font-weight:650">${label}</div><div id="${id}" style="white-space:nowrap">${Array.from({ length: n }, () => '<span class="cell" style="width:14px;margin-right:4px"></span>').join('')}</div></div>`;
+  $('#hBars').innerHTML = bar('September', 30, 'hbS') + bar('August', 31, 'hbA') + '<div id="hBr" style="margin-left:192px;width:' + (24 * 18 - 4) + 'px;border-top:3px solid #30d158;padding-top:10px;text-align:center;font-size:24px;font-weight:650;color:#30d158">Same 24 days</div>';
+  $('#hPills').innerHTML = `<div class="pill hp" style="font-size:26px;color:#8e8e93"><span style="text-decoration:line-through">Sep 1–24 vs all of August</span><span style="color:#ff453a">✕ looks like a slump</span></div>
+     <div class="pill hp" style="font-size:26px;background:rgba(48,209,88,.12);border-color:rgba(48,209,88,.35)"><span>Sep 1–24 vs Aug 1–24</span><span style="color:#30d158">✓ the real trend</span></div>`;
+  // sync badges
+  const badge = (k, c, n) => `<div class="pill bd" style="font-size:30px;padding:16px 30px"><div class="ico" style="width:48px;height:48px;border-radius:13px;background:${c}">${svg(k)}</div>${n}</div>`;
+  $('#badges').innerHTML = badge('wifi', '#636366', 'Works offline') + badge('sync', '#0a84ff', 'Phone ⇄ laptop sync') + badge('user', '#30d158', 'No account needed');
+  $('#eBadges').innerHTML = [['free', '#30d158', 'Free'], ['user', '#0a84ff', 'No sign-up'], ['wifi', '#636366', 'Works offline'], ['dev', '#5e5ce6', 'Any phone or laptop']]
+    .map(([k, c, n]) => `<div class="pill eb" style="font-size:26px;padding:10px 22px 10px 12px"><div class="ico" style="width:42px;height:42px;border-radius:12px;background:${c}">${svg(k)}</div>${n}</div>`).join('');
+  // sync dots
+  $('#dots').innerHTML = Array.from({ length: 7 }, () => '<circle r="9" fill="#0a84ff" filter="url(#glow)"/>').join('');
+})();
+
+/* ---------------- phone track ---------------- */
+const META = {};
+const PH_KF = [
+  [23.3, { x: 960, y: 1700, s: 1, ry: 0 }],
+  [24.5, { x: 640, y: 548, ry: 14 }, 'outExpo'],
+  [34.0, { x: 660, ry: 9 }, 'lin'],
+  [34.75, { x: 1330, ry: -13 }, 'inOut'],
+  [46.9, { x: 1320, ry: -8 }, 'lin'],
+  [47.65, { x: 960, y: 548, ry: 0, s: .98 }, 'inOut'],
+  [56.9, { s: 1 }, 'lin'],
+  [57.65, { x: 400, y: 548, ry: 0, s: 1 }, 'inOut'],
+  [64.9, { x: 410 }, 'lin'],
+  [65.65, { x: 1370, ry: -12 }, 'inOut'],
+  [70.4, { x: 1360, ry: -8 }, 'lin'],
+  [71.2, { x: 430, y: 548, ry: 0, s: .78 }, 'inOut'],
+  [77.3, { x: 440 }, 'lin'],
+  [78.0, { y: 1750, s: .7 }, 'in'],
+];
+// which recorded clip (and clip time) the phone shows at time t
+function screenAt(t) {
+  if (t < 34.45) return ['log', t - 25.0];
+  if (t < 47.45) return ['metrics', t - 34.6];
+  if (t < 57.45) return ['overview', t - 47.6];
+  if (t < 65.45) return ['goals', 0];
+  if (t < 71.0) return ['goals', t - 65.3];
+  return ['overview', 0];
+}
+const frameSrc = (clip, ct) => { const m = META[clip]; const f = clamp(Math.floor(ct * 30 + 1e-6), 0, m.frames - 1); return { f, src: `clips/${clip}/${String(f).padStart(4, '0')}.jpg` }; };
+let curSrc = '';
+async function phone(t) {
+  const el = $('#phone'); const on = t >= 23.3 && t < 78.0; el.style.display = on ? '' : 'none'; if (!on) return;
+  const v = sample(PH_KF, t);
+  el.style.transform = `translate(${v.x - 188}px,${v.y - 412}px) perspective(1800px) rotateY(${v.ry}deg) scale(${v.s})`;
+  const [clip, ct] = screenAt(t); const { src } = frameSrc(clip, ct);
+  const img = $('#layA');
+  if (src !== curSrc) { img.src = src; curSrc = src; try { await img.decode(); } catch (e) {} }
+  // overlays: tap ripples, +1 floaters, highlight box
+  const S = 352 / 390, ov = $('#pov'); let h = '';
+  if (clip !== 'goals' || ct > 0) for (const tp of META[clip].taps) {
+    const dt = ct - tp.t; if (dt < 0 || dt > .6) continue;
+    const k = dt / .6; h += `<div class="tap" style="left:${tp.x * S}px;top:${tp.y * S}px;transform:scale(${.55 + k * .9});opacity:${(1 - k) * .9}"></div>`;
+    if (clip === 'log') h += `<div class="plus1" style="left:${tp.x * S - 14}px;top:${tp.y * S - 44 - E.out(k) * 46}px;opacity:${1 - E.in(k)}">+1</div>`;
+  }
+  if (clip === 'metrics') {   // glow around the formula once the CAC sheet is open
+    const k = E.outExpo(P(t, 45.0, 45.5)) * (1 - P(t, 46.9, 47.3));
+    if (k > 0) h += `<div class="hl" style="left:${8 * S}px;top:${(612) * S}px;width:${374 * S}px;height:${66 * S}px;opacity:${k};transform:scale(${1.08 - .08 * k})"></div>`;
+  }
+  ov.innerHTML = h;
+}
+
+/* ---------------- background ---------------- */
+function background(t) {
+  const warm = P(t, 5.5, 7.5) * (1 - P(t, 18.8, 19.8));
+  const a = $('#orbA'), b = $('#orbB');
+  const ca = warm > .5 ? `rgba(255,120,40,${.22 * warm})` : `rgba(10,132,255,${.30 * (1 - warm) * (t < 19.5 ? .55 : 1)})`;
+  const cb = warm > .5 ? `rgba(255,50,80,${.16 * warm})` : `rgba(94,92,230,${.26 * (1 - warm) * (t < 19.5 ? .55 : 1)})`;
+  a.style.background = `radial-gradient(circle, ${ca}, transparent 65%)`;
+  b.style.background = `radial-gradient(circle, ${cb}, transparent 65%)`;
+  a.style.transform = `translate(${-200 + Math.sin(t * .23) * 260}px,${-300 + Math.cos(t * .17) * 160}px)`;
+  b.style.transform = `translate(${1150 + Math.cos(t * .19) * 240}px,${380 + Math.sin(t * .21) * 180}px)`;
+  const fl = $('#flash'); fl.style.opacity = Math.max(0, 1 - Math.abs(t - 19.72) / .25) * .85;
+}
+
+/* ---------------- scenes ---------------- */
+function s1(t) {
+  if (!show('#s1', t, 0, 6.6)) return;
+  A('#qmark', t, [[0, { o: 0, s: .9 }], [2.5, { o: 1, s: 1 }, 'out'], [6.0, { s: 1.06, r: 4 }, 'lin'], [6.5, { o: 0 }]]);
+  words('#h1a', t, .55, .11); words('#h1b', t, 1.35, .16, .6);
+  A('#h1grp', t, [[3.15, {}], [3.75, { y: -150, s: .72, o: .38 }, 'inOut'], [6.05, {}], [6.5, { o: 0, b: 12, s: .8 }]]);
+  words('#h1c', t, 3.3, .09);
+  words('#h1d', t, 4.85, .12);
+  A('#h1c', t, [[6.05, {}], [6.5, { o: 0, b: 12, s: 1.08 }]]);
+  A('#h1d', t, [[6.05, {}], [6.5, { o: 0, b: 12, s: 1.08 }]]);
+}
+function s2(t) {
+  if (!show('#s2', t, 6.4, 19.5)) return;
+  words('#p1', t, 6.7, .12);
+  A('#p1', t, [[9.4, {}], [10.0, { y: -330, s: .6 }, 'inOut'], [13.2, {}], [13.6, { o: 0, b: 10 }]]);
+  const card = (id, t0, r, dx) => {
+    const fl = Math.sin(t * .9 + dx) * 8;
+    A(id, t, [[t0, { y: 120, o: 0, s: .7, r: r * 2.5 }], [t0 + .8, { y: fl, o: 1, s: 1, r }, 'spring'], [13.25, { y: fl, r }], [13.85, { y: 220, x: dx * 1.5, o: 0, r: r * 4, b: 8 }, 'in']]);
+  };
+  card('#cSheet', 10.3, -7, -120); card('#cNote', 11.2, 5, 10); card('#cMem', 11.9, -4, 140);
+  // funnel scene
+  words('#p2', t, 13.56, .1);
+  A('#p2', t, [[15.75, {}], [16.15, { o: 0, y: -30, b: 10 }]]);
+  const fOn = t > 13.5;
+  $('#funnel').style.display = fOn ? '' : 'none';
+  if (fOn) {
+    A('#funnel', t, [[15.8, { x: 0, s: 1 }], [16.5, { x: -330, s: .78 }, 'inOut'], [18.75, {}], [19.35, { s: .1, o: 0, x: 0, b: 20 }, 'in']]);
+    document.querySelectorAll('#funnel .fb').forEach(g => {
+      const i = +g.dataset.i, k = E.outExpo(P(t, 13.7 + i * .14, 14.3 + i * .14));
+      g.style.opacity = k; g.style.transformOrigin = '500px 0'; g.style.transform = `scaleX(${.3 + .7 * k})`;
+    });
+    document.querySelectorAll('#funnel .lk').forEach(l => { const i = +l.dataset.i; const k = E.outExpo(P(t, 14.5 + i * .18, 15 + i * .18)); l.style.opacity = k; l.style.transform = `translateX(${(1 - k) * -20}px)`; });
+    // leaking drops from the edges of each bar
+    let d = '';
+    for (let i = 1; i < 6; i++) for (let j = 0; j < 3; j++) {
+      const period = 1.1, ph = hash(i * 7 + j) * period, age = ((t - 14.4 - i * .18 + ph) % period + period) % period;
+      if (t < 14.4 + i * .18) continue;
+      const w = 900 - (i - 1) * 125, x0 = (500 + (j % 2 ? w : -w) / 2) + (j % 2 ? -8 : 8), y0 = 20 + (i - 1) * 100 + 60;
+      const yy = y0 + 180 * age * age, a = 1 - age / period;
+      d += `<circle cx="${x0 + (j % 2 ? 1 : -1) * age * 30}" cy="${yy}" r="${6 - age * 2}" fill="#ff453a" opacity="${a * .85}"/>`;
+    }
+    $('#drops').innerHTML = d;
+  }
+  words('#p3', t, 15.96, .1);
+  A('#p3', t, [[18.75, {}], [19.3, { o: 0, s: .4, b: 16 }, 'in']]);
+  A('#mCard', t, [[16.2, { x: 80, o: 0, s: .92 }], [16.9, { x: 0, o: 1, s: 1 }, 'outExpo'], [18.75, {}], [19.35, { x: -500, s: .1, o: 0, b: 20 }, 'in']]);
+  $('#qq').style.opacity = t > 17 ? .45 + .55 * Math.abs(Math.sin(t * 4)) : 1;
+}
+function s3(t) {
+  if (!show('#s3', t, 19.3, 24.8)) return;
+  const path = $('#ecgp'); const L = 2140; path.style.strokeDasharray = L;
+  const dk = E.inOut(P(t, 19.3, 19.8)); path.style.strokeDashoffset = L * (1 - dk);
+  A('#ecg', t, [[19.8, { o: 1 }], [20.2, { o: 0, s: 1.15 }]]);
+  A('#logoIc', t, [[19.75, { s: .2, o: 0, r: -20 }], [20.6, { s: 1, o: 1, r: 0 }, 'spring']]);
+  const tx = $('#logoTx'); const k = E.outExpo(P(t, 19.95, 20.7));
+  tx.style.opacity = k; tx.style.transform = `translateX(${(1 - k) * -60}px)`; tx.style.clipPath = `inset(0 ${(1 - k) * 100}% 0 0)`;
+  A('#logo', t, [[23.4, {}], [24.2, { y: -260, o: 0, s: .7 }, 'inOut']]);
+  words('#tagline', t, 21.1, .07);
+  A('#tagline', t, [[23.3, {}], [23.9, { o: 0, y: -40, b: 10 }]]);
+}
+function s4(t) {
+  if (!show('#s4', t, 24.3, 34.8)) return;
+  const out = [[33.9, {}], [34.5, { o: 0, x: -60, b: 10 }]];
+  A('#lEb', t, [[24.9, { o: 0, y: 20 }], [25.4, { o: 1, y: 0 }, 'out']]);
+  words('#lH', t, 25.0, .1);
+  inOut('#lSub', t, 27.2);
+  A('#lTxt', t, out);
+  document.querySelectorAll('#lStages .stage').forEach(s => { const i = +s.dataset.i; const k = E.outExpo(P(t, 31.5 + i * .16, 32.1 + i * .16)); s.style.opacity = k; s.style.transform = `translateY(${(1 - k) * 24}px) scale(${.9 + .1 * k})`; });
+}
+function s5(t) {
+  if (!show('#s5', t, 34.3, 47.6)) return;
+  A('#mEb', t, [[34.5, { o: 0, y: 20 }], [35.0, { o: 1, y: 0 }, 'out'], [46.9, {}], [47.4, { o: 0, x: -60 }]]);
+  words('#mH', t, 34.6, .1);
+  A('#mH', t, [[46.9, {}], [47.4, { o: 0, x: -60, b: 10 }]]);
+  const times = [36.05, 37.5, 39.3, 40.95, 42.3];
+  document.querySelectorAll('#mChips .chip').forEach((c, i) => {
+    const t0 = times[i], active = t >= t0 && (i === 4 ? t < 43.7 : t < times[i + 1]);
+    A(c, t, [[t0 - .05, { x: -80, o: 0, b: 10 }], [t0 + .55, { x: 0, o: 1, b: 0 }, 'outExpo'], [46.8 + i * .05, {}], [47.3 + i * .05, { o: 0, x: -80, b: 10 }]]);
+    c.style.borderColor = active ? 'rgba(10,132,255,.9)' : 'rgba(255,255,255,.07)';
+    c.style.boxShadow = active ? '0 0 0 4px rgba(10,132,255,.18),0 0 40px rgba(10,132,255,.25)' : 'none';
+  });
+  A('#mMore', t, [[43.7, { o: 0, y: 20 }], [44.3, { o: 1, y: 0 }, 'outExpo'], [46.9, {}], [47.4, { o: 0, x: -60 }]]);
+}
+function s6(t) {
+  if (!show('#s6', t, 47.2, 57.5)) return;
+  const out = [[56.8, {}], [57.3, { o: 0, x: -60, b: 10 }]];
+  A('#oEb', t, [[47.5, { o: 0, y: 20 }], [48.0, { o: 1, y: 0 }, 'out'], ...out]);
+  A('#oH', t, [[47.6, { o: 0, y: 50, b: 12 }], [48.3, { o: 1, y: 0, b: 0 }, 'outExpo'], ...out]);
+  // rolling word: business → week → month → quarter → year
+  const ch = [49.1, 49.7, 50.15, 50.65]; let pos = 0;
+  ch.forEach(c => { pos += E.outExpo(P(t, c, c + .35)); });
+  $('#oRollIn').style.transform = `translateY(${-pos * 1.1}em)`;
+  A('#k1', t, [[48.3, { x: 80, o: 0, s: .9 }], [49.0, { x: 0, o: 1, s: 1, y: Math.sin(t) * 6 }, 'outExpo'], [51.2, { y: Math.sin(t) * 6 }], [51.7, { o: 0, x: 80, b: 10 }]]);
+  A('#k2', t, [[48.6, { x: 80, o: 0, s: .9 }], [49.3, { x: 0, o: 1, s: 1, y: Math.cos(t) * 6 }, 'outExpo'], [51.3, { y: Math.cos(t) * 6 }], [51.8, { o: 0, x: 80, b: 10 }]]);
+  const ft = [51.9, 52.6, 53.3];
+  document.querySelectorAll('#oFeat .feat').forEach((f, i) => {
+    A(f, t, [[ft[i], { x: 60, o: 0, b: 10 }], [ft[i] + .6, { x: 0, o: 1, b: 0 }, 'outExpo'], [56.8 + i * .05, {}], [57.3 + i * .05, { o: 0, x: 60 }]]);
+  });
+}
+function s7(t) {
+  if (!show('#s7', t, 57.2, 65.5)) return;
+  const out = [[64.8, {}], [65.3, { o: 0, x: 60, b: 10 }]];
+  A('#hEb', t, [[57.4, { o: 0, y: 20 }], [57.9, { o: 1, y: 0 }, 'out'], ...out]);
+  words('#hH', t, 57.45, .12);
+  A('#hH', t, out);
+  // magnifier lens: the period label ("vs same days of August") enlarged beside the phone
+  const L = $('#lensImg'); L.style.backgroundImage = `url(clips/goals/0000.jpg)`;
+  const z = 1.84; L.style.backgroundSize = `${390 * z}px auto`; L.style.backgroundPosition = `${-8 * z}px ${-170 * z}px`;
+  A('#lens', t, [[58.5, { o: 0, s: .5, x: -140 }], [59.2, { o: 1, s: 1, x: 0 }, 'spring'], [64.8, {}], [65.3, { o: 0, s: .8 }]]);
+  // day cells
+  const cS = $('#hbS').children, cA = $('#hbA').children;
+  [...cS].forEach((c, i) => { const on = i < 24 && t > 59.2 + i * .035; c.style.background = on ? '#0a84ff' : 'rgba(255,255,255,.08)'; });
+  [...cA].forEach((c, i) => { const on = i < 24 && t > 60.3 + i * .035; c.style.background = on ? '#30d158' : 'rgba(255,255,255,.08)'; c.style.opacity = i >= 24 && t > 61.2 ? .35 : 1; });
+  A('#hBars', t, [[59.0, { o: 0, y: 30 }], [59.5, { o: 1, y: 0 }, 'outExpo'], ...out]);
+  A('#hBr', t, [[61.2, { o: 0, y: -10 }], [61.7, { o: 1, y: 0 }, 'outExpo']]);
+  document.querySelectorAll('#hPills .hp').forEach((p, i) => A(p, t, [[62.6 + i * .6, { o: 0, x: 40, b: 8 }], [63.2 + i * .6, { o: 1, x: 0, b: 0 }, 'outExpo'], [64.8, {}], [65.3, { o: 0 }]]));
+}
+function s8(t) {
+  if (!show('#s8', t, 65.3, 70.9)) return;
+  const out = [[70.2, {}], [70.7, { o: 0, x: -60, b: 10 }]];
+  A('#gEb', t, [[65.5, { o: 0, y: 20 }], [66.0, { o: 1, y: 0 }, 'out'], ...out]);
+  words('#gH', t, 65.5, .1); A('#gH', t, out);
+  A('#gRing', t, [[66.9, { o: 0, y: 40 }], [67.5, { o: 1, y: 0 }, 'outExpo'], ...out]);
+  const k = E.outExpo(P(t, 67.1, 68.6)); $('#gArc').style.strokeDashoffset = 578 * (1 - .99 * k); $('#gPct').textContent = Math.round(99 * k) + '%';
+  A('#gPace', t, [[67.9, { o: 0, x: -20 }], [68.4, { o: 1, x: 0 }, 'outExpo']]);
+  A('#gSub', t, [[68.8, { o: 0, y: 20, b: 8 }], [69.4, { o: 1, y: 0, b: 0 }, 'outExpo'], ...out]);
+}
+function s9(t) {
+  if (!show('#s9', t, 70.7, 78.0)) return;
+  const out = [[77.2, {}], [77.8, { o: 0, y: 60, b: 10 }]];
+  A('#laptop', t, [[70.8, { o: 0, x: 200, s: .92 }], [71.6, { o: 1, x: 0, s: 1 }, 'outExpo'], ...out]);
+  A('#arc', t, [[71.6, { o: 0 }], [72.1, { o: 1 }], ...out]);
+  const path = $('#arcp'), L = path.getTotalLength();
+  [...$('#dots').children].forEach((c, i) => {
+    const dir = i % 2 ? -1 : 1, u = (((t - 72.1) * .45 + i / 7) % 1 + 1) % 1, pt = path.getPointAtLength((dir > 0 ? u : 1 - u) * L);
+    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('opacity', t > 72.1 ? Math.sin(u * Math.PI) : 0);
+    c.setAttribute('fill', dir > 0 ? '#0a84ff' : '#30d158');
+  });
+  A('#code', t, [[72.2, { o: 0, y: -20, s: .9 }], [72.8, { o: 1, y: 0, s: 1 }, 'outExpo'], ...out]);
+  const code = '7KQ2 MX9P', n = Math.floor(clamp((t - 73.0) / 1.3) * code.length + 1e-6);
+  $('#codeTx').innerHTML = (code.slice(0, n) || '') + (n < code.length && t > 72.8 && Math.floor(t * 3) % 2 ? '<span style="color:#0a84ff">|</span>' : '') || '&nbsp;';
+  const bt = [70.95, 72.3, 75.6];
+  document.querySelectorAll('#badges .bd').forEach((b, i) => A(b, t, [[bt[i], { o: 0, y: 40, s: .9 }], [bt[i] + .6, { o: 1, y: 0, s: 1 }, 'spring'], ...out]));
+}
+function s10(t) {
+  if (!show('#s10', t, 77.6, 91)) return;
+  words('#c1', t, 77.85, .12); words('#c2', t, 78.95, .12);
+  A('#c1', t, [[79.9, {}], [80.5, { o: 0, y: -80, b: 14, s: .9 }, 'in']]);
+  A('#c2', t, [[80.0, {}], [80.6, { o: 0, y: -80, b: 14, s: .9 }, 'in']]);
+  A('#end', t, [[80.3, { o: 0, y: 50, b: 12 }], [81.1, { o: 1, y: 0, b: 0 }, 'outExpo']]);
+  document.querySelectorAll('#eBadges .eb').forEach((b, i) => A(b, t, [[81.6 + i * .12, { o: 0, y: 20 }], [82.1 + i * .12, { o: 1, y: 0 }, 'outExpo']]));
+  A('#eUrl', t, [[82.3, { o: 0, y: 20 }], [82.9, { o: 1, y: 0 }, 'outExpo']]);
+  A('#eHome', t, [[82.9, { o: 0, y: 20 }], [83.5, { o: 1, y: 0 }, 'outExpo']]);
+  A('#qr', t, [[81.4, { o: 0, s: .85, r: 6 }], [82.3, { o: 1, s: 1, r: 0 }, 'spring']]);
+  A('#s10', t, [[88.9, {}], [89.9, { o: 0 }, 'lin']]);
+}
+
+window.frame = async t => {
+  background(t);
+  s1(t); s2(t); s3(t); s4(t); s5(t); s6(t); s7(t); s8(t); s9(t); s10(t);
+  await phone(t);
+  $('#stage').style.opacity = clamp(t / .4);
+};
+window.ready = (async () => {
+  for (const c of ['log', 'metrics', 'overview', 'goals']) META[c] = await (await fetch(`clips/${c}/meta.json`)).json();
+  await document.fonts.ready;
+})();
+</script>
+</body></html>

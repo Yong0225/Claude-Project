@@ -11,6 +11,7 @@ Several independent projects share one repo, `Claude-Project` (renamed from `spa
 | `business-tracker/` | **Pulse** — business metrics tracker. Single-file web app, data in localStorage | `business-tracker/README.md` |
 | `staff-scheduler/` | 班表 — restaurant scheduling, timesheets, payroll. Single-file web app | `staff-scheduler/README.md` |
 | `restaurant-site/` | 拾山 SHISHAN restaurant landing page | — |
+| `marketing/pulse-launch-video/` | Pulse launch video (VSL, English, 1:30 MP4) and the scripts that render it | `marketing/pulse-launch-video/README.md` |
 | root `*.py` | F&B lead pipeline: scraping (`scrap*.py`), ICP qualification with Gemini (`analyze_leads.py`), cold emails (`generate_emails.py`), `leads_app.py` | `scrap.md`, `pp.md`, `icp.md`, `coldemail.md` |
 
 The web apps have no build step and no dependencies: open `index.html` in a browser, or serve with `py -m http.server`.
