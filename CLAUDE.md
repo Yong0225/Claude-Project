@@ -11,6 +11,7 @@ Several independent projects share one repo, `Claude-Project` (renamed from `spa
 | `business-tracker/` | **Pulse** — business metrics tracker. Single-file web app, data in localStorage | `business-tracker/README.md` |
 | `staff-scheduler/` | 班表 — restaurant scheduling, timesheets, payroll. Single-file web app | `staff-scheduler/README.md` |
 | `restaurant-site/` | 拾山 SHISHAN restaurant landing page | — |
+| `heritage-collection/` | The Heritage Collection by Daily Coffee (Penang) website. Single page + `images/` + vendored GSAP/Lenis in `js/` | — |
 | `marketing/pulse-launch-video/` | Pulse launch video (VSL, English, 1:30 MP4) and the scripts that render it | `marketing/pulse-launch-video/README.md` |
 | root `*.py` | F&B lead pipeline: scraping (`scrap*.py`), ICP qualification with Gemini (`analyze_leads.py`), cold emails (`generate_emails.py`), `leads_app.py` | `scrap.md`, `pp.md`, `icp.md`, `coldemail.md` |
 
@@ -21,7 +22,7 @@ The web apps have no build step and no dependencies: open `index.html` in a brow
 GitHub Pages serves the `master` branch from the repo root:
 
 - https://yong0225.github.io/Claude-Project/business-tracker/ — Pulse. The owner uses this daily on their phone from the home screen.
-- Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`).
+- Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`, `/heritage-collection/`).
 
 **Anything pushed to `master` is live within 1–2 minutes.** Never push broken work to `master`.
 
