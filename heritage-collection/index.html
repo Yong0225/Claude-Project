@@ -165,7 +165,7 @@ html.js body.is-loading{overflow:hidden}
 .plate-sec .label-row{position:absolute;top:clamp(84px,11vh,112px);left:0;right:0;z-index:6}
 .plate{position:absolute;left:50%;top:53%;translate:-50% -50%;width:min(88svh,60vw);aspect-ratio:1;z-index:2}
 .plate img{position:absolute;inset:0;width:100%;height:100%}
-.plate__text{position:absolute;left:50%;top:53%;translate:-50% -50%;width:min(44svh,30vw);text-align:center;z-index:5}
+.plate__text{position:absolute;left:50%;top:53.5%;translate:-50% -50%;width:min(42svh,29vw);text-align:center;z-index:5}
 .psteps{display:grid}
 .pstep{grid-area:1/1;visibility:hidden}
 .pstep h3{font:400 clamp(34px,4.1vw,66px)/.9 var(--f-display);text-transform:uppercase;letter-spacing:.01em}
@@ -248,8 +248,8 @@ html.js body.is-loading{overflow:hidden}
 /* 6 kitchen */
 .kitchen{position:relative;background:var(--paper);padding:clamp(100px,15vh,170px) 0 clamp(80px,12vh,140px)}
 .kitchen__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding:0 var(--gut)}
-.kitchen__menu{display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(30px,6vw,110px);padding:0 var(--gut);margin-top:clamp(50px,9vh,100px)}
-.kitchen__photo{margin-top:34px;overflow:hidden;box-shadow:0 40px 70px -45px rgba(40,25,10,.6)}
+.kitchen__menu{display:grid;align-items:start;grid-template-columns:1fr 1.3fr;gap:clamp(30px,6vw,110px);padding:0 var(--gut);margin-top:clamp(50px,9vh,100px)}
+.kitchen__photo{margin:0;overflow:hidden;box-shadow:0 40px 70px -45px rgba(40,25,10,.6)}
 .kitchen__photo img{width:100%}
 .tabs{display:flex;flex-wrap:wrap;gap:0 28px;border-bottom:1px solid var(--line)}
 .tab{position:relative;padding:16px 0;font:500 10.5px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);transition:color .4s}
@@ -264,22 +264,20 @@ html.js body.is-loading{overflow:hidden}
 .menu-note{margin-top:16px;font-size:12px;color:var(--muted)}
 .kitchen__menu .btns{margin-top:30px}
 
-/* 7 morning / evening before-after */
-.ba{position:relative;background:var(--espresso);color:var(--paper)}
-.ba__pin{position:relative;height:100svh;overflow:hidden;--pos:0%}
-.ba__img{position:absolute;inset:0}
-.ba__img img{width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
-.ba__img--eve{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba__img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,9,6,.45),rgba(14,9,6,.05) 35%,rgba(14,9,6,.05) 65%,rgba(14,9,6,.5))}
-.ba__label{position:absolute;top:clamp(96px,14vh,140px);z-index:3;max-width:40vw}
-.ba__label .display{font-size:clamp(34px,4.6vw,76px)}
-.ba__label .script{display:block;color:var(--gold-2);transform:rotate(-3deg);margin-top:.05em}
-.ba__label--eve{left:var(--gut)}
-.ba__label--morn{right:var(--gut);text-align:right}
-.ba__line{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:var(--paper);z-index:4;box-shadow:0 0 20px rgba(0,0,0,.35)}
-.ba__handle{position:absolute;top:50%;left:var(--pos);width:64px;height:64px;translate:-50% -50%;border-radius:50%;background:rgba(251,248,242,.95);color:var(--espresso);display:grid;place-items:center;z-index:5;cursor:ew-resize;box-shadow:0 10px 30px rgba(0,0,0,.35);touch-action:none}
-.ba__handle svg{width:28px;height:28px}
-.ba__hint{position:absolute;left:50%;bottom:6vh;translate:-50% 0;z-index:3;font:500 10px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:rgba(251,248,242,.8)}
+/* 7 afternoon to evening wipe */
+.dn{position:relative;background:var(--espresso);color:var(--paper)}
+.dn__pin{position:relative;height:100svh;overflow:hidden;--p:0%}
+.dn__layer{position:absolute;inset:0}
+.dn__layer--a{z-index:1}
+.dn__layer--b{z-index:2}
+.dn__layer--a{background:radial-gradient(70% 70% at 50% 50%,#2a1d14 0%,var(--espresso) 70%)}
+.dn__layer--b{clip-path:inset(0 calc(100% - var(--p)) 0 0);background:var(--espresso)}
+.dn__layer--b img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dn__layer--b::after{content:"";position:absolute;inset:0;background:rgba(14,9,6,.42)}
+.dn__text{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 var(--gut)}
+.dn__text .script{display:block;color:var(--gold-2);transform:rotate(-3deg);transform-origin:center;margin-top:.05em}
+.dn__line{position:absolute;left:50%;bottom:7vh;width:120px;height:1px;translate:-50% 0;background:rgba(255,255,255,.22);z-index:3;overflow:hidden}
+.dn__line b{position:absolute;inset:0;background:var(--paper);transform-origin:left;transform:scaleX(0)}
 
 /* 8 spaces */
 .spaces{position:relative;background:var(--paper);padding:clamp(100px,15vh,170px) 0 clamp(90px,13vh,150px)}
@@ -503,7 +501,7 @@ html.js body.is-loading{overflow:hidden}
       <figure class="pcard pcard--3"><img src="images/steak-sm.jpg" width="1000" height="667" alt="Sliced beef tenderloin with vegetables on a white plate" loading="lazy"></figure>
       <figure class="pcard pcard--4"><img src="images/lantern-sm.jpg" width="1200" height="800" alt="Lantern-lit lounge by the courtyard pool" loading="lazy"></figure>
 
-      <div class="plate" aria-hidden="true"><img src="images/plate-base.png" width="1400" height="1400" alt=""><img class="plate__band" src="images/plate-band.png" width="1400" height="1400" alt=""></div>
+      <div class="plate" aria-hidden="true"><img src="images/plate-white.png" width="1400" height="1400" alt=""></div>
       <div class="plate__text">
         <div class="psteps">
           <article class="pstep"><h3>Breakfast</h3><span class="script">rise &amp; pour</span><p>Doors open at 6:30 am. Fresh coffee, warm plates and a quiet table before the city wakes.</p></article>
@@ -548,10 +546,10 @@ html.js body.is-loading{overflow:hidden}
               <div class="dcard__body"><span class="dcard__price">RM 189</span><h3 style="margin-top:10px">Wagyu<br>Tenderloin</h3><p>150g wagyu tenderloin, pomme purée, seasonal vegetables and brown sauce.</p><span class="dcard__tags">Continental signatures</span></div></article>
             <article class="dcard"><div class="dcard__img"><img src="images/lamb-shank-sm.jpg" width="750" height="1000" alt="Slow-cooked lamb shank with vegetables" loading="lazy"></div>
               <div class="dcard__body"><span class="dcard__price">RM 148</span><h3 style="margin-top:10px">Classic<br>Lamb Shank</h3><p>Slow-cooked lamb shank with pomme purée and seasonal vegetables.</p><span class="dcard__tags">Continental signatures</span></div></article>
-            <article class="dcard"><div class="dcard__img"><img src="images/seafood-pasta-sm.jpg" width="667" height="1000" alt="Seafood pasta with prawns and mussels" loading="lazy"></div>
-              <div class="dcard__body"><span class="dcard__price">From RM 38</span><h3 style="margin-top:10px">The Pasta<br>List</h3><p>Seafood aglio olio, smoked duck curry fettuccine and braised beef ragu.</p><span class="dcard__tags">Pasta</span></div></article>
             <article class="dcard"><div class="dcard__img"><img src="images/fish-chips-sm.jpg" width="1000" height="667" alt="Battered fish with fries and tartare sauce" loading="lazy"></div>
               <div class="dcard__body"><span class="dcard__price">RM 58</span><h3 style="margin-top:10px">Classic<br>Fish &amp; Chips</h3><p>Battered fish, potato fries, greens and tartare sauce.</p><span class="dcard__tags">Continental signatures</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/seafood-pasta-sm.jpg" width="667" height="1000" alt="Seafood pasta with prawns and mussels" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">From RM 38</span><h3 style="margin-top:10px">The Pasta<br>List</h3><p>Seafood aglio olio, smoked duck curry fettuccine and braised beef ragu.</p><span class="dcard__tags">Pasta</span></div></article>
           </div>
         </div>
       </div>
@@ -583,11 +581,11 @@ html.js body.is-loading{overflow:hidden}
 
     <div class="kitchen__menu">
       <div>
-        <p class="eyebrow">The menu</p>
-        <p class="lead" style="margin-top:18px">Malaysian heritage classics beside continental signatures and pasta, a menu that moves between home and away, much like Penang itself.</p>
         <figure class="kitchen__photo"><img src="images/pasta-fork-sm.jpg" srcset="images/pasta-fork-sm.jpg 750w, images/pasta-fork.jpg 1500w" sizes="(max-width: 899px) 90vw, 38vw" width="750" height="1000" alt="Seafood spaghetti twirled on a fork" loading="lazy"></figure>
       </div>
       <div>
+        <p class="eyebrow">The menu</p>
+        <p class="lead" style="margin:14px 0 26px">Malaysian heritage classics beside continental signatures and pasta, a menu that moves between home and away, much like Penang itself.</p>
         <div class="tabs" role="tablist" aria-label="Menu categories"></div>
         <div class="mpanels"></div>
         <p class="menu-note">Prices in Ringgit Malaysia. Menu and prices may change.</p>
@@ -599,16 +597,12 @@ html.js body.is-loading{overflow:hidden}
     </div>
   </section>
 
-  <!-- morning / evening -->
-  <section class="ba" data-header="light" aria-label="Morning and evening in the courtyard">
-    <div class="ba__pin">
-      <div class="ba__img ba__img--morn"><img src="images/courtyard-sm.jpg" srcset="images/courtyard-sm.jpg 1200w, images/courtyard.jpg 2048w" sizes="100vw" width="1200" height="800" alt="The white colonial courtyard and pool in morning light" loading="lazy"></div>
-      <div class="ba__img ba__img--eve"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"></div>
-      <div class="ba__label ba__label--eve"><h2><span class="display">Evening</span><span class="script">lamplit by the water</span></h2></div>
-      <div class="ba__label ba__label--morn"><h2><span class="display">Morning</span><span class="script">sunlit courtyard</span></h2></div>
-      <div class="ba__line"></div>
-      <button type="button" class="ba__handle" aria-label="Drag to compare morning and evening"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8l-6 6 6 6M18 8l6 6-6 6"/></svg></button>
-      <p class="ba__hint">Scroll or drag</p>
+  <!-- afternoon to evening -->
+  <section class="dn" data-header="light" aria-label="Afternoon into evening">
+    <div class="dn__pin">
+      <div class="dn__layer dn__layer--a"><div class="dn__text"><h2><span class="display display--xl">Afternoon fades</span><span class="script">into lamplight</span></h2></div></div>
+      <div class="dn__layer dn__layer--b"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"><div class="dn__text"><h2><span class="display display--xl">Evening glows</span><span class="script">by the water</span></h2></div></div>
+      <div class="dn__line"><b></b></div>
     </div>
   </section>
 
@@ -1112,9 +1106,12 @@ function motion() {
       pfill.style.transform = `scaleX(${f - i})`;
     },
   });
-  ScrollTrigger.create({ trigger: '.plate-sec', start: 'top 70%', once: true, onEnter: () => { if (pstep < 0) setPlateStep(0); } });
-  gsap.fromTo('.plate__band', { rotation: -40 }, { rotation: 360, ease: 'none', scrollTrigger: { trigger: '.plate-sec', start: 'top bottom', end: () => '+=' + (innerHeight + innerHeight * .8 * N), scrub: 1 } });
-  gsap.from('.plate', { scale: .72, opacity: 0, ease: 'power2.out', scrollTrigger: { trigger: '.plate-sec', start: 'top 95%', end: 'top 10%', scrub: 1 } });
+  // plate glides in: rises, settles and gently turns into place before the first course appears
+  gsap.set('.plate', { opacity: 0, y: 140, scale: .82, rotation: -18 });
+  ScrollTrigger.create({ trigger: '.plate-sec', start: 'top 80%', once: true, onEnter: () => {
+    gsap.to('.plate', { opacity: 1, y: 0, scale: 1, rotation: 0, duration: reduce ? 0 : 1.8, ease: 'expo.out' });
+    gsap.delayedCall(reduce ? 0 : .6, () => { if (pstep < 0) setPlateStep(0); });
+  } });
   $$('.doodle').forEach((d, k) => {
     gsap.from(d, { opacity: 0, scale: .6, duration: 1.2, delay: .4 + k * .15, ease: 'expo.out', scrollTrigger: { trigger: '.plate-sec', start: 'top 60%', once: true } });
     if (!reduce) gsap.to(d, { y: k % 2 ? 14 : -14, rotation: k % 2 ? -8 : 8, duration: 3 + k * .5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
@@ -1153,16 +1150,15 @@ function motion() {
   // kitchen photo parallax
   gsap.fromTo('.kitchen__photo img', { scale: 1.12, yPercent: -4 }, { scale: 1, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.kitchen__photo', start: 'top bottom', end: 'bottom top', scrub: true } });
 
-  // morning / evening: the divider sweeps from left to right as you scroll; drag to compare
-  const baPin = $('.ba__pin'), baHandle = $('.ba__handle');
-  let baDragUntil = 0;
-  const setBa = p => baPin.style.setProperty('--pos', (p * 100).toFixed(2) + '%');
-  setBa(0.02);
-  ScrollTrigger.create({ trigger: '.ba', start: 'top top', end: '+=180%', pin: '.ba__pin', scrub: true, anticipatePin: 1,
-    onUpdate: s => { if (Date.now() > baDragUntil) setBa(Math.min(.98, .02 + s.progress * .96)); } });
-  const baMove = e => { const r = baPin.getBoundingClientRect(); setBa(Math.min(.98, Math.max(.02, (e.clientX - r.left) / r.width))); baDragUntil = Date.now() + 1500; };
-  baHandle.addEventListener('pointerdown', e => { baHandle.setPointerCapture(e.pointerId); baMove(e); const mv = ev => baMove(ev); const up = () => { baHandle.removeEventListener('pointermove', mv); baHandle.removeEventListener('pointerup', up); }; baHandle.addEventListener('pointermove', mv); baHandle.addEventListener('pointerup', up); });
-  baHandle.addEventListener('keydown', e => { const cur = parseFloat(getComputedStyle(baPin).getPropertyValue('--pos')) / 100 || 0; if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setBa(Math.min(.98, Math.max(.02, cur + (e.key === 'ArrowRight' ? .05 : -.05)))); baDragUntil = Date.now() + 3000; } });
+  // afternoon to evening: the evening scene wipes in from the left; each headline stays in place,
+  // so the words change as the edge passes over them
+  const dnPin = $('.dn__pin');
+  gsap.timeline({ scrollTrigger: { trigger: '.dn', start: 'top top', end: '+=220%', pin: '.dn__pin', scrub: 1, anticipatePin: 1 } })
+    .fromTo('.dn__layer--a .display', { yPercent: 50, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .25 }, 0)
+    .fromTo('.dn__layer--a .script', { opacity: 0 }, { opacity: 1, duration: .2 }, .12)
+    .fromTo(dnPin, { '--p': '0%' }, { '--p': '100%', ease: 'power1.inOut', duration: 1 }, .35)
+    .fromTo('.dn__layer--b img', { scale: 1.18, xPercent: -4 }, { scale: 1, xPercent: 0, ease: 'none', duration: 1.25 }, .35)
+    .fromTo('.dn__line b', { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: 1.6 }, 0);
 
   // spaces
   ScrollTrigger.create({ trigger: '.spaces', start: 'top 70%', end: 'bottom 30%', onToggle: s => s.isActive ? restartSpaces() : clearInterval(spaceTimer) });
