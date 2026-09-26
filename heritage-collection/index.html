@@ -151,12 +151,20 @@ html.js body.is-loading{overflow:hidden}
 .wave svg{width:100%;height:100%;display:block}
 .hero .wave{bottom:-1px;z-index:4;color:var(--paper)}
 
+.hero__cup{--cup:min(30vw,400px);position:absolute;left:50%;bottom:calc(var(--cup) * -.32);translate:-50% 0;width:var(--cup);aspect-ratio:1;z-index:5}
+.hero__saucer{position:relative;width:100%;height:100%;border-radius:50%;padding:9%;background:radial-gradient(circle at 38% 32%,#ffffff 0%,#f6f1e8 45%,#e2d6c2 100%);box-shadow:0 60px 90px -36px rgba(20,12,6,.7),0 14px 30px -12px rgba(20,12,6,.4),inset 0 -6px 14px rgba(120,95,60,.18),inset 0 6px 12px rgba(255,255,255,.9)}
+.hero__saucer::before{content:"";position:absolute;inset:3.2%;border-radius:50%;border:2px solid #c9a55c;box-shadow:0 0 0 1px rgba(255,255,255,.5) inset}
+.hero__saucer::after{content:"";position:absolute;inset:7.5%;border-radius:50%;box-shadow:inset 3px 5px 10px rgba(110,85,50,.25),inset -2px -3px 6px rgba(255,255,255,.8)}
+.hero__cupimg{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;overflow:hidden;box-shadow:0 22px 30px -10px rgba(0,0,0,.5),0 4px 8px rgba(0,0,0,.25)}
+.hero__cupimg img{width:100%;height:100%;object-fit:cover}
+@media (max-width:899px){.hero__cup{--cup:min(60vw,340px)}}
+
 /* 2 plate */
 .plate-sec{position:relative;background:var(--paper)}
 .plate-sec__pin{position:relative;height:100svh;overflow:hidden}
 .plate-sec .label-row{position:absolute;top:clamp(84px,11vh,112px);left:0;right:0;z-index:6}
-.plate{position:absolute;left:50%;top:53%;translate:-50% -50%;width:min(84svh,58vw);aspect-ratio:1;z-index:2;filter:drop-shadow(0 34px 38px rgba(70,48,24,.2)) drop-shadow(0 6px 10px rgba(70,48,24,.12))}
-.plate svg{width:100%;height:100%;display:block}
+.plate{position:absolute;left:50%;top:53%;translate:-50% -50%;width:min(88svh,60vw);aspect-ratio:1;z-index:2}
+.plate img{position:absolute;inset:0;width:100%;height:100%}
 .plate__text{position:absolute;left:50%;top:53%;translate:-50% -50%;width:min(44svh,30vw);text-align:center;z-index:5}
 .psteps{display:grid}
 .pstep{grid-area:1/1;visibility:hidden}
@@ -168,11 +176,11 @@ html.js body.is-loading{overflow:hidden}
 .pbar b{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(0)}
 .pcard{position:absolute;z-index:3;opacity:0;box-shadow:0 30px 50px -22px rgba(40,25,10,.5)}
 .pcard img{width:100%}
-.pcard--0{width:clamp(170px,17vw,300px);left:5%;bottom:26%}
-.pcard--1{width:clamp(180px,18vw,320px);right:6%;top:16%}
-.pcard--2{width:clamp(180px,18vw,320px);left:6%;top:17%}
-.pcard--3{width:clamp(170px,16vw,280px);right:6%;bottom:8%}
-.pcard--4{width:clamp(180px,18vw,320px);left:5%;bottom:26%}
+.pcard--0{width:clamp(140px,12vw,220px);left:7%;bottom:22%}
+.pcard--1{width:clamp(170px,16vw,280px);right:6%;top:16%}
+.pcard--2{width:clamp(150px,13vw,230px);left:7%;top:15%}
+.pcard--3{width:clamp(190px,19vw,330px);right:6%;bottom:9%}
+.pcard--4{width:clamp(190px,19vw,330px);left:5%;bottom:24%}
 .doodle{position:absolute;z-index:1;width:clamp(44px,4.6vw,76px);color:var(--gold);opacity:.8}
 .doodle svg{width:100%;height:auto;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 .doodle--a{left:14%;top:30%}
@@ -205,13 +213,14 @@ html.js body.is-loading{overflow:hidden}
 .days__intro .lead{margin-top:26px}
 .days__viewport{flex:1;min-width:0}
 .days__track{display:flex;align-items:stretch;gap:clamp(16px,1.6vw,28px);padding-right:var(--gut);will-change:transform}
-.dcard{flex:0 0 clamp(250px,21vw,340px);display:flex;flex-direction:column;background:#fff;border:1px solid var(--line)}
-.dcard__img{aspect-ratio:3/2;overflow:hidden}
+.dcard{flex:0 0 clamp(250px,20vw,330px);display:flex;flex-direction:column;background:#fff;border:1px solid var(--line)}
+.dcard__img{aspect-ratio:4/5;overflow:hidden}
 .dcard__img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 .dcard:hover .dcard__img img{transform:scale(1.04)}
 .dcard__body{display:flex;flex-direction:column;flex:1;padding:22px 22px 18px}
 .dcard h3{font:400 clamp(24px,2vw,32px)/.95 var(--f-display);text-transform:uppercase}
 .dcard p{margin-top:12px;font-size:13px;line-height:1.6;color:var(--muted)}
+.dcard__price{font:500 11px/1 var(--f-body);letter-spacing:.16em;color:var(--gold)}
 .dcard__tags{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font:500 9.5px/1.4 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 .dcard p + .dcard__tags{margin-top:24px}
 .dcard .tlink{margin-top:18px;color:var(--gold);align-self:flex-start}
@@ -220,16 +229,21 @@ html.js body.is-loading{overflow:hidden}
 .counter .bar{flex:1;height:1px;background:var(--line);position:relative}
 .counter .bar i{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(.2)}
 
-/* 5 big word */
-.word{position:relative;background:var(--cream)}
-.word__pin{position:relative;height:100svh;overflow:hidden;display:grid;place-items:center}
-.word__eyebrow{position:absolute;top:clamp(110px,22vh,220px);left:0;right:0;text-align:center;z-index:3}
-.word__big{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;font:400 min(25vw,52svh)/1 var(--f-display);color:var(--jade-2);letter-spacing:.02em;pointer-events:none}
-.word__big span{display:inline-block}
-.word__cup{--w:min(46vw,760px);position:relative;z-index:2;width:var(--w);border-radius:4px;overflow:hidden;box-shadow:0 50px 80px -40px rgba(40,25,10,.6)}
-.word__cup img{width:100%}
-.word__text{position:absolute;right:var(--gut);bottom:clamp(40px,10vh,110px);width:min(300px,80vw);z-index:3;font-size:13px;line-height:1.6;color:var(--ink)}
-.word__text::before{content:"";display:block;width:60px;height:1px;background:var(--ink);margin-bottom:14px}
+/* 5 heritage (1926) */
+.heritage{position:relative;background:var(--cream);padding:clamp(100px,15vh,170px) 0 clamp(90px,13vh,150px);overflow:hidden}
+.heritage__head{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 var(--gut)}
+.heritage__year{display:flex;gap:.02em;font:400 clamp(120px,21vw,340px)/.8 var(--f-display);color:var(--jade-2);letter-spacing:.02em;margin-top:18px}
+.heritage__year span{display:inline-block}
+.heritage__head .script{margin-top:.1em;transform:rotate(-3deg);transform-origin:center}
+.heritage__grid{display:grid;grid-template-columns:1fr 1.55fr 1fr;gap:clamp(16px,2.2vw,36px);align-items:start;padding:0 var(--gut);margin-top:clamp(50px,9vh,100px)}
+.hphoto{overflow:hidden;box-shadow:0 40px 70px -45px rgba(40,25,10,.6)}
+.hphoto img{width:100%;height:100%;object-fit:cover;will-change:transform}
+.hphoto--a{aspect-ratio:2/3;margin-top:clamp(60px,12vh,140px)}
+.hphoto--b{aspect-ratio:1.62/1}
+.hphoto--c{aspect-ratio:4/5;margin-top:clamp(120px,22vh,260px)}
+.hphoto--c img{object-position:40% 50%}
+.heritage__cap{display:flex;justify-content:space-between;gap:12px;margin-top:12px;font:500 9.5px/1.4 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.heritage__text{grid-column:2;max-width:46ch;margin:34px auto 0;text-align:center;color:var(--ink);opacity:.85}
 
 /* 6 kitchen */
 .kitchen{position:relative;background:var(--paper);padding:clamp(100px,15vh,170px) 0 clamp(80px,12vh,140px)}
@@ -250,18 +264,22 @@ html.js body.is-loading{overflow:hidden}
 .menu-note{margin-top:16px;font-size:12px;color:var(--muted)}
 .kitchen__menu .btns{margin-top:30px}
 
-/* 7 day to night */
-.dn{position:relative;background:var(--espresso);color:var(--paper)}
-.dn__pin{position:relative;height:100svh;overflow:hidden}
-.dn__img{position:absolute;inset:0}
-.dn__img img{width:100%;height:100%;object-fit:cover}
-.dn__img--a{clip-path:inset(22% 34% 22% 34%)}
-.dn__img--b{clip-path:inset(0% 50% 0% 50%)}
-.dn__shade{position:absolute;inset:0;background:rgba(14,9,6,.36);z-index:2;pointer-events:none}
-.dn__text{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--gut)}
-.dn__text .script{color:var(--gold-2);margin-top:.05em}
-.dn__line{position:absolute;left:50%;bottom:7vh;width:120px;height:1px;translate:-50% 0;background:rgba(255,255,255,.25);z-index:3;overflow:hidden}
-.dn__line b{position:absolute;inset:0;background:var(--paper);transform-origin:left;transform:scaleX(0)}
+/* 7 morning / evening before-after */
+.ba{position:relative;background:var(--espresso);color:var(--paper)}
+.ba__pin{position:relative;height:100svh;overflow:hidden;--pos:0%}
+.ba__img{position:absolute;inset:0}
+.ba__img img{width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.ba__img--eve{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba__img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,9,6,.45),rgba(14,9,6,.05) 35%,rgba(14,9,6,.05) 65%,rgba(14,9,6,.5))}
+.ba__label{position:absolute;top:clamp(96px,14vh,140px);z-index:3;max-width:40vw}
+.ba__label .display{font-size:clamp(34px,4.6vw,76px)}
+.ba__label .script{display:block;color:var(--gold-2);transform:rotate(-3deg);margin-top:.05em}
+.ba__label--eve{left:var(--gut)}
+.ba__label--morn{right:var(--gut);text-align:right}
+.ba__line{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:var(--paper);z-index:4;box-shadow:0 0 20px rgba(0,0,0,.35)}
+.ba__handle{position:absolute;top:50%;left:var(--pos);width:64px;height:64px;translate:-50% -50%;border-radius:50%;background:rgba(251,248,242,.95);color:var(--espresso);display:grid;place-items:center;z-index:5;cursor:ew-resize;box-shadow:0 10px 30px rgba(0,0,0,.35);touch-action:none}
+.ba__handle svg{width:28px;height:28px}
+.ba__hint{position:absolute;left:50%;bottom:6vh;translate:-50% 0;z-index:3;font:500 10px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:rgba(251,248,242,.8)}
 
 /* 8 spaces */
 .spaces{position:relative;background:var(--paper);padding:clamp(100px,15vh,170px) 0 clamp(90px,13vh,150px)}
@@ -347,14 +365,14 @@ html.js body.is-loading{overflow:hidden}
   .nav__inner{grid-template-columns:1fr;align-content:start;padding-top:100px;gap:40px}
   .nav__list a{font-size:clamp(38px,11vw,64px)}
   .arc{font-size:clamp(20px,6.3vw,40px);letter-spacing:.03em}
-  .plate{width:128vw;top:52%}
+  .plate{width:132vw;top:52%}
   .plate__text{width:68vw;top:52%}
   .pstep p{font-size:12.5px}
-  .pcard--0{width:34vw;left:4%;bottom:5%}
-  .pcard--1{width:40vw;right:4%;top:15%}
-  .pcard--2{width:40vw;left:4%;top:15%}
-  .pcard--3{width:38vw;right:4%;bottom:5%}
-  .pcard--4{width:40vw;left:4%;bottom:5%}
+  .pcard--0{width:26vw;left:4%;bottom:5%}
+  .pcard--1{width:34vw;right:4%;top:14%}
+  .pcard--2{width:28vw;left:4%;top:14%}
+  .pcard--3{width:40vw;right:4%;bottom:5%}
+  .pcard--4{width:42vw;left:4%;bottom:5%}
   .doodle{width:38px}
   .doodle--a{left:6%;top:36%}.doodle--b{right:6%;top:66%}.doodle--c{right:8%;top:30%}.doodle--d{left:8%;top:72%}
   .plate-sec__intro{display:none}
@@ -366,10 +384,11 @@ html.js body.is-loading{overflow:hidden}
   .days__viewport::-webkit-scrollbar{display:none}
   .days__track{padding:0 var(--gut);width:max-content}
   .dcard{flex-basis:76vw;scroll-snap-align:center}
-  .word__big{font-size:30vw}
-  .word__cup{--w:84vw}
-  .word__eyebrow{top:18vh}
-  .word__text{left:var(--gut);right:var(--gut);width:auto;bottom:6vh}
+  .heritage__grid{grid-template-columns:1fr 1fr}
+  .hphoto--b{grid-column:1/-1;grid-row:1}
+  .hphoto--a{margin-top:0}
+  .hphoto--c{margin-top:14vw}
+  .heritage__text{grid-column:1/-1}
   .kitchen__head{flex-direction:column;align-items:flex-start}
   .kitchen__menu{grid-template-columns:1fr}
   .spaces__grid{grid-template-columns:1fr}
@@ -462,6 +481,9 @@ html.js body.is-loading{overflow:hidden}
         <span class="hero__script" aria-hidden="true">by Daily Coffee</span>
       </h1>
     </div>
+    <div class="hero__cup">
+      <div class="hero__saucer"><div class="hero__cupimg"><img src="images/hero-latte.jpg" srcset="images/hero-latte-sm.jpg 700w, images/hero-latte.jpg 1200w" sizes="(max-width: 899px) 60vw, 30vw" width="1200" height="1200" alt="Cappuccino with tulip latte art, seen from above"></div></div>
+    </div>
     <div class="wave" aria-hidden="true"><svg viewBox="0 0 1440 160" preserveAspectRatio="none"><path class="js-wave" fill="currentColor" d="M0 96 C 240 150 480 150 720 100 C 960 50 1200 40 1440 92 L1440 160 L0 160 Z"/></svg></div>
   </section>
 
@@ -475,13 +497,13 @@ html.js body.is-loading{overflow:hidden}
       <span class="doodle doodle--c" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M12 70C18 34 44 12 72 8C68 38 46 64 12 70Z"/><path d="M12 70L62 18"/><path d="M28 54l-5-12M38 44l-3-13M48 34l-1-12M28 54l13 1M38 44l14-1M48 34l13-3"/></svg></span>
       <span class="doodle doodle--d" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M14 34h44v10a22 22 0 0 1-44 0z"/><path d="M58 38h6a7 7 0 0 1 0 14h-8"/><path d="M8 70h60"/><path d="M28 26c-4-5 4-8 0-14M38 26c-4-5 4-8 0-14"/></svg></span>
 
-      <figure class="pcard pcard--0"><img src="images/dining-sm.jpg" width="1200" height="800" alt="The dining room with garden windows and velvet banquettes" loading="lazy"></figure>
-      <figure class="pcard pcard--1"><img src="images/veranda-sm.jpg" width="1200" height="800" alt="Teak tables on the open veranda" loading="lazy"></figure>
-      <figure class="pcard pcard--2"><img src="images/terrace-sm.jpg" width="1200" height="800" alt="Courtyard terrace by the pool in the afternoon" loading="lazy"></figure>
-      <figure class="pcard pcard--3"><img src="images/bar-sm.jpg" width="1200" height="800" alt="The long bar lit for the evening" loading="lazy"></figure>
+      <figure class="pcard pcard--0"><img src="images/coffee-saucer-sm.jpg" width="667" height="1000" alt="Latte art in a white cup on a wooden table" loading="lazy"></figure>
+      <figure class="pcard pcard--1"><img src="images/nasi-lemak-sm.jpg" width="1000" height="1000" alt="Nasi lemak with sambal, egg and peanuts on banana leaf" loading="lazy"></figure>
+      <figure class="pcard pcard--2"><img src="images/coffee-swan-sm.jpg" width="750" height="1000" alt="Swan latte art in a cup on a café table" loading="lazy"></figure>
+      <figure class="pcard pcard--3"><img src="images/steak-sm.jpg" width="1000" height="667" alt="Sliced beef tenderloin with vegetables on a white plate" loading="lazy"></figure>
       <figure class="pcard pcard--4"><img src="images/lantern-sm.jpg" width="1200" height="800" alt="Lantern-lit lounge by the courtyard pool" loading="lazy"></figure>
 
-      <div class="plate" aria-hidden="true"></div>
+      <div class="plate" aria-hidden="true"><img src="images/plate-base.png" width="1400" height="1400" alt=""><img class="plate__band" src="images/plate-band.png" width="1400" height="1400" alt=""></div>
       <div class="plate__text">
         <div class="psteps">
           <article class="pstep"><h3>Breakfast</h3><span class="script">rise &amp; pour</span><p>Doors open at 6:30 am. Fresh coffee, warm plates and a quiet table before the city wakes.</p></article>
@@ -507,41 +529,48 @@ html.js body.is-loading{overflow:hidden}
     </div>
   </section>
 
-  <!-- days -->
-  <section class="days" aria-label="An hour for everything">
+  <!-- signature plates -->
+  <section class="days" id="dishes" aria-label="Signature plates">
     <div class="days__pin">
-      <div class="label-row"><span class="eyebrow">An hour for everything</span><span class="rule"></span></div>
+      <div class="label-row"><span class="eyebrow">Signature plates</span><span class="rule"></span></div>
       <div class="days__wrap">
         <div class="days__intro">
-          <h2 class="title-block"><span class="display js-words">All day on<br>Jalan Burma</span><br><span class="script">come as you are</span></h2>
-          <p class="lead">Arrive for the first coffee, linger over lunch, or return as the courtyard lamps come on. Each hour here has its own mood.</p>
+          <h2 class="title-block"><span class="display js-words">A taste<br>of Penang</span><br><span class="script">made to share</span></h2>
+          <p class="lead">Heritage classics from the hawker tradition beside continental plates cooked with care, served from breakfast until late.</p>
         </div>
         <div class="days__viewport">
           <div class="days__track">
-            <article class="dcard"><div class="dcard__img"><img src="images/dining-sm.jpg" width="1200" height="800" alt="Dining room with tall garden windows" loading="lazy"></div>
-              <div class="dcard__body"><h3>First<br>Cup</h3><p>Garden light through tall windows and the first coffee of the day.</p><span class="dcard__tags">Coffee · Breakfast · From 6:30 am</span></div></article>
-            <article class="dcard"><div class="dcard__img"><img src="images/veranda-sm.jpg" width="1200" height="800" alt="Teak tables on the open veranda beside the garden" loading="lazy"></div>
-              <div class="dcard__body"><h3>Heritage<br>Lunch</h3><p>Teak tables on the open veranda, ceiling fans turning above the garden.</p><span class="dcard__tags">Lunch · Veranda · Malaysian classics</span></div></article>
-            <article class="dcard"><div class="dcard__img"><img src="images/terrace-sm.jpg" width="1200" height="800" alt="Courtyard terrace beside the pool in the afternoon" loading="lazy"></div>
-              <div class="dcard__body"><h3>Afternoon<br>Pause</h3><p>Kopi and something sweet while the afternoon settles over the courtyard.</p><span class="dcard__tags">Coffee · Dessert · Courtyard</span></div></article>
-            <article class="dcard"><div class="dcard__img"><img src="images/bar-sm.jpg" width="1200" height="800" alt="The long bar lit for the evening" loading="lazy"></div>
-              <div class="dcard__body"><h3>After<br>Dark</h3><p>The long bar glows, dinner is served, and the evening takes its time.</p><span class="dcard__tags">Dinner · Drinks · Until 11 pm</span></div></article>
-            <article class="dcard"><div class="dcard__img"><img src="images/lantern-sm.jpg" width="1200" height="800" alt="Lantern-lit seating by the pool at dusk" loading="lazy"></div>
-              <div class="dcard__body"><h3>Celebrations</h3><p>Birthdays, family dinners and milestones, planned around your table.</p><button type="button" class="tlink" data-open="resModal" data-occasion="Family gathering">Plan a gathering</button></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/nasi-lemak-sm.jpg" width="1000" height="1000" alt="Nasi lemak with fried chicken, sambal, egg, peanuts and anchovies on banana leaf" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">RM 38</span><h3 style="margin-top:10px">Heritage<br>Nasi Lemak</h3><p>Coconut rice with ayam berempah, sambal, egg, peanuts and anchovies.</p><span class="dcard__tags">Heritage classics</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/chicken-rice-sm.jpg" width="1000" height="619" alt="Hainanese chicken rice with chilli and ginger sauces" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">RM 28</span><h3 style="margin-top:10px">Hainanese<br>Chicken Rice</h3><p>Tender poached chicken, fragrant rice, ginger chilli and Hainan ginger sauce.</p><span class="dcard__tags">Heritage classics</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/steak-sm.jpg" width="1000" height="667" alt="Sliced beef tenderloin with vegetables and jus" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">RM 189</span><h3 style="margin-top:10px">Wagyu<br>Tenderloin</h3><p>150g wagyu tenderloin, pomme purée, seasonal vegetables and brown sauce.</p><span class="dcard__tags">Continental signatures</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/lamb-shank-sm.jpg" width="750" height="1000" alt="Slow-cooked lamb shank with vegetables" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">RM 148</span><h3 style="margin-top:10px">Classic<br>Lamb Shank</h3><p>Slow-cooked lamb shank with pomme purée and seasonal vegetables.</p><span class="dcard__tags">Continental signatures</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/seafood-pasta-sm.jpg" width="667" height="1000" alt="Seafood pasta with prawns and mussels" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">From RM 38</span><h3 style="margin-top:10px">The Pasta<br>List</h3><p>Seafood aglio olio, smoked duck curry fettuccine and braised beef ragu.</p><span class="dcard__tags">Pasta</span></div></article>
+            <article class="dcard"><div class="dcard__img"><img src="images/fish-chips-sm.jpg" width="1000" height="667" alt="Battered fish with fries and tartare sauce" loading="lazy"></div>
+              <div class="dcard__body"><span class="dcard__price">RM 58</span><h3 style="margin-top:10px">Classic<br>Fish &amp; Chips</h3><p>Battered fish, potato fries, greens and tartare sauce.</p><span class="dcard__tags">Continental signatures</span></div></article>
           </div>
         </div>
       </div>
-      <div class="counter"><b class="js-dnum">01</b><span>/ 05</span><span class="bar"><i class="js-dbar"></i></span></div>
+      <div class="counter"><b class="js-dnum">01</b><span>/ 06</span><span class="bar"><i class="js-dbar"></i></span></div>
     </div>
   </section>
 
-  <!-- big word -->
-  <section class="word" aria-label="Our building">
-    <div class="word__pin">
-      <p class="eyebrow word__eyebrow">A heritage home on Jalan Burma</p>
-      <div class="word__big" aria-hidden="true"><span>1</span><span>9</span><span>2</span><span>6</span></div>
-      <figure class="word__cup"><img src="images/entrance-sm.jpg" srcset="images/entrance-sm.jpg 1200w, images/entrance.jpg 2048w" sizes="(max-width: 899px) 84vw, 46vw" width="1200" height="591" alt="The restored 1926 heritage building on Jalan Burma at dusk" loading="lazy"></figure>
-      <p class="word__text">Built in 1926 as residences on Jalan Burma and carefully restored, the house keeps its verandas, timber shutters and garden courtyard. They set the scene for every meal.</p>
+  <!-- heritage 1926 -->
+  <section class="heritage" aria-label="Our building">
+    <div class="heritage__head">
+      <p class="eyebrow" data-reveal>A heritage home on Jalan Burma</p>
+      <div class="heritage__year" aria-label="1926"><span>1</span><span>9</span><span>2</span><span>6</span></div>
+      <span class="script" data-reveal>restored with care</span>
+    </div>
+    <div class="heritage__grid">
+      <div><figure class="hphoto hphoto--a"><img src="images/facade-detail.jpg" width="1024" height="1536" alt="Timber shutters and white balustrades on the heritage facade" loading="lazy"></figure><div class="heritage__cap"><span>01</span><span>Timber shutters</span></div></div>
+      <div><figure class="hphoto hphoto--b"><img src="images/house-sm.jpg" srcset="images/house-sm.jpg 1200w, images/house.jpg 2048w" sizes="(max-width: 899px) 92vw, 44vw" width="1200" height="739" alt="The white colonial house framed by tropical trees" loading="lazy"></figure><div class="heritage__cap"><span>02</span><span>The house, 1926</span></div>
+        <p class="heritage__text" data-reveal>Built in 1926 as residences on Jalan Burma and carefully restored, the house keeps its verandas, timber shutters and garden courtyard. They set the scene for every meal.</p></div>
+      <div><figure class="hphoto hphoto--c"><img src="images/entrance-sm.jpg" srcset="images/entrance-sm.jpg 1200w, images/entrance.jpg 2048w" sizes="(max-width: 899px) 45vw, 28vw" width="1200" height="591" alt="The lamplit entrance at dusk" loading="lazy"></figure><div class="heritage__cap"><span>03</span><span>Arrival at dusk</span></div></div>
     </div>
   </section>
 
@@ -556,7 +585,7 @@ html.js body.is-loading{overflow:hidden}
       <div>
         <p class="eyebrow">The menu</p>
         <p class="lead" style="margin-top:18px">Malaysian heritage classics beside continental signatures and pasta, a menu that moves between home and away, much like Penang itself.</p>
-        <figure class="kitchen__photo"><img src="images/veranda-sm.jpg" srcset="images/veranda-sm.jpg 1200w, images/veranda.jpg 2048w" sizes="(max-width: 899px) 90vw, 38vw" width="1200" height="800" alt="Lunch tables on the open veranda beside the garden" loading="lazy"></figure>
+        <figure class="kitchen__photo"><img src="images/pasta-fork-sm.jpg" srcset="images/pasta-fork-sm.jpg 750w, images/pasta-fork.jpg 1500w" sizes="(max-width: 899px) 90vw, 38vw" width="750" height="1000" alt="Seafood spaghetti twirled on a fork" loading="lazy"></figure>
       </div>
       <div>
         <div class="tabs" role="tablist" aria-label="Menu categories"></div>
@@ -570,15 +599,16 @@ html.js body.is-loading{overflow:hidden}
     </div>
   </section>
 
-  <!-- day to night -->
-  <section class="dn" data-header="light" aria-label="Morning to evening">
-    <div class="dn__pin">
-      <div class="dn__img dn__img--a"><img src="images/courtyard-sm.jpg" srcset="images/courtyard-sm.jpg 1200w, images/courtyard.jpg 2048w" sizes="100vw" width="1200" height="800" alt="The white colonial courtyard and pool in morning light" loading="lazy"></div>
-      <div class="dn__img dn__img--b"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"></div>
-      <div class="dn__shade"></div>
-      <div class="dn__text dn__text--a"><h2><span class="display display--xl">Sunlit mornings</span><br><span class="script">around the courtyard</span></h2></div>
-      <div class="dn__text dn__text--b"><h2><span class="display display--xl">Lamplit evenings</span><br><span class="script">by the water</span></h2></div>
-      <div class="dn__line"><b></b></div>
+  <!-- morning / evening -->
+  <section class="ba" data-header="light" aria-label="Morning and evening in the courtyard">
+    <div class="ba__pin">
+      <div class="ba__img ba__img--morn"><img src="images/courtyard-sm.jpg" srcset="images/courtyard-sm.jpg 1200w, images/courtyard.jpg 2048w" sizes="100vw" width="1200" height="800" alt="The white colonial courtyard and pool in morning light" loading="lazy"></div>
+      <div class="ba__img ba__img--eve"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"></div>
+      <div class="ba__label ba__label--eve"><h2><span class="display">Evening</span><span class="script">lamplit by the water</span></h2></div>
+      <div class="ba__label ba__label--morn"><h2><span class="display">Morning</span><span class="script">sunlit courtyard</span></h2></div>
+      <div class="ba__line"></div>
+      <button type="button" class="ba__handle" aria-label="Drag to compare morning and evening"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 8l-6 6 6 6M18 8l6 6-6 6"/></svg></button>
+      <p class="ba__hint">Scroll or drag</p>
     </div>
   </section>
 
@@ -777,22 +807,6 @@ $$('.js-year').forEach(el => { el.textContent = mytNow().y; });
 
 /* plate artwork (drawn here, jade Peranakan-style band) */
 (function drawPlate() {
-  let band = '';
-  for (let i = 0; i < 20; i++) {
-    const a = i * 18;
-    band += `<g transform="rotate(${a} 300 300)"><g transform="translate(300 49)"><path d="M0-10C4-5 4 5 0 10C-4 5-4-5 0-10Z"/><path d="M-10 0C-5-4 5-4 10 0C5 4-5 4-10 0Z"/><circle r="2.3" fill="#B8904F"/></g></g><g transform="rotate(${a + 9} 300 300)"><circle cx="300" cy="44" r="1.8" fill="#B8904F"/><circle cx="300" cy="53" r="1.2" fill="#B8904F"/></g>`;
-  }
-  $('.plate').innerHTML = `<svg viewBox="0 0 600 600" class="plate__svg"><defs>
-    <radialGradient id="pg" cx="42%" cy="36%" r="70%"><stop offset="0" stop-color="#FFFEFA"/><stop offset=".62" stop-color="#F6F0E4"/><stop offset="1" stop-color="#E0D2BA"/></radialGradient>
-    <radialGradient id="pw" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#FFFFFC"/><stop offset=".8" stop-color="#F7F1E6"/><stop offset="1" stop-color="#E9DDC9"/></radialGradient>
-    <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E7CD93"/><stop offset=".5" stop-color="#AE8641"/><stop offset="1" stop-color="#DCBE80"/></linearGradient></defs>
-    <circle cx="300" cy="300" r="298" fill="url(#pg)"/>
-    <circle cx="300" cy="300" r="290" fill="none" stroke="url(#gd)" stroke-width="8"/>
-    <circle cx="300" cy="300" r="280" fill="none" stroke="#AE8641" stroke-opacity=".45"/>
-    <g fill="#2F4B40" fill-opacity=".85">${band}</g>
-    <circle cx="300" cy="300" r="226" fill="none" stroke="#AE8641" stroke-opacity=".6" stroke-width="1.2"/>
-    <circle cx="300" cy="300" r="214" fill="url(#pw)"/>
-    <circle cx="300" cy="300" r="211" fill="none" stroke="#5a4020" stroke-opacity=".06" stroke-width="6"/></svg>`;
   $('.js-anise').innerHTML = Array.from({ length: 8 }, (_, i) => `<path transform="rotate(${i * 45} 40 40)" d="M40 40C35 31 36 15 40 8C44 15 45 31 40 40Z"/>`).join('');
 })();
 
@@ -1070,6 +1084,8 @@ function motion() {
   // hero
   gsap.to('.hero__media', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero__content', { y: () => -innerHeight * .1, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: '65% top', scrub: true } });
+  gsap.to('.hero__cup', { y: () => -innerHeight * .2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero__cupimg', { rotation: 90, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   if (!reduce) gsap.fromTo('.hero__media img', { scale: 1 }, { scale: 1.08, duration: 14, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.4 });
 
   // waves breathe
@@ -1097,7 +1113,7 @@ function motion() {
     },
   });
   ScrollTrigger.create({ trigger: '.plate-sec', start: 'top 70%', once: true, onEnter: () => { if (pstep < 0) setPlateStep(0); } });
-  gsap.fromTo('.plate__svg', { rotation: -40 }, { rotation: 360, ease: 'none', scrollTrigger: { trigger: '.plate-sec', start: 'top bottom', end: () => '+=' + (innerHeight + innerHeight * .8 * N), scrub: 1 } });
+  gsap.fromTo('.plate__band', { rotation: -40 }, { rotation: 360, ease: 'none', scrollTrigger: { trigger: '.plate-sec', start: 'top bottom', end: () => '+=' + (innerHeight + innerHeight * .8 * N), scrub: 1 } });
   gsap.from('.plate', { scale: .72, opacity: 0, ease: 'power2.out', scrollTrigger: { trigger: '.plate-sec', start: 'top 95%', end: 'top 10%', scrub: 1 } });
   $$('.doodle').forEach((d, k) => {
     gsap.from(d, { opacity: 0, scale: .6, duration: 1.2, delay: .4 + k * .15, ease: 'expo.out', scrollTrigger: { trigger: '.plate-sec', start: 'top 60%', once: true } });
@@ -1126,29 +1142,27 @@ function motion() {
     return () => vp.removeEventListener('scroll', on);
   });
 
-  // big word
-  const letters = $$('.word__big span');
-  gsap.timeline({ scrollTrigger: { trigger: '.word', start: 'top top', end: '+=130%', pin: '.word__pin', scrub: 1, anticipatePin: 1, invalidateOnRefresh: true } })
-    .fromTo(letters, { x: i => (1.5 - i) * innerWidth * .04, opacity: .2 }, { x: i => (i - 1.5) * innerWidth * (innerWidth < 900 ? .04 : .07), opacity: 1, ease: 'power2.out', duration: 1 }, 0)
-    .fromTo('.word__cup', { yPercent: 70, rotation: -10, scale: .7 }, { yPercent: 0, rotation: 0, scale: 1, ease: 'power2.out', duration: 1 }, 0)
-    .fromTo('.word__text', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35 }, .6)
-    .fromTo('.word__eyebrow', { opacity: 0 }, { opacity: 1, duration: .3 }, .1);
+  // 1926: digits rise, photos drift at different speeds
+  gsap.from('.heritage__year span', { yPercent: 60, opacity: 0, duration: reduce ? 0 : 1.4, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '.heritage__year', start: 'top 85%', once: true } });
+  [['.hphoto--a', 60], ['.hphoto--b', 20], ['.hphoto--c', 110]].forEach(([sel, y]) => {
+    gsap.from(sel, { clipPath: 'inset(100% 0% 0% 0%)', duration: reduce ? 0 : 1.4, ease: 'expo.inOut', scrollTrigger: { trigger: sel, start: 'top 88%', once: true } });
+    gsap.fromTo(sel, { y: y }, { y: -y, ease: 'none', scrollTrigger: { trigger: '.heritage__grid', start: 'top bottom', end: 'bottom top', scrub: true } });
+    gsap.fromTo(sel + ' img', { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: sel, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
 
   // kitchen photo parallax
   gsap.fromTo('.kitchen__photo img', { scale: 1.12, yPercent: -4 }, { scale: 1, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '.kitchen__photo', start: 'top bottom', end: 'bottom top', scrub: true } });
 
-  // morning to evening
-  gsap.timeline({ scrollTrigger: { trigger: '.dn', start: 'top top', end: '+=240%', pin: '.dn__pin', scrub: 1, anticipatePin: 1 } })
-    .fromTo('.dn__img--a', { clipPath: 'inset(22% 34% 22% 34%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 1 }, 0)
-    .fromTo('.dn__img--a img', { scale: 1.3 }, { scale: 1, ease: 'power2.out', duration: 1.2 }, 0)
-    .fromTo('.dn__text--a .display', { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .5 }, .25)
-    .fromTo('.dn__text--a .script', { opacity: 0 }, { opacity: 1, duration: .4 }, .5)
-    .to('.dn__text--a', { opacity: 0, y: -60, duration: .4 }, 1.3)
-    .fromTo('.dn__img--b', { clipPath: 'inset(0% 50% 0% 50%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 1 }, 1.3)
-    .fromTo('.dn__img--b img', { scale: 1.25 }, { scale: 1, ease: 'power2.out', duration: 1.2 }, 1.3)
-    .fromTo('.dn__text--b .display', { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .5 }, 1.8)
-    .fromTo('.dn__text--b .script', { opacity: 0 }, { opacity: 1, duration: .4 }, 2)
-    .fromTo('.dn__line b', { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: 2.6 }, 0);
+  // morning / evening: the divider sweeps from left to right as you scroll; drag to compare
+  const baPin = $('.ba__pin'), baHandle = $('.ba__handle');
+  let baDragUntil = 0;
+  const setBa = p => baPin.style.setProperty('--pos', (p * 100).toFixed(2) + '%');
+  setBa(0.02);
+  ScrollTrigger.create({ trigger: '.ba', start: 'top top', end: '+=180%', pin: '.ba__pin', scrub: true, anticipatePin: 1,
+    onUpdate: s => { if (Date.now() > baDragUntil) setBa(Math.min(.98, .02 + s.progress * .96)); } });
+  const baMove = e => { const r = baPin.getBoundingClientRect(); setBa(Math.min(.98, Math.max(.02, (e.clientX - r.left) / r.width))); baDragUntil = Date.now() + 1500; };
+  baHandle.addEventListener('pointerdown', e => { baHandle.setPointerCapture(e.pointerId); baMove(e); const mv = ev => baMove(ev); const up = () => { baHandle.removeEventListener('pointermove', mv); baHandle.removeEventListener('pointerup', up); }; baHandle.addEventListener('pointermove', mv); baHandle.addEventListener('pointerup', up); });
+  baHandle.addEventListener('keydown', e => { const cur = parseFloat(getComputedStyle(baPin).getPropertyValue('--pos')) / 100 || 0; if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setBa(Math.min(.98, Math.max(.02, cur + (e.key === 'ArrowRight' ? .05 : -.05)))); baDragUntil = Date.now() + 3000; } });
 
   // spaces
   ScrollTrigger.create({ trigger: '.spaces', start: 'top 70%', end: 'bottom 30%', onToggle: s => s.isActive ? restartSpaces() : clearInterval(spaceTimer) });
@@ -1190,7 +1204,9 @@ function intro() {
     .fromTo('.hero__media', { scale: 1.3 }, { scale: 1, duration: 2.4 * d, ease: 'expo.out' }, '-=.8')
     .from('.arc__ch i', { yPercent: 120, opacity: 0, duration: 1.2 * d, stagger: .035 * d, ease: 'expo.out' }, '-=1.9')
     .from('.hero__script', { opacity: 0, y: 24, duration: 1 * d, ease: 'power3.out' }, '-=.9')
-    .from('.hero .wave', { yPercent: 100, duration: 1.2 * d, ease: 'expo.out' }, '-=1.4')
+    .from('.hero__cup', { yPercent: 90, duration: 1.8 * d, ease: 'expo.out' }, '-=1.5')
+    .from('.hero__cupimg', { rotation: -120, duration: 2.2 * d, ease: 'expo.out' }, '<')
+    .from('.hero .wave', { yPercent: 100, duration: 1.2 * d, ease: 'expo.out' }, '<')
     .from('.hdr', { opacity: 0, y: -12, duration: .8 * d, clearProps: 'transform,opacity' }, '-=1.2');
 }
 
