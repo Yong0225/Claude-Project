@@ -270,10 +270,9 @@ html.js body.is-loading{overflow:hidden}
 .dn__layer{position:absolute;inset:0}
 .dn__layer--a{z-index:1}
 .dn__layer--b{z-index:2}
-.dn__layer--a{background:radial-gradient(70% 70% at 50% 50%,#2a1d14 0%,var(--espresso) 70%)}
 .dn__layer--b{clip-path:inset(0 calc(100% - var(--p)) 0 0);background:var(--espresso)}
-.dn__layer--b img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.dn__layer--b::after{content:"";position:absolute;inset:0;background:rgba(14,9,6,.42)}
+.dn__layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dn__layer::after{content:"";position:absolute;inset:0;background:rgba(14,9,6,.42)}
 .dn__text{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 var(--gut)}
 .dn__text .script{display:block;color:var(--gold-2);transform:rotate(-3deg);transform-origin:center;margin-top:.05em}
 .dn__line{position:absolute;left:50%;bottom:7vh;width:120px;height:1px;translate:-50% 0;background:rgba(255,255,255,.22);z-index:3;overflow:hidden}
@@ -501,7 +500,7 @@ html.js body.is-loading{overflow:hidden}
       <figure class="pcard pcard--3"><img src="images/steak-sm.jpg" width="1000" height="667" alt="Sliced beef tenderloin with vegetables on a white plate" loading="lazy"></figure>
       <figure class="pcard pcard--4"><img src="images/lantern-sm.jpg" width="1200" height="800" alt="Lantern-lit lounge by the courtyard pool" loading="lazy"></figure>
 
-      <div class="plate" aria-hidden="true"><img src="images/plate-white.png" width="1400" height="1400" alt=""></div>
+      <div class="plate" aria-hidden="true"><img class="plate__shadow" src="images/plate-shadow.png" width="700" height="700" alt=""><img class="plate__body" src="images/plate-body.png" width="1400" height="1400" alt=""></div>
       <div class="plate__text">
         <div class="psteps">
           <article class="pstep"><h3>Breakfast</h3><span class="script">rise &amp; pour</span><p>Doors open at 6:30 am. Fresh coffee, warm plates and a quiet table before the city wakes.</p></article>
@@ -598,10 +597,10 @@ html.js body.is-loading{overflow:hidden}
   </section>
 
   <!-- afternoon to evening -->
-  <section class="dn" data-header="light" aria-label="Afternoon into evening">
+  <section class="dn" data-header="light" aria-label="Morning into evening">
     <div class="dn__pin">
-      <div class="dn__layer dn__layer--a"><div class="dn__text"><h2><span class="display display--xl">Afternoon fades</span><span class="script">into lamplight</span></h2></div></div>
-      <div class="dn__layer dn__layer--b"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"><div class="dn__text"><h2><span class="display display--xl">Evening glows</span><span class="script">by the water</span></h2></div></div>
+      <div class="dn__layer dn__layer--a"><img src="images/courtyard-sm.jpg" srcset="images/courtyard-sm.jpg 1200w, images/courtyard.jpg 2048w" sizes="100vw" width="1200" height="800" alt="The white colonial courtyard and pool in morning light" loading="lazy"><div class="dn__text"><h2><span class="display display--xl">Sunlit mornings</span><span class="script">around the courtyard</span></h2></div></div>
+      <div class="dn__layer dn__layer--b"><img src="images/pool-night-sm.jpg" srcset="images/pool-night-sm.jpg 1200w, images/pool-night.jpg 2048w" sizes="100vw" width="1200" height="723" alt="The courtyard pool reflecting warm lights at night" loading="lazy"><div class="dn__text"><h2><span class="display display--xl">Lamplit evenings</span><span class="script">by the water</span></h2></div></div>
       <div class="dn__line"><b></b></div>
     </div>
   </section>
@@ -1107,9 +1106,10 @@ function motion() {
     },
   });
   // plate glides in: rises, settles and gently turns into place before the first course appears
-  gsap.set('.plate', { opacity: 0, y: 140, scale: .82, rotation: -18 });
+  gsap.fromTo('.plate__body', { rotation: -60 }, { rotation: 300, ease: 'none', scrollTrigger: { trigger: '.plate-sec', start: 'top bottom', end: () => '+=' + (innerHeight + innerHeight * .8 * N), scrub: 1 } });
+  gsap.set('.plate', { opacity: 0, y: 140, scale: .82 });
   ScrollTrigger.create({ trigger: '.plate-sec', start: 'top 80%', once: true, onEnter: () => {
-    gsap.to('.plate', { opacity: 1, y: 0, scale: 1, rotation: 0, duration: reduce ? 0 : 1.8, ease: 'expo.out' });
+    gsap.to('.plate', { opacity: 1, y: 0, scale: 1, duration: reduce ? 0 : 1.8, ease: 'expo.out' });
     gsap.delayedCall(reduce ? 0 : .6, () => { if (pstep < 0) setPlateStep(0); });
   } });
   $$('.doodle').forEach((d, k) => {
@@ -1154,6 +1154,7 @@ function motion() {
   // so the words change as the edge passes over them
   const dnPin = $('.dn__pin');
   gsap.timeline({ scrollTrigger: { trigger: '.dn', start: 'top top', end: '+=220%', pin: '.dn__pin', scrub: 1, anticipatePin: 1 } })
+    .fromTo('.dn__layer--a img', { scale: 1.12 }, { scale: 1, ease: 'none', duration: .6 }, 0)
     .fromTo('.dn__layer--a .display', { yPercent: 50, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .25 }, 0)
     .fromTo('.dn__layer--a .script', { opacity: 0 }, { opacity: 1, duration: .2 }, .12)
     .fromTo(dnPin, { '--p': '0%' }, { '--p': '100%', ease: 'power1.inOut', duration: 1 }, .35)
