@@ -1,0 +1,8 @@
+/* Noto Sans SC (variable), subset to the characters used in slides-zh.html.
+   Re-subset if you change the Chinese copy. */
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 100 900;
+  src: url(fonts/NotoSansSC-subset.woff2) format('woff2');
+}
