@@ -1,5 +1,5 @@
-/* Noto Sans SC (variable), subset to the characters used in slides-zh.html.
-   Re-subset if you change the Chinese copy. */
+/* Noto Sans SC (variable), subset to the characters used in all slides*-zh.html files.
+   Re-subset if you change any Chinese copy (see make-zh-font.sh). */
 @font-face {
   font-family: 'Noto Sans SC';
   font-style: normal;
