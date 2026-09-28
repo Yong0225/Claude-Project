@@ -27,20 +27,20 @@
   .pager i.on{background:var(--hot)}
 
   .kicker{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:var(--hot);margin-top:30px}
-  h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:66px;line-height:1;text-transform:uppercase;letter-spacing:.005em;margin-top:18px}
+  h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:80px;line-height:.98;text-transform:uppercase;letter-spacing:.005em;margin-top:18px}
   h1 s{text-decoration:none;color:var(--dim)}
   h1 em{font-style:normal;color:var(--hot)}
 
   .stat{display:flex;align-items:flex-end;gap:28px;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
-  .num{font-family:Anton,Impact,sans-serif;font-size:124px;line-height:.8;color:var(--bone);letter-spacing:-.01em;flex:none}
+  .num{font-family:Anton,Impact,sans-serif;font-size:170px;line-height:.8;color:var(--bone);letter-spacing:-.01em;flex:none}
   .num small{font-size:.5em;vertical-align:top;margin-left:4px}
-  .stat p{font-size:23px;line-height:1.32;color:var(--mute);padding-bottom:6px}
+  .stat p{font-size:30px;line-height:1.32;color:var(--mute);padding-bottom:6px}
   .stat p b{color:var(--bone);font-weight:700}
   .src{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--dim);letter-spacing:.06em;margin-top:10px;display:block}
 
   .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;padding-top:26px;border-top:1px solid var(--line)}
-  .foot .so{font-size:22px;line-height:1.38;color:var(--bone);font-weight:500;max-width:880px}
-  #s3 .foot .so{max-width:560px}
+  .foot .so{font-size:30px;line-height:1.38;color:var(--bone);font-weight:500;max-width:880px}
+  #s3 .foot .so{max-width:680px;font-size:27px}
   .foot .so b{color:var(--hot);font-weight:700}
   .sources{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;color:var(--dim);margin-top:14px;letter-spacing:.02em}
 
@@ -55,7 +55,7 @@
   /* ---------- SLIDE 1: Google Maps cards ---------- */
   .maps{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
   .gcard{background:#fff;border-radius:22px;color:#202124;padding:20px 22px 18px;font-family:Inter,Arial,sans-serif;box-shadow:0 30px 60px rgba(0,0,0,.35)}
-  .gcard .ph{height:84px;border-radius:14px;margin:-8px -8px 18px;background:linear-gradient(135deg,#6b4f3a,#c89b6d 55%,#e9d2ad);position:relative;overflow:hidden}
+  .gcard .ph{height:110px;border-radius:14px;margin:-8px -8px 18px;background:linear-gradient(135deg,#6b4f3a,#c89b6d 55%,#e9d2ad);position:relative;overflow:hidden}
   .gcard .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 70%,rgba(255,255,255,.35),transparent 40%),radial-gradient(circle at 75% 35%,rgba(0,0,0,.25),transparent 45%)}
   .gcard.b .ph{background:linear-gradient(135deg,#34423a,#7c8f6a 55%,#d8d0a8)}
   .gcard h3{font-size:25px;font-weight:600;letter-spacing:-.01em}
@@ -80,7 +80,7 @@
   /* ---------- SLIDE 2: IG phone ---------- */
   .ig-wrap{display:grid;grid-template-columns:380px 1fr;gap:40px;margin-top:28px;align-items:start}
   .phone{background:#000;border-radius:44px;padding:14px;box-shadow:0 30px 60px rgba(0,0,0,.4);border:2px solid #444}
-  .screen{background:#fff;border-radius:32px;color:#111;padding:22px 20px 20px;font-family:Inter,Arial,sans-serif;height:340px;overflow:hidden}
+  .screen{background:#fff;border-radius:32px;color:#111;padding:22px 20px 20px;font-family:Inter,Arial,sans-serif;height:410px;overflow:hidden}
   .ig-h{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:18px}
   .ig-row{display:flex;align-items:center;gap:20px;margin-top:18px}
   .ava{width:82px;height:82px;border-radius:50%;padding:3px;background:conic-gradient(#f58529,#dd2a7b,#8134af,#515bd4,#f58529)}
@@ -99,7 +99,7 @@
   .circ{outline:3px solid #FF4A2B;outline-offset:3px;border-radius:6px}
 
   .path{list-style:none;counter-reset:s}
-  .path li{counter-increment:s;display:flex;align-items:center;gap:16px;font-size:18px;color:var(--bone);padding:6px 0;border-bottom:1px dashed var(--line)}
+  .path li{counter-increment:s;display:flex;align-items:center;gap:16px;font-size:24px;color:var(--bone);padding:12px 0;border-bottom:1px dashed var(--line)}
   .path li::before{content:counter(s,decimal-leading-zero);font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--dim);width:28px}
   .path li.drop{color:var(--hot)}
   .path li.drop::before{color:var(--hot)}
@@ -117,7 +117,7 @@
   .col .t2{font-size:15px;color:var(--mute);margin-top:6px}
   .col+.col .t2{color:rgba(43,43,43,.6)}
   .col ul{list-style:none;margin-top:18px}
-  .col li{font-size:18px;line-height:1.35;padding:12px 0;border-top:1px solid var(--line);display:flex;gap:12px}
+  .col li{font-size:22px;line-height:1.3;padding:16px 0;border-top:1px solid var(--line);display:flex;gap:12px}
   .col+.col li{border-top-color:rgba(43,43,43,.15)}
   .col li i{font-style:normal;font-family:'JetBrains Mono',monospace;font-weight:700;flex:none;width:18px}
   .col li i.x{color:var(--hot)}
@@ -131,6 +131,10 @@
   .bar .cut{background:repeating-linear-gradient(-45deg,var(--hot) 0 10px,#d63a1f 10px 20px);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
 
   .cta{font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:var(--hot);padding:14px 18px;white-space:nowrap;font-weight:700}
+  .tagline{font-size:20px;color:var(--mute);margin-top:12px;text-align:center}
+  .tagline b{color:var(--hot)}
+  .tagline.ok b{color:var(--bone)}
+  .sources{font-size:12px}
 </style>
 </head>
 <body>
@@ -146,7 +150,7 @@
   </div>
 
   <div class="kicker">The Google Maps blind spot</div>
-  <h1>Your 4.8★ gets them <em>interested.</em><br>No “Website” button <em>loses them.</em></h1>
+  <h1>Found on Google.<br><em>Lost at the “Website” button.</em></h1>
 
   <div class="maps">
     <div>
@@ -155,46 +159,39 @@
         <div class="ph"></div>
         <h3>Your Restaurant</h3>
         <div class="rt"><b>4.8</b><span class="stars">★★★★★</span>(1,204)</div>
-        <div class="cat">Restaurant · Open now</div>
         <div class="acts">
           <div class="act"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21.7 11.3l-9-9a1 1 0 00-1.4 0l-9 9a1 1 0 000 1.4l9 9a1 1 0 001.4 0l9-9a1 1 0 000-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 011-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg></div>Directions</div>
           <div class="act"><div class="ic"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg></div>Call</div>
           <div class="act dead"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.9a15.7 15.7 0 00-1.4-3.6A8 8 0 0118.9 8zM12 4c.8 1.2 1.5 2.5 1.9 4h-3.8c.4-1.4 1.1-2.8 1.9-4zM4.3 14a8 8 0 010-4h3.4a16 16 0 000 4H4.3zm.8 2h3c.3 1.3.8 2.5 1.4 3.6A8 8 0 015.1 16zM8 8H5.1a8 8 0 014.3-3.6C8.8 5.5 8.4 6.7 8 8zm4 12c-.8-1.2-1.5-2.5-1.9-4h3.8c-.4 1.4-1.1 2.8-1.9 4zm2.3-6H9.7a14.7 14.7 0 010-4h4.6a14.7 14.7 0 010 4zm.3 5.6c.6-1.1 1.1-2.3 1.4-3.6h3a8 8 0 01-4.4 3.6zm1.8-5.6a16 16 0 000-4h3.4a8 8 0 010 4h-3.4z"/></svg></div><span>No website</span></div>
         </div>
       </div>
-      <p class="note">They loved the reviews. They wanted the <b>menu, prices, a way to book.</b> They found nothing.</p>
+      <p class="tagline">Great reviews. <b>Dead end.</b></p>
     </div>
     <div>
-      <div class="glabel">○ The place 200m away</div>
+      <div class="glabel">○ Next door</div>
       <div class="gcard b">
         <div class="ph"></div>
         <h3>Competitor Bistro</h3>
         <div class="rt"><b>4.4</b><span class="stars">★★★★☆</span>(386)</div>
-        <div class="cat">Restaurant · Open now</div>
         <div class="acts">
           <div class="act"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21.7 11.3l-9-9a1 1 0 00-1.4 0l-9 9a1 1 0 000 1.4l9 9a1 1 0 001.4 0l9-9a1 1 0 000-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 011-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg></div>Directions</div>
           <div class="act live"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.9a15.7 15.7 0 00-1.4-3.6A8 8 0 0118.9 8zM12 4c.8 1.2 1.5 2.5 1.9 4h-3.8c.4-1.4 1.1-2.8 1.9-4zM4.3 14a8 8 0 010-4h3.4a16 16 0 000 4H4.3zm.8 2h3c.3 1.3.8 2.5 1.4 3.6A8 8 0 015.1 16zM8 8H5.1a8 8 0 014.3-3.6C8.8 5.5 8.4 6.7 8 8zm4 12c-.8-1.2-1.5-2.5-1.9-4h3.8c-.4 1.4-1.1 2.8-1.9 4zm2.3-6H9.7a14.7 14.7 0 010-4h4.6a14.7 14.7 0 010 4zm.3 5.6c.6-1.1 1.1-2.3 1.4-3.6h3a8 8 0 01-4.4 3.6zm1.8-5.6a16 16 0 000-4h3.4a8 8 0 010 4h-3.4z"/></svg></div>Website</div>
           <div class="act live"><div class="ic"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V9h14v11zM7 11h5v5H7z"/></svg></div>Reserve</div>
         </div>
       </div>
-      <p class="note">Fewer stars. <b>But one tap to the menu and a table.</b> Guess who gets tonight’s booking.</p>
+      <p class="tagline ok">Fewer stars. <b>Gets the booking.</b></p>
     </div>
   </div>
 
   <div class="stat">
     <div class="num">18<small>×</small></div>
-    <p><b>more daily orders</b> for restaurants that link their own ordering site on their Google profile vs. those that don’t.<span class="src">— Grubhub, Google Business link study (2021–22)</span></p>
-  </div>
-
-  <div class="chips">
-    <div class="chip"><div class="n">70<em>%</em></div><p>more likely to <b style="color:var(--bone)">visit</b> a business with a complete Google profile.</p><span class="src">— Google</span></div>
-    <div class="chip"><div class="n">+21<em>%</em></div><p>more conversion actions when a <b style="color:var(--bone)">booking link</b> is added to the profile.</p><span class="src">— BizIQ, GBP Optimization Stats 2026</span></div>
+    <p><b>more daily orders</b> for restaurants that link their own site on Google.<span class="src">— Grubhub</span></p>
   </div>
 
   <div class="foot">
     <div>
-      <div class="so">Your Google listing already does the hard part — getting found. <b>Without a site behind it, the ready-to-eat-tonight crowd walks next door.</b></div>
-      <div class="sources">Sources: get.grubhub.com/blog/google-business-link · Google Business Profile · biziq.com/blog/google-business-profile-optimization-statistics</div>
+      <div class="so">They already found you. <b>Don’t send them next door.</b></div>
+      <div class="sources">Source: get.grubhub.com/blog/google-business-link</div>
     </div>
   </div>
 </section>
@@ -219,39 +216,33 @@
         <div class="ava"><i></i></div>
         <div class="ig-n"><div><b>312</b>posts</div><div><b>8.6K</b>followers</div><div><b>540</b>following</div></div>
       </div>
-      <div class="bio"><b>Your Restaurant 🍜</b><br>Open Tue–Sun · 11am–10pm<br><span class="circ">📩 DM to book · Menu in highlights 👇</span><br><span class="lk circ">linktr.ee/yourrestaurant</span></div>
+      <div class="bio"><b>Your Restaurant 🍜</b><br><span class="circ">📩 DM to book · Menu in highlights 👇</span><br><span class="lk circ">linktr.ee/yourrestaurant</span></div>
       <div class="hl"><div><i class="circ"></i>Menu 1</div><div><i></i>Menu 2</div><div><i></i>Prices?</div><div><i></i>Location</div></div>
       <div class="grid3"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div></div>
 
     <div>
-      <div class="glabel">What a hungry follower has to do</div>
+      <div class="glabel">Their path to a table</div>
       <ol class="path">
-        <li>Sees your Reel — wants it</li>
-        <li>Taps your profile — bio has no prices</li>
-        <li>Opens Linktree</li>
-        <li>Swipes 4 “Menu” highlights</li>
-        <li class="drop">DMs to book — waits for reply</li>
-        <li class="drop">…gets distracted. Gone.</li>
+        <li>See Reel</li>
+        <li>Open profile</li>
+        <li>Open Linktree</li>
+        <li>Dig for the menu</li>
+        <li class="drop">DM &amp; wait…</li>
+        <li class="drop">Gone.</li>
       </ol>
-      <div class="vs"><div class="n">1 TAP</div><p>A proper site puts menu, prices, location and booking <b>on one screen.</b></p></div>
     </div>
   </div>
 
   <div class="stat">
     <div class="num">65<small>%</small></div>
-    <p>of diners <b>go directly to a restaurant’s website</b> to book a table.<span class="src">— Toast restaurant research (via Tablein)</span></p>
-  </div>
-
-  <div class="chips">
-    <div class="chip"><div class="n">69<em>%</em></div><p>of diners prefer to <b style="color:var(--bone)">browse the restaurant’s website</b> before choosing to visit.</p><span class="src">— WifiTalents 2024 (via CHAMP Digital)</span></div>
-    <div class="chip"><div class="n">36<em>%</em></div><p>gave up ordering because the site <b style="color:var(--bone)">wasn’t mobile-friendly.</b> Not just any site — a good one.</p><span class="src">— MGH Restaurant Consumer Survey</span></div>
+    <p>of diners <b>book directly on the restaurant’s website.</b><span class="src">— Toast</span></p>
   </div>
 
   <div class="foot">
     <div>
-      <div class="so">Your content is working — it creates the craving. <b>But every extra tap between “I want that” and “table booked” is where followers quietly drop off.</b></div>
-      <div class="sources">Sources: tablein.com/blog/restaurant-website-mistakes · champdigital.com/blog/food-beverage-marketing-statistics</div>
+      <div class="so">IG creates the craving. <b>Your website closes it.</b></div>
+      <div class="sources">Source: Toast research, via tablein.com/blog/restaurant-website-mistakes</div>
     </div>
   </div>
 </section>
@@ -272,44 +263,35 @@
   <div class="split">
     <div class="col">
       <h4>Rented</h4>
-      <div class="t">IG DMs + delivery apps</div>
-      <div class="t2">Someone else’s platform, someone else’s rules</div>
+      <div class="t">DMs + delivery apps</div>
       <ul>
-        <li><i class="x">✕</i><span><b>15–30% commission</b> taken on every delivery-app order</span></li>
-        <li><i class="x">✕</i><span>Bookings buried in DMs — <b>missed at peak hour</b></span></li>
-        <li><i class="x">✕</i><span>Customer data <b>stays with the platform</b></span></li>
-        <li><i class="x">✕</i><span>Algorithm change or banned account = <b>traffic gone overnight</b></span></li>
+        <li><i class="x">✕</i><span><b>15–30%</b> commission</span></li>
+        <li><i class="x">✕</i><span>Missed DMs at peak hour</span></li>
+        <li><i class="x">✕</i><span>Algorithm decides your traffic</span></li>
       </ul>
     </div>
     <div class="col">
       <h4>Owned</h4>
-      <div class="t">Your own website</div>
-      <div class="t2">Your address on the internet — permanent</div>
+      <div class="t">Your website</div>
       <ul>
-        <li><i class="ok">✓</i><span><b>0% commission</b> on direct orders &amp; bookings</span></li>
-        <li><i class="ok">✓</i><span>Booking form <b>takes reservations 24/7</b></span></li>
-        <li><i class="ok">✓</i><span>Names, numbers, emails <b>become your regulars list</b></span></li>
-        <li><i class="ok">✓</i><span>Google, IG, TikTok all <b>point to one place you control</b></span></li>
+        <li><i class="ok">✓</i><span><b>0%</b> commission</span></li>
+        <li><i class="ok">✓</i><span>Bookings 24/7</span></li>
+        <li><i class="ok">✓</i><span>Your own regulars list</span></li>
       </ul>
     </div>
   </div>
 
-  <div class="bar">
-    <div class="lbl"><span>Every 100 in delivery-app sales</span><span>typical commission</span></div>
-    <div class="track"><div class="keep" style="width:70%">You keep ~70</div><div class="cut" style="width:30%">−30 gone</div></div>
-  </div>
-
   <div class="stat">
     <div class="num">+20<small>%</small></div>
-    <p>higher customer spend when guests <b>order through digital channels</b> instead of in person.<span class="src">— Deloitte, 2021 (via CHAMP Digital)</span></p>
+    <p><b>higher spend</b> when guests order digitally.<span class="src">— Deloitte</span></p>
   </div>
 
   <div class="foot">
     <div>
-      <div class="so">Social media is where they find you. <b>Your website is where you keep them.</b></div>
-      <div class="sources">Sources: champdigital.com/blog/food-beverage-marketing-statistics · delivery-app commission range: typical published merchant rates</div>
+      <div class="so">Social finds them. <b>Your website keeps them.</b></div>
+      <div class="sources">Source: Deloitte 2021, via champdigital.com · commission: typical delivery-app rates</div>
     </div>
-    <div class="cta">Free listing audit → reply “AUDIT”</div>
+    <div class="cta">Free audit → reply “AUDIT”</div>
   </div>
 </section>
 
