@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Insights video</title>
+<link rel="stylesheet" href="../../../insights-no-website/fonts.css">
+<style>
+:root{--bg:#161514;--ink:#2B2B2B;--bone:#E8E6E1;--mute:rgba(232,230,225,.62);--dim:rgba(232,230,225,.34);--line:rgba(232,230,225,.16);--hot:#FF4A2B}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font-family:Inter,sans-serif;color:var(--bone);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--bg)}
+.a{position:absolute;will-change:transform,opacity,filter}
+.c{left:0;right:0;text-align:center}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase}
+.an{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;line-height:.98;letter-spacing:.005em}
+.hot{color:var(--hot)}
+.w{display:inline-block;will-change:transform,opacity,filter;white-space:pre}
+#glow{position:absolute;width:1400px;height:1400px;border-radius:50%;background:radial-gradient(circle,rgba(255,74,43,.22),rgba(255,74,43,0) 62%);left:-160px;top:200px}
+#glow2{position:absolute;width:1200px;height:1200px;border-radius:50%;background:radial-gradient(circle,rgba(232,230,225,.07),rgba(232,230,225,0) 60%);left:200px;top:900px}
+#light{position:absolute;inset:0;background:var(--bone);clip-path:circle(0px at 540px 960px)}
+#grain{position:absolute;inset:-40px;opacity:.07;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.3px);background-size:6px 6px;mix-blend-mode:overlay}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 50%,rgba(0,0,0,.55) 100%)}
+#flash{position:absolute;inset:0;background:var(--hot);opacity:0;pointer-events:none;mix-blend-mode:screen}
+/* header */
+#hdr{left:64px;right:64px;top:84px;display:flex;justify-content:space-between;align-items:flex-start;font-size:19px}
+#hdr .m{border-left:3px solid var(--hot);padding-left:14px;line-height:1.55;color:var(--mute)}
+#hdr .m b{color:var(--bone)}
+#hdr .r{text-align:right;line-height:1.55;color:var(--mute)}
+#hdr .r b{color:var(--bone)}
+#hdr.lt .m,#hdr.lt .r{color:rgba(43,43,43,.6)} #hdr.lt b{color:var(--ink)} #prog.lt{background:rgba(43,43,43,.15)}
+#prog{left:64px;right:64px;top:196px;height:3px;background:var(--line)}
+#prog i{display:block;height:100%;width:0;background:var(--hot)}
+/* captions */
+#cap{left:80px;right:80px;top:1648px;text-align:center}
+#cap span{display:inline-block;background:rgba(10,10,10,.62);border:1px solid rgba(255,255,255,.08);padding:14px 26px;border-radius:14px;font-size:34px;line-height:1.35;font-weight:600;color:#f3f1ec;backdrop-filter:blur(6px)}
+/* cards */
+.gcard{background:#fff;color:#202124;border-radius:34px;padding:34px 40px;box-shadow:0 40px 90px rgba(0,0,0,.55)}
+.gcard h3{font-size:44px;font-weight:600;letter-spacing:-.01em}
+.stars{display:flex;gap:10px;margin-top:16px;align-items:center}
+.stars i{font-style:normal;font-size:56px;color:#fbbc04;display:inline-block}
+.stars b{font-size:44px;margin-right:10px}
+.gcard .rv{font-size:28px;color:#70757a;margin-top:10px}
+.ig{display:flex;align-items:center;gap:34px}
+.ava{width:150px;height:150px;border-radius:50%;padding:6px;background:conic-gradient(#f58529,#dd2a7b,#8134af,#515bd4,#f58529)}
+.ava i{display:block;width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 35% 35%,#d9a066,#7a4a2a)}
+.ig .n{font-size:92px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.ig .l{font-size:30px;color:#70757a;margin-top:6px}
+.src{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:21px;letter-spacing:.06em;color:var(--mute);border:1px solid var(--line);padding:12px 20px;border-radius:40px}
+.tile{position:absolute;width:440px;height:210px;border:1.5px solid var(--line);background:rgba(255,255,255,.035);border-radius:26px;padding:30px 34px;display:flex;flex-direction:column;justify-content:space-between}
+.tile svg{width:58px;height:58px;stroke:var(--hot);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tile b{font-family:Anton,sans-serif;font-weight:400;font-size:62px;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+/* timeline */
+#tl{left:120px;top:470px;width:4px;height:0;background:linear-gradient(var(--dim),var(--hot))}
+.node{position:absolute;left:96px;display:flex;align-items:flex-start;gap:40px}
+.node .dot{width:52px;height:52px;border-radius:50%;border:4px solid var(--bone);background:var(--bg);flex:none;position:relative}
+.node .tx{font-size:48px;font-weight:700;line-height:1.15;letter-spacing:-.01em;padding-top:2px}
+.node .tx small{display:block;font-size:30px;font-weight:500;color:var(--mute);margin-top:10px;letter-spacing:0}
+.node.x .dot{background:var(--hot);border-color:var(--hot)}
+.node.x .dot::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:900;font-size:26px}
+.node.x .tx{color:var(--hot);font-family:Anton,sans-serif;font-weight:400;font-size:84px;text-transform:uppercase;line-height:1}
+.hlr{display:flex;gap:14px;margin-top:18px}
+.hlr i{width:74px;height:74px;border-radius:50%;border:3px solid var(--dim);background:rgba(255,255,255,.05);display:inline-block}
+.bubble{display:flex;width:fit-content;align-items:center;gap:10px;margin-top:18px;background:#3a3a3c;color:#fff;border-radius:30px;padding:16px 26px;font-size:30px;font-weight:500}
+.typing{display:flex;width:fit-content;gap:8px;margin-top:14px;background:#262628;border-radius:30px;padding:18px 24px}
+.typing i{width:14px;height:14px;border-radius:50%;background:#8e8e93;display:inline-block}
+.seen{font-size:22px;color:var(--dim);margin-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.08em}
+#clock{right:64px;top:300px;font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:var(--bone);letter-spacing:.06em}
+/* phone */
+.phone{position:absolute;background:#000;border-radius:64px;padding:16px;border:2px solid #4a4a4e;box-shadow:0 60px 120px rgba(0,0,0,.55)}
+.phone .sc{border-radius:50px;overflow:hidden;height:100%;position:relative}
+.clean{background:#171513;color:#f2ede4;display:flex;flex-direction:column;height:100%}
+.clean .hero{height:40%;background:linear-gradient(160deg,rgba(0,0,0,.05),rgba(0,0,0,.72)),radial-gradient(circle at 35% 40%,#d9a066,#7a4a2a 55%,#2b1a10);display:flex;flex-direction:column;justify-content:flex-end;padding:30px}
+.clean .hero b{font-family:Anton,sans-serif;font-weight:400;font-size:52px;letter-spacing:.02em;line-height:1}
+.clean .hero span{font-size:21px;opacity:.8;margin-top:6px}
+.clean .inf{display:flex;gap:10px;padding:18px 30px 0;font-size:18px;opacity:.75}
+.clean .inf span{border:1px solid rgba(242,237,228,.3);border-radius:20px;padding:6px 14px}
+.clean .mn{padding:22px 30px;display:grid;gap:18px;font-size:25px}
+.clean .mn div{display:flex;justify-content:space-between;border-bottom:1px dotted rgba(242,237,228,.25);padding-bottom:14px}
+.clean .mn em{font-style:normal;opacity:.75}
+.clean .bk{margin:auto 30px 30px;background:#f2ede4;color:#171513;text-align:center;padding:24px;border-radius:50px;font-weight:800;font-size:27px;position:relative;overflow:hidden}
+.ripple{position:absolute;width:40px;height:40px;border-radius:50%;background:rgba(255,74,43,.45);left:50%;top:50%;margin:-20px 0 0 -20px}
+.messy{background:#fff;color:#111;padding:30px 26px;height:100%}
+.messy .bar{display:flex;justify-content:space-between;font-weight:700;font-size:25px}
+.messy .jpg{margin-top:24px;height:330px;background:repeating-linear-gradient(0deg,#f3eee4 0 22px,#e2d9c6 22px 24px);position:relative;transform:rotate(-2deg);border:1px solid #ccc;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.messy .jpg::after{content:"MENU_final_v3.jpg";position:absolute;right:12px;bottom:10px;font-family:'JetBrains Mono',monospace;font-size:15px;color:#999}
+.messy .jpg i{position:absolute;left:22px;top:26px;width:60%;height:16px;background:#b9ad96;box-shadow:0 44px 0 #b9ad96,0 88px 0 #b9ad96,0 132px 0 #b9ad96,0 176px 0 #b9ad96,0 220px 0 #b9ad96;filter:blur(2.4px)}
+.messy .lt{margin-top:34px;display:grid;gap:16px}
+.messy .lt div{border:2px solid #111;border-radius:40px;text-align:center;padding:17px;font-size:22px;font-weight:600}
+.messy .dm{margin-top:18px;font-size:19px;color:#888;text-align:center}
+.bub{position:absolute;font-size:40px;font-weight:800;padding:20px 30px;border-radius:26px;background:var(--bone);color:var(--ink);white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.bub.bad{color:var(--hot)}
+#check{left:540px;top:900px;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:var(--hot);display:grid;place-items:center;box-shadow:0 30px 80px rgba(255,74,43,.45)}
+#check svg{width:130px;height:130px;stroke:#fff;stroke-width:14;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#sticker{left:540px;top:900px;width:660px;height:660px;margin:-330px 0 0 -330px;border-radius:50%;background:var(--hot);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 50px 120px rgba(255,74,43,.35)}
+#sticker b{font-family:Anton,sans-serif;font-weight:400;font-size:300px;line-height:.9}
+#sticker span{font-size:40px;font-weight:800;line-height:1.2;margin-top:12px}
+#ring{left:540px;top:900px;width:1500px;height:1500px;margin:-750px 0 0 -750px;border-radius:50%;border:5px solid var(--hot)}
+</style></head>
+<body><div id="stage">
+  <div id="glow" class="a"></div><div id="glow2" class="a"></div>
+  <div id="light"></div>
+
+  <!-- ===== S1 HOOK ===== -->
+  <div id="s1" class="a" style="inset:0">
+    <div class="a gcard" id="gcard" style="left:130px;width:820px;top:330px">
+      <h3>Your Restaurant</h3>
+      <div class="stars"><b>4.8</b><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></div>
+      <div class="rv">1,204 Google reviews</div>
+    </div>
+    <div class="a gcard" id="igcard" style="left:130px;width:820px;top:700px">
+      <div class="ig"><div class="ava"><i></i></div><div><div class="n" id="fol">0</div><div class="l">Instagram followers</div></div></div>
+    </div>
+    <div class="a c an" id="hq" style="top:1110px;font-size:104px;padding:0 70px">So why are they picking <span class="hot">the place next door?</span></div>
+  </div>
+
+  <!-- ===== S2 STAT 77 ===== -->
+  <div id="s2" class="a" style="inset:0">
+    <div class="a c mono hot" id="eb1" style="top:470px;font-size:26px">The research says</div>
+    <div class="a c an" id="n77" style="top:560px;font-size:560px;line-height:1"><span id="n77v">0</span><span class="hot" style="font-size:.5em;vertical-align:top">%</span></div>
+    <div class="a" id="ring77" style="left:540px;top:840px;width:1400px;height:1400px;margin:-700px 0 0 -700px;border-radius:50%;border:5px solid var(--hot)"></div>
+    <div class="a c" id="t77" style="top:1170px;font-size:54px;line-height:1.25;font-weight:500;padding:0 90px;color:var(--mute)">of diners <b style="color:var(--bone)">check a restaurant’s website</b> before they go.</div>
+    <div class="a c" id="s77" style="top:1420px"><span class="src">MGH Restaurant Survey · 1,101 US diners · 2019</span></div>
+  </div>
+
+  <!-- ===== S3 NEED ===== -->
+  <div id="s3" class="a" style="inset:0">
+    <div class="a c an" id="hn" style="top:300px;font-size:120px">Hungry people <span class="hot">decide fast.</span></div>
+    <svg class="a" id="sw" style="left:390px;top:590px" width="300" height="300" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="130" fill="none" stroke="rgba(232,230,225,.14)" stroke-width="14"/>
+      <circle id="swArc" cx="150" cy="150" r="130" fill="none" stroke="#FF4A2B" stroke-width="14" stroke-linecap="round" transform="rotate(-90 150 150)" stroke-dasharray="816.8" stroke-dashoffset="816.8"/>
+      <line id="swHand" x1="150" y1="150" x2="150" y2="48" stroke="#E8E6E1" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="150" cy="150" r="12" fill="#E8E6E1"/>
+    </svg>
+    <div class="a c mono" id="wl" style="top:945px;font-size:24px;color:var(--mute)">What they want to see</div>
+    <div class="tile" id="tl1" style="left:80px;top:1010px"><svg viewBox="0 0 24 24"><path d="M4 4h12a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><b>The menu</b></div>
+    <div class="tile" id="tl2" style="left:560px;top:1010px"><svg viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="8" cy="8" r="1.6"/></svg><b>The prices</b></div>
+    <div class="tile" id="tl3" style="left:80px;top:1250px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><b>Your hours</b></div>
+    <div class="tile" id="tl4" style="left:560px;top:1250px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg><b>A booking</b></div>
+  </div>
+
+  <!-- ===== S4 WITHOUT ===== -->
+  <div id="s4" class="a" style="inset:0">
+    <div class="a mono" id="wo" style="left:64px;top:300px;font-size:26px"><span class="hot">●</span> Without a website</div>
+    <div class="a" id="clock">00:00</div>
+    <div class="a" id="tl"></div>
+    <div class="node a" id="nd1" style="top:470px"><div class="dot"></div><div class="tx">Dig through<br>IG highlights<div class="hlr"><i></i><i></i><i></i><i></i></div></div></div>
+    <div class="node a" id="nd2" style="top:790px"><div class="dot"></div><div class="tx">Guess the prices<small>Not listed anywhere.</small></div></div>
+    <div class="node a" id="nd3" style="top:1010px"><div class="dot"></div><div class="tx">DM to book<div class="bubble">Table for 2 tonight?</div><div class="typing" id="typ"><i></i><i></i><i></i></div></div></div>
+    <div class="node x a" id="nd4" style="top:1380px"><div class="dot"></div><div class="tx">Picked<br>someone else</div></div>
+  </div>
+
+  <!-- ===== S5 WITH ===== -->
+  <div id="s5" class="a" style="inset:0;color:var(--ink)">
+    <div class="a mono" id="wi" style="left:64px;top:300px;font-size:26px;color:var(--ink)"><span class="hot">●</span> With a website</div>
+    <div class="phone a" id="ph5" style="left:250px;top:400px;width:580px;height:1140px"><div class="sc clean">
+      <div class="hero"><b>YOUR RESTAURANT</b><span>Charcoal grill · Since 2012</span></div>
+      <div class="inf"><span>Open today 11–10</span><span>📍 Directions</span></div>
+      <div class="mn"><div><span>Signature short rib</span><em>48</em></div><div><span>Charcoal chicken</span><em>32</em></div><div><span>Seasonal greens</span><em>16</em></div></div>
+      <div class="bk" id="bk">Book a table<i class="ripple" id="rip"></i></div>
+    </div></div>
+    <div class="a" id="check"><svg viewBox="0 0 100 100"><path id="ckp" d="M24 52l17 17 36-38" stroke-dasharray="80" stroke-dashoffset="80"/></svg></div>
+    <div class="a c an" id="tb" style="top:1400px;font-size:150px;color:var(--ink)">Table booked.</div>
+  </div>
+
+  <!-- ===== S6 STAT 75 ===== -->
+  <div id="s6" class="a" style="inset:0">
+    <div class="a c mono hot" id="ch2" style="top:600px;font-size:28px">Finding 02</div>
+    <div class="a c an" id="sc2" style="top:660px;font-size:170px">The second<br>cost.</div>
+    <div class="a" id="ring"></div>
+    <div class="a" id="sticker"><b>75%</b><span>judge a business’s<br>credibility by its<br>website design</span></div>
+    <div class="a c" id="s75" style="top:1320px"><span class="src">Stanford Web Credibility Project · all industries</span></div>
+  </div>
+
+  <!-- ===== S7 JUDGE ===== -->
+  <div id="s7" class="a" style="inset:0">
+    <div class="a c an" id="hj" style="top:290px;font-size:112px">They judge <span class="hot">before<br>they taste.</span></div>
+    <div class="phone a" id="phL" style="left:60px;top:640px;width:450px;height:880px"><div class="sc messy">
+      <div class="bar"><span>yourrestaurant</span><span>☰</span></div>
+      <div class="jpg"><i></i></div>
+      <div class="lt"><div>📋 Menu (updated?)</div><div>📍 Location</div><div>💬 DM to book</div></div>
+      <div class="dm">linktr.ee/yourrestaurant</div>
+    </div></div>
+    <div class="phone a" id="phR" style="left:570px;top:640px;width:450px;height:880px"><div class="sc clean">
+      <div class="hero"><b style="font-size:42px">YOUR RESTAURANT</b><span>Charcoal grill · Since 2012</span></div>
+      <div class="mn" style="font-size:22px"><div><span>Short rib</span><em>48</em></div><div><span>Charcoal chicken</span><em>32</em></div><div><span>Greens</span><em>16</em></div></div>
+      <div class="bk" style="font-size:23px;padding:20px">Book a table</div>
+    </div></div>
+    <div class="bub bad a" id="bL" style="left:40px;top:560px">“Is it worth it?”</div>
+    <div class="bub a" id="bR" style="right:40px;top:560px">“Worth the price.”</div>
+  </div>
+
+  <!-- ===== S8 END ===== -->
+  <div id="s8" class="a" style="inset:0">
+    <div class="a c" id="e1" style="top:700px;font-size:76px;font-weight:600;letter-spacing:-.02em">Your food is premium.</div>
+    <div class="a c an hot" id="e2" style="top:830px;font-size:150px">Make the first<br>impression match.</div>
+    <div class="a c" id="e3" style="top:1300px;font-family:'JetBrains Mono',monospace;font-size:21px;line-height:1.7;color:var(--dim);padding:0 110px">Sources: MGH Restaurant Survey (1,101 US diners, 2019) · Stanford Web Credibility Project (B.J. Fogg), all industries</div>
+  </div>
+
+  <!-- optional end card (?logo=1) -->
+  <div id="lc" class="a" style="inset:0;background:#2B2B2B;display:none">
+    <div class="a" id="lg" style="left:160px;top:700px;width:760px;height:486px;background:url(ystudio-logo.jpg) no-repeat;background-size:1009px 1009px;background-position:-115.6px -236.3px"></div>
+  </div>
+
+  <div id="hdr" class="a mono"><div class="m"><b>F&amp;B Digital Report</b><br>Diner behaviour</div><div class="r"><b id="chN">Finding 01</b><br><span id="chT">Decision speed</span></div></div>
+  <div id="prog" class="a"><i id="progi"></i></div>
+  <div id="cap" class="a"><span id="capt"></span></div>
+  <div id="flash"></div>
+  <div id="grain"></div><div id="vig"></div>
+</div>
+<script>
+const LOGO = /logo=1/.test(location.search);
+const DUR = LOGO ? 68.5 : 65;
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, d) => cl((t - a) / d);
+const E = {
+  oExpo: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  oQuint: x => 1 - Math.pow(1 - x, 5),
+  ioCubic: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  ioExpo: x => x <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+  oBack: x => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  iCubic: x => x * x * x,
+};
+const lerp = (a, b, x) => a + (b - a) * x;
+function S(el, o = {}) {
+  if (typeof el === 'string') el = $(el);
+  const { x = 0, y = 0, s = 1, r = 0, op = 1, blur = 0 } = o;
+  el.style.transform = `translate3d(${x}px,${y}px,0) scale(${s}) rotate(${r}deg)`;
+  el.style.opacity = op;
+  el.style.filter = blur > .05 ? `blur(${blur}px)` : 'none';
+  el.style.visibility = op <= .001 ? 'hidden' : 'visible';
+}
+// standard enter: rise + unblur
+function rise(el, t, at, d = .9, dist = 70) { const p = E.oExpo(P(t, at, d)); S(el, { y: (1 - p) * dist, op: P(t, at, d * .5), blur: (1 - p) * 14 }); return p; }
+// split into words once
+function words(id) {
+  const el = $(id); if (el._w) return el._w;
+  const walk = n => { [...n.childNodes].forEach(c => {
+    if (c.nodeType === 3) { const f = document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(part => { if (!part) return; if (/^\s+$/.test(part)) { f.appendChild(document.createTextNode(' ')); return; }
+        const s = document.createElement('span'); s.className = 'w'; s.textContent = part; f.appendChild(s); });
+      n.replaceChild(f, c);
+    } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c); }); };
+  walk(el); el._w = [...el.querySelectorAll('.w')]; return el._w;
+}
+function stagger(id, t, at, span, d = .7, dist = 60) {
+  const ws = words(id), n = ws.length;
+  ws.forEach((w, i) => { const a = at + (n > 1 ? span * i / (n - 1) : 0); const p = E.oExpo(P(t, a, d));
+    S(w, { y: (1 - p) * dist, op: P(t, a, d * .45), blur: (1 - p) * 12 }); });
+}
+// scene alpha: fade/blur out
+function out(el, t, at, d = .5, dy = -60) { const p = E.ioCubic(P(t, at, d)); return p; }
+function scene(id, t, a, b) { const el = $(id); const vis = t >= a && t <= b; el.style.display = vis ? 'block' : 'none'; return vis; }
+
+// cue times (absolute seconds) — from vo/cues.json + OFF in audio.py
+const OFF = { hook: .5, stat1: 8.6, need: 15.4, without: 24.3, with: 33.7, stat2: 38.8, judge: 48.4, end: 58.1 };
+const CUES = { hook: [0, 1.646, 3.903], stat1: [0, 1.727], need: [0, 2.301, 3.853, 4.844, 5.986, 7.119], without: [0, 3.546, 4.837, 6.426], with: [0, 2.071, 3.13], stat2: [0, 1.573], judge: [0, 3.441, 6.177], end: [0, 1.585] };
+const DURS = { hook: 7.376, stat1: 6.08, need: 8.159, without: 8.743, with: 4.052, stat2: 8.824, judge: 8.783, end: 3.206 };
+const T = (k, i) => OFF[k] + CUES[k][i];
+const LINES = {
+  hook: ['Five stars on Google.', 'Thousands of followers on Instagram.', 'So why are hungry customers still picking the place next door?'],
+  stat1: ['Here’s what the research says.', '77% of diners check a restaurant’s website before they go.'],
+  need: ['They’re hungry, and they decide fast.', 'They want four things.', 'The menu.', 'The prices.', 'Your hours.', 'And a way to book.'],
+  without: ['Without a website, that means digging through Instagram highlights,', 'guessing the prices,', 'and waiting on a DM.', 'Every extra step is a reason to leave.'],
+  with: ['With a website, it’s one page.', 'One tap.', 'Table booked.'],
+  stat2: ['And there’s a second cost.', 'Stanford researchers found that 75% of people judge a business’s credibility by its website design.'],
+  judge: ['So before anyone tastes your food, they’ve already judged it.', 'A blurry menu photo says: is it worth it?', 'A clean, simple site says: worth the price.'],
+  end: ['Your food is premium.', 'Make the first impression match.'],
+};
+// caption list merges short phrases
+const CAPS = [];
+for (const k in LINES) LINES[k].forEach((txt, i) => {
+  const a = T(k, i), b = i + 1 < CUES[k].length ? T(k, i + 1) : OFF[k] + DURS[k] + .25;
+  CAPS.push({ a, b, txt });
+});
+// merge need 2..5 into one growing caption for calmer reading
+function capAt(t) { for (const c of CAPS) if (t >= c.a - .05 && t < c.b) return c; return null; }
+
+let fol;
+window.frame = function (t) {
+  // ---------- global ----------
+  $('progi').style.width = (cl(t / (DUR - 1.2)) * 100) + '%';
+  S('glow', { x: Math.sin(t * .23) * 160, y: Math.cos(t * .17) * 220, s: 1 + .08 * Math.sin(t * .4) });
+  S('glow2', { x: Math.cos(t * .19) * 200, y: Math.sin(t * .21) * 160, op: .9 });
+  const gx = Math.floor(t * 24) % 6, gy = Math.floor(t * 24 * 7) % 6;
+  $('grain').style.transform = `translate(${gx - 3}px,${gy - 3}px)`;
+  const chapter2 = t >= 38.5;
+  $('chN').textContent = chapter2 ? 'Finding 02' : 'Finding 01';
+  $('chT').textContent = chapter2 ? 'First impressions' : 'Decision speed';
+  S('hdr', { op: P(t, .2, .8) * (1 - P(t, 64.2, .6)) });
+  S('prog', { op: P(t, .2, .8) * (1 - P(t, 64.2, .6)) });
+  // light (bone) circle wipe for the "with a website" scene
+  const lin = E.ioExpo(P(t, 33.35, .7)), lout = E.ioExpo(P(t, 38.25, .6));
+  const rad = lin * (1 - lout) * 1250;
+  $('light').style.clipPath = `circle(${rad}px at 540px ${lerp(1400, 960, lin)}px)`;
+  const onLight = rad > 900;
+  $('hdr').classList.toggle('lt', onLight); $('prog').classList.toggle('lt', onLight);
+  // flash
+  let fl = 0;
+  fl += .35 * Math.exp(-Math.max(0, t - T('stat1', 1) - .15) * 7) * (t > T('stat1', 1) + .15);
+  fl += .45 * Math.exp(-Math.max(0, t - T('without', 3)) * 6) * (t > T('without', 3));
+  fl += .3 * Math.exp(-Math.max(0, t - 41.95) * 7) * (t > 41.95);
+  $('flash').style.opacity = fl;
+
+  // ---------- S1 hook 0.2–8.4 ----------
+  if (scene('s1', t, 0, 8.6)) {
+    const t1 = T('hook', 0), t2 = T('hook', 1), t3 = T('hook', 2), ox = E.ioExpo(P(t, 7.95, .6));
+    const shrink = E.ioExpo(P(t, t3 - .1, .9));
+    const gp = rise('gcard', t, t1 - .1, 1, 120);
+    S('gcard', { y: (1 - gp) * 120 - shrink * 110 - ox * 160, s: 1 - shrink * .12, op: P(t, t1 - .1, .5) * (1 - shrink * .55) * (1 - ox), blur: (1 - gp) * 14 + ox * 10 });
+    $('gcard').querySelectorAll('.stars i').forEach((st, i) => { const p = E.oBack(P(t, t1 + .35 + i * .11, .45)); S(st, { s: p, op: P(t, t1 + .35 + i * .11, .15), r: (1 - p) * -40 }); });
+    const ip = E.oExpo(P(t, t2 - .1, 1));
+    S('igcard', { y: (1 - ip) * 120 - shrink * 190 - ox * 160, s: 1 - shrink * .12, op: P(t, t2 - .1, .5) * (1 - shrink * .55) * (1 - ox), blur: (1 - ip) * 14 + ox * 10 });
+    const n = Math.round(8600 * E.oQuint(P(t, t2 + .1, 1.4)));
+    $('fol').textContent = n.toLocaleString('en-US');
+    S('hq', { op: 1 - ox, y: -ox * 120, blur: ox * 12 });
+    stagger('hq', t, t3 + .05, 2.6, .8, 80);
+  }
+  // ---------- S2 stat 77 ----------
+  if (scene('s2', t, 8.3, 15.6)) {
+    const a = T('stat1', 0), b = T('stat1', 1), ox = E.ioExpo(P(t, 14.85, .6));
+    S('eb1', { op: P(t, a, .5) * (1 - P(t, b - .3, .4)), y: (1 - E.oExpo(P(t, a, .8))) * 30 });
+    const np = E.oExpo(P(t, b, 1.3));
+    $('n77v').textContent = Math.round(77 * np);
+    const pre = E.oExpo(P(t, a + .2, 1.2));
+    S('n77', { op: P(t, a + .2, .5) * (1 - ox), s: lerp(.7, 1, pre) * (1 + .04 * Math.exp(-Math.max(0, t - b) * 5) * (t > b)) + ox * 1.6, y: lerp(-40, 0, pre), blur: (1 - pre) * 20 + ox * 30 });
+    const rp = E.oExpo(P(t, b + .05, 1.4));
+    S('ring77', { s: .15 + rp * .85, op: (1 - P(t, b + .05, 1.4)) * (t > b) });
+    stagger('t77', t, b + .45, 2.1, .8, 50);
+    S('t77', { op: 1 - ox, y: -ox * 80, blur: ox * 10 });
+    const sp = rise('s77', t, b + 2.6, .8, 30); S('s77', { y: (1 - sp) * 30, op: P(t, b + 2.6, .4) * (1 - ox) });
+  }
+  // ---------- S3 need ----------
+  if (scene('s3', t, 15.1, 24.4)) {
+    const a = T('need', 0), ox = E.ioExpo(P(t, 23.75, .6));
+    stagger('hn', t, a + .05, 1.6, .8, 70);
+    S('hn', { op: 1 - ox, y: -ox * 80, blur: ox * 10 });
+    const sp = E.oBack(P(t, a + .4, .8));
+    S('sw', { s: sp * (1 - ox * .3), op: P(t, a + .4, .3) * (1 - ox), r: (1 - sp) * -60 });
+    const sweep = cl((t - a - .6) / 8);
+    $('swArc').setAttribute('stroke-dashoffset', 816.8 * (1 - E.ioCubic(sweep)));
+    $('swHand').setAttribute('transform', `rotate(${Math.floor((t - a) * 4) * 24 + 360 * 0} 150 150)`);
+    S('wl', { op: P(t, T('need', 1), .5) * (1 - ox), y: (1 - E.oExpo(P(t, T('need', 1), .8))) * 20 });
+    ['tl1', 'tl2', 'tl3', 'tl4'].forEach((id, i) => { const at = T('need', i + 2) - .05, p = E.oBack(P(t, at, .7));
+      S(id, { s: lerp(.55, 1, p) * (1 - ox * .1), op: P(t, at, .25) * (1 - ox), y: (1 - E.oExpo(P(t, at, .8))) * 60 - ox * 60, blur: (1 - E.oExpo(P(t, at, .5))) * 10 + ox * 8 });
+      $(id).style.borderColor = t > at && t < at + .6 ? 'var(--hot)' : ''; });
+  }
+  // ---------- S4 without ----------
+  if (scene('s4', t, 23.9, 33.9)) {
+    const a = T('without', 0), ox = E.ioExpo(P(t, 33.2, .5));
+    S('wo', { op: P(t, a - .3, .5) * (1 - ox), x: (1 - E.oExpo(P(t, a - .3, .8))) * -40 });
+    const el = Math.max(0, t - a);
+    $('clock').textContent = '00:' + String(Math.floor(el * 1.9)).padStart(2, '0');
+    $('clock').style.color = el > 5 ? 'var(--hot)' : '';
+    S('clock', { op: P(t, a, .5) * (1 - ox) });
+    const lh = E.ioCubic(P(t, a + .1, T('without', 3) - a)) * 930;
+    $('tl').style.height = lh + 'px'; S('tl', { op: 1 - ox });
+    const nodes = [['nd1', a + .15], ['nd2', T('without', 1)], ['nd3', T('without', 2)], ['nd4', T('without', 3)]];
+    nodes.forEach(([id, at], i) => { const p = E.oExpo(P(t, at, .9));
+      const shake = i === 3 ? Math.sin(t * 90) * 14 * Math.exp(-Math.max(0, t - at) * 6) * (t > at) : 0;
+      S(id, { x: (1 - p) * 90 + shake, op: P(t, at, .35) * (1 - ox), blur: (1 - p) * 14 + ox * 10, s: i === 3 ? lerp(1.35, 1, E.oBack(P(t, at, .6))) : 1 });
+      const dot = $(id).querySelector('.dot'); const dp = E.oBack(P(t, at, .5)); dot.style.transform = `scale(${dp})`; });
+    $('nd1').querySelectorAll('.hlr i').forEach((h, i) => { const at = a + .9 + i * .45; const on = t > at;
+      h.style.borderColor = on ? 'var(--hot)' : ''; h.style.transform = `scale(${1 + .18 * Math.exp(-Math.max(0, t - at) * 8) * on})`; });
+    $('typ').querySelectorAll('i').forEach((d, i) => { const ph = (t * 3 - i * .25) % 1; d.style.transform = `translateY(${-Math.max(0, Math.sin(ph * Math.PI * 2)) * 8}px)`; });
+  }
+  // ---------- S5 with (light) ----------
+  if (scene('s5', t, 33.4, 38.6)) {
+    const a = T('with', 0), ox = E.ioExpo(P(t, 38.0, .45));
+    S('wi', { op: P(t, a - .1, .5) * (1 - ox), x: (1 - E.oExpo(P(t, a - .1, .8))) * -40 });
+    const pp = E.oExpo(P(t, a, 1.1));
+    const booked = E.ioExpo(P(t, T('with', 2), .6));
+    S('ph5', { y: (1 - pp) * 500 - booked * 150, op: P(t, a, .3) * (1 - ox), s: 1 - booked * .2, r: (1 - pp) * 6 });
+    const tp = T('with', 1) + .15, rp = P(t, tp, .7);
+    S('rip', { s: E.oExpo(rp) * 18, op: (1 - rp) * (t > tp) });
+    $('bk').style.transform = `scale(${1 - .05 * Math.sin(Math.PI * P(t, tp, .25))})`;
+    $('bk').style.background = t > tp + .1 ? 'var(--hot)' : ''; $('bk').style.color = t > tp + .1 ? '#fff' : '';
+    const cp = E.oBack(P(t, T('with', 2), .6));
+    S('check', { s: cp, op: P(t, T('with', 2), .15) * (1 - ox), r: (1 - cp) * -90 });
+    $('ckp').setAttribute('stroke-dashoffset', 80 * (1 - E.oQuint(P(t, T('with', 2) + .15, .5))));
+    const tbp = rise('tb', t, T('with', 2) + .1, .8, 60); S('tb', { y: (1 - tbp) * 60, op: P(t, T('with', 2) + .1, .4) * (1 - ox), blur: (1 - tbp) * 12 });
+  }
+  // ---------- S6 stat 75 ----------
+  if (scene('s6', t, 38.5, 48.6)) {
+    const a = T('stat2', 0), hit = 41.95, ox = E.ioExpo(P(t, 47.9, .6));
+    const up = E.ioExpo(P(t, hit - .5, .7));
+    S('ch2', { op: P(t, a - .2, .5) * (1 - up), y: (1 - E.oExpo(P(t, a - .2, .8))) * 30 - up * 200 });
+    const cp = E.oExpo(P(t, a, 1));
+    S('sc2', { op: P(t, a, .4) * (1 - up), s: lerp(1.25, 1, cp) - up * .3, y: -up * 260, blur: (1 - cp) * 20 + up * 16 });
+    const sp = E.oBack(P(t, hit, .9));
+    S('sticker', { s: sp * (1 - ox * .4) + .015 * Math.sin(t * 2), r: lerp(-35, -6, sp) + Math.sin(t * .8) * 2 + ox * 40, op: P(t, hit, .2) * (1 - ox), blur: ox * 16 });
+    const rp = E.oExpo(P(t, hit + .05, 1.5));
+    S('ring', { s: .3 + rp * .7, op: (1 - P(t, hit + .05, 1.5)) * (t > hit) });
+    const s5 = E.oExpo(P(t, 45.2, .8)); S('s75', { y: (1 - s5) * 30, op: P(t, 45.2, .4) * (1 - ox) });
+  }
+  // ---------- S7 judge ----------
+  if (scene('s7', t, 48.2, 57.9)) {
+    const a = T('judge', 0), b1 = T('judge', 1), b2 = T('judge', 2), ox = E.ioExpo(P(t, 57.35, .5));
+    stagger('hj', t, a + .05, 1.4, .8, 70); S('hj', { op: 1 - ox, y: -ox * 80, blur: ox * 10 });
+    const lp = E.oExpo(P(t, a + .5, 1.1)), rp = E.oExpo(P(t, a + .8, 1.1));
+    const fL = E.ioCubic(P(t, b1 - .1, .5)), fR = E.ioCubic(P(t, b2 - .1, .5));
+    const floatL = Math.sin(t * 1.1) * 8, floatR = Math.cos(t * 1.05) * 8;
+    S('phL', { y: (1 - lp) * 700 + floatL, r: lerp(-14, -5, lp), op: P(t, a + .5, .3) * (1 - ox) * (1 - fR * .55), s: 1 + fL * (1 - fR) * .05 - fR * .04 });
+    S('phR', { y: (1 - rp) * 700 + floatR, r: lerp(14, 5, rp), op: P(t, a + .8, .3) * (1 - ox) * (1 - fL * (1 - fR) * .55), s: 1 + fR * .06 - fL * (1 - fR) * .04 });
+    const bl = E.oBack(P(t, b1, .6)), br = E.oBack(P(t, b2, .6));
+    S('bL', { s: bl, op: P(t, b1, .2) * (1 - ox) * (1 - fR * .5), r: -5 + (1 - bl) * -20, y: (1 - bl) * 40 });
+    S('bR', { s: br, op: P(t, b2, .2) * (1 - ox), r: 4 + (1 - br) * 20, y: (1 - br) * 40 });
+  }
+  // ---------- S8 end ----------
+  if (scene('s8', t, 57.8, 65)) {
+    const a = T('end', 0), b = T('end', 1), fo = P(t, 64.2, .7);
+    const lift = E.ioExpo(P(t, 61.4, 1));
+    stagger('e1', t, a, .9, .8, 50); S('e1', { y: -lift * 90, op: 1 - fo });
+    stagger('e2', t, b, 1.2, .9, 90); S('e2', { y: -lift * 90, op: 1 - fo });
+    const sp = E.oExpo(P(t, 61.8, 1)); S('e3', { y: (1 - sp) * 30 - lift * 40, op: P(t, 61.8, .5) * (1 - fo) });
+  }
+  // ---------- optional logo card ----------
+  if (LOGO) { const on = t >= 64.5; $('lc').style.display = on ? 'block' : 'none';
+    if (on) { const p = E.ioExpo(P(t, 64.5, .6)); $('lc').style.opacity = p; const lp = E.oExpo(P(t, 64.9, 1.4));
+      S('lg', { s: lerp(.86, 1, lp), op: P(t, 64.9, .6) * (1 - P(t, 67.9, .6)), blur: (1 - lp) * 12 }); } }
+  // ---------- captions ----------
+  const c = capAt(t);
+  if (c) { $('capt').textContent = c.txt; const p = E.oExpo(P(t, c.a - .05, .35)); const q = P(t, c.b - .15, .15);
+    S('cap', { op: P(t, c.a - .05, .15) * (1 - q), y: (1 - p) * 16 }); } else S('cap', { op: 0 });
+  const onLightCap = rad > 1100;
+};
+window.ready = document.fonts.ready.then(() => { frame(0); return true; });
+</script>
+</body></html>
