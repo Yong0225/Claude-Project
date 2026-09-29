@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>蔬食堂 · 有网站 vs 没有网站</title>
+<style>
+@font-face{font-family:"Serif SC";src:url(fonts/NotoSerifSC.ttf);font-weight:200 900}
+@font-face{font-family:"Sans SC";src:url(fonts/NotoSansSC.ttf);font-weight:100 900}
+@font-face{font-family:"Manrope";src:url(fonts/Manrope.ttf);font-weight:200 800}
+@font-face{font-family:"Young Serif";src:url(fonts/YoungSerif-Regular.ttf)}
+@font-face{font-family:"Brush";src:url(fonts/MaShanZheng-Regular.ttf)}
+:root{
+  --green:#1e4a2c;--green2:#2c6a3f;--cream:#f4efe4;--cream2:#ebe2d0;--saffron:#d99a2b;
+  --ink:#16201a;--slate:#14171a;--slate2:#1d2226;--red:#e5484d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font-family:"Sans SC","Manrope",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--slate)}
+.abs{position:absolute}
+.layer{position:absolute;inset:0}
+.serif{font-family:"Serif SC",serif}
+.mono{font-family:"Manrope",sans-serif;font-variant-numeric:tabular-nums}
+
+/* ---------- backgrounds ---------- */
+#bgA{background:radial-gradient(900px 1100px at 50% 55%,#252b30 0%,#15181b 60%,#0d0f11 100%)}
+#bgA .grid{position:absolute;inset:-200px;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:90px 90px}
+#bgB{background:radial-gradient(1000px 1200px at 50% 52%,#fbf7ef 0%,#f1e9da 55%,#e6dcc7 100%)}
+.blob{position:absolute;border-radius:50%;filter:blur(90px)}
+#iris{border-radius:50%;background:#f1e9da;width:10px;height:10px;left:540px;top:1045px;transform:translate(-50%,-50%) scale(0)}
+
+/* ---------- intro ---------- */
+.big{font-family:"Serif SC",serif;font-weight:900;letter-spacing:-.01em;line-height:1.18}
+.ch{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .01em}
+.ch>i{display:inline-block;font-style:normal;will-change:transform}
+#splitTop{left:0;top:0;width:1080px;height:960px;background:#15181b;overflow:hidden}
+#splitBot{left:0;top:960px;width:1080px;height:960px;background:#f1e9da;overflow:hidden}
+.splitLabel{position:absolute;left:0;right:0;text-align:center;font-size:150px}
+.splitSub{position:absolute;left:0;right:0;text-align:center;font-size:34px;letter-spacing:.3em;font-weight:500}
+
+/* ---------- HUD ---------- */
+#hud{left:56px;right:56px;top:64px;height:76px}
+#hudPill{left:0;top:0;height:64px;border-radius:40px;padding:0 30px 0 12px;display:flex;align-items:center;gap:16px;font-size:30px;font-weight:700;white-space:nowrap}
+#hudPill b{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:"Manrope";font-weight:800;font-size:24px}
+#hudClock{right:0;top:0;text-align:right}
+#hudClock small{display:block;font-size:22px;letter-spacing:.2em;font-weight:500;opacity:.6}
+#hudClock span{display:block;font-family:"Manrope";font-weight:700;font-size:48px;line-height:1.1;font-variant-numeric:tabular-nums}
+#hudFF{right:330px;top:52px;font-family:"Manrope";font-weight:800;font-size:26px;letter-spacing:.1em;padding:8px 16px;border-radius:10px;background:var(--red);color:#fff}
+
+/* ---------- captions ---------- */
+.cap{position:absolute;left:60px;right:60px;text-align:center;font-family:"Serif SC",serif;font-weight:900;font-size:66px;line-height:1.25;white-space:nowrap}
+.cap.top{top:196px}
+.cap.bot{top:1700px;font-size:44px;font-family:"Sans SC";font-weight:500;letter-spacing:.02em}
+.cap.center{top:880px;font-size:92px}
+.cap.a{color:#eef1f3}
+.cap.b{color:var(--green)}
+.cap.bot.a{color:#aeb6bd}
+.cap.bot.b{color:#56705c}
+
+/* ---------- phone ---------- */
+#cam{position:absolute;inset:0;transform-origin:540px 1045px}
+#phoneWrap{position:absolute;left:540px;top:1045px;width:0;height:0;perspective:2600px}
+#phone{position:absolute;left:-286px;top:-604px;width:572px;height:1208px;border-radius:84px;box-shadow:0 0 0 2px rgba(255,255,255,.10),0 0 0 1px rgba(0,0,0,.6) inset,0 60px 120px -20px rgba(0,0,0,.55),0 0 80px rgba(120,140,160,.10);background:linear-gradient(145deg,#3a3f44,#15181b 40%,#2b3035 70%,#0d0f11);padding:13px;transform-style:preserve-3d}
+#phone:before{content:"";position:absolute;inset:3px;border-radius:81px;border:2px solid rgba(255,255,255,.08)}
+#shadow{position:absolute;left:-300px;top:560px;width:600px;height:90px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent);filter:blur(10px)}
+#screenBox{position:relative;width:546px;height:1182px;border-radius:72px;overflow:hidden;background:#fff}
+#screen{position:absolute;left:0;top:0;width:390px;height:844px;transform:scale(1.4);transform-origin:0 0;overflow:hidden;font-family:"Sans SC","Manrope",sans-serif;color:#111}
+#glare{position:absolute;inset:0;border-radius:72px;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%)}
+#island{position:absolute;left:50%;top:11px;width:122px;height:35px;margin-left:-61px;background:#000;border-radius:20px;z-index:50}
+.pg{position:absolute;inset:0;overflow:hidden}
+.sb{position:absolute;left:0;right:0;top:0;height:47px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 44px;font-family:"Manrope";font-weight:700;font-size:16px}
+.sb svg{height:12px}
+#sbTime{font-variant-numeric:tabular-nums}
+#tap{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;z-index:60;background:rgba(255,255,255,.35);border:2px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(0,0,0,.15),0 6px 18px rgba(0,0,0,.25)}
+
+/* maps */
+#pgMaps{background:#e8eaed}
+#mapImg{position:absolute;left:-195px;top:-60px;width:780px;height:780px;transform-origin:390px 390px}
+#mapSearch{position:absolute;left:12px;right:12px;top:54px;height:50px;border-radius:25px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.2);display:flex;align-items:center;padding:0 18px;gap:14px;font-size:17px;color:#202124;z-index:5}
+#mapSearch .ham{width:18px;height:12px;border-top:2px solid #444;border-bottom:2px solid #444;position:relative}
+#mapSearch .ham:after{content:"";position:absolute;left:0;right:0;top:3px;border-top:2px solid #444}
+#mapQ{flex:1;white-space:nowrap}
+.caret{display:inline-block;width:2px;height:20px;background:#1a73e8;vertical-align:-3px;margin-left:1px}
+#pin{position:absolute;left:195px;top:330px;width:34px;height:48px;margin:-48px 0 0 -17px;z-index:3}
+#pinLabel{position:absolute;left:218px;top:292px;font-weight:700;font-size:14px;color:#c5221f;text-shadow:0 0 3px #fff,0 0 3px #fff;z-index:3;font-family:"Manrope"}
+#sheet{position:absolute;left:0;right:0;top:844px;height:520px;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.18);padding:10px 18px;z-index:6}
+#sheet .hdl{width:36px;height:4px;border-radius:2px;background:#dadce0;margin:0 auto 12px}
+#sheet h3{font-family:"Manrope";font-size:23px;font-weight:600;color:#202124;letter-spacing:.01em}
+.rate{margin-top:4px;font-size:15px;color:#5f6368;display:flex;align-items:center;gap:5px;font-family:"Manrope"}
+.stars{color:#fbbc04;letter-spacing:1px;font-size:15px}
+#sheet .cat{font-size:15px;color:#5f6368;margin-top:2px}
+.gbtns{display:flex;gap:8px;margin-top:14px;white-space:nowrap}
+.gbtns span{border:1px solid #dadce0;border-radius:18px;height:36px;padding:0 14px;display:flex;align-items:center;gap:6px;font-size:14px;color:#1a73e8;font-weight:500}
+.gbtns span.pri{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.gphotos{display:grid;grid-template-columns:1.9fr 1fr;grid-template-rows:88px 88px;gap:4px;margin-top:14px;border-radius:12px;overflow:hidden}
+.gphotos div{background-size:cover;background-position:center}
+.gphotos div:first-child{grid-row:1/3}
+.grow{display:flex;gap:14px;align-items:center;font-size:14px;color:#3c4043;margin-top:14px}
+.grow i{width:20px;height:20px;border-radius:50%;border:2px solid #1a73e8;flex:none}
+/* photo viewer */
+#pgPhoto{background:#000;z-index:8}
+#pgPhoto .top{position:absolute;left:0;right:0;top:47px;height:50px;display:flex;align-items:center;gap:14px;padding:0 16px;color:#fff;font-size:16px;font-family:"Manrope";font-weight:600;z-index:3}
+.ph{position:absolute;left:0;top:0;width:390px;height:844px;background-size:contain;background-position:center;background-repeat:no-repeat}
+#phDots{position:absolute;bottom:40px;left:0;right:0;text-align:center;color:#fff;font-family:"Manrope";font-size:14px;font-weight:600;opacity:.8}
+/* app modal */
+#modal{z-index:9}
+#modalDim{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+#modalCard{position:absolute;left:20px;right:20px;top:200px;background:#fff;border-radius:22px;padding:28px 22px 20px;text-align:center}
+#modalCard h4{font-size:20px;font-weight:500;color:#202124;margin:14px 0 14px}
+#modalCard p{font-size:14px;color:#3c4043;text-align:left;margin:8px 4px;display:flex;gap:10px}
+#modalCard p:before{content:"✓";color:#1a73e8;font-weight:700}
+.mbtn{height:44px;border-radius:22px;display:grid;place-items:center;font-size:16px;margin-top:12px}
+/* facebook */
+#pgFb{background:#f0f2f5;z-index:10}
+#fbHead{position:absolute;left:0;right:0;top:47px;height:52px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e4e6eb;z-index:3}
+#fbHead .logo{font-family:"Manrope";font-weight:800;font-size:28px;color:#0866ff;letter-spacing:-.04em}
+#fbHead .lg{background:#0866ff;color:#fff;font-size:14px;font-weight:600;padding:7px 14px;border-radius:8px}
+#fbBody{position:absolute;left:0;right:0;top:99px}
+#fbCover{height:150px;background:url(img/store.jpg) center 40%/cover}
+.fbAv{position:absolute;left:14px;top:92px;width:112px;height:112px;border-radius:50%;border:4px solid #fff;background:#fff;overflow:hidden}
+#fbInfo{background:#fff;padding:62px 14px 14px}
+#fbInfo h3{font-family:"Manrope";font-size:24px;font-weight:800;color:#050505}
+#fbInfo .sub{font-size:14px;color:#65676b;margin-top:2px}
+.fbbtns{display:flex;gap:8px;margin-top:12px}
+.fbbtns span{flex:1;height:36px;border-radius:8px;display:grid;place-items:center;font-size:15px;font-weight:600;background:#e4e6eb;color:#050505}
+.fbbtns span.pri{background:#0866ff;color:#fff}
+.fbtabs{display:flex;gap:22px;padding:12px 14px 0;background:#fff;font-size:15px;font-weight:600;color:#65676b;border-top:1px solid #e4e6eb;margin-top:0}
+.fbtabs span{padding-bottom:10px}
+.fbtabs span:first-child{color:#0866ff;border-bottom:3px solid #0866ff}
+.fbpost{background:#fff;margin-top:8px;padding:12px 14px}
+.skl{height:10px;border-radius:5px;background:#e4e6eb;margin-top:8px}
+#fbWall{position:absolute;left:0;right:0;top:844px;height:420px;background:#fff;border-radius:16px 16px 0 0;z-index:5;padding:28px 22px;text-align:center;box-shadow:0 -6px 30px rgba(0,0,0,.25)}
+#fbDim{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:4}
+#fbWall h4{font-size:19px;font-weight:700;color:#050505;margin:14px 0 6px;line-height:1.4}
+#fbWall p{font-size:14px;color:#65676b}
+.fbL{height:44px;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:700;margin-top:12px}
+/* messenger */
+#pgMsg{background:#fff;z-index:11}
+#msgHead{position:absolute;left:0;right:0;top:47px;height:58px;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #eee}
+#msgHead .av{width:38px;height:38px;border-radius:50%;overflow:hidden}
+#msgHead b{font-size:16px;font-family:"Manrope"}
+#msgIntro{position:absolute;left:0;right:0;top:150px;text-align:center}
+#msgIntro .av{width:84px;height:84px;border-radius:50%;margin:0 auto;overflow:hidden}
+#msgIntro b{display:block;margin-top:10px;font-family:"Manrope";font-size:20px}
+#msgIntro small{font-size:13px;color:#65676b}
+#msgBubble{position:absolute;right:12px;top:420px;max-width:270px;background:linear-gradient(160deg,#a033ff,#0866ff 60%,#00a2ff);color:#fff;font-size:16px;line-height:1.45;padding:10px 14px;border-radius:20px 20px 4px 20px}
+#msgSeen{position:absolute;right:14px;top:494px;font-size:12px;color:#65676b}
+#msgComp{position:absolute;left:0;right:0;bottom:0;height:84px;border-top:1px solid #eee;display:flex;align-items:flex-start;padding:12px 12px 0;gap:10px}
+#msgField{flex:1;min-height:38px;border-radius:19px;background:#f0f2f5;font-size:15px;padding:9px 14px;color:#050505;line-height:1.35;white-space:nowrap;overflow:hidden}
+#msgWait{position:absolute;left:0;right:0;top:560px;text-align:center;font-size:13px;color:#8a8d91}
+/* google */
+#pgGoogle{background:#fff;z-index:12}
+#gLogo{position:absolute;left:0;right:0;top:66px;text-align:center;font-family:"Manrope";font-weight:700;font-size:30px;letter-spacing:-.02em}
+#gBox{position:absolute;left:14px;right:14px;top:112px;height:46px;border-radius:23px;box-shadow:0 1px 6px rgba(32,33,36,.28);display:flex;align-items:center;padding:0 16px;font-size:16px;gap:10px}
+#gTabs{position:absolute;left:14px;top:170px;display:flex;gap:20px;font-size:14px;color:#5f6368}
+#gTabs span:first-child{color:#1a0dab;border-bottom:3px solid #1a0dab;padding-bottom:8px}
+#gRes{position:absolute;left:0;right:0;top:214px;padding:16px 16px;border-top:1px solid #ebebeb}
+.gsite{display:flex;align-items:center;gap:10px}
+.gfav{width:28px;height:28px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:var(--cream);font-family:"Brush";font-size:18px}
+.gsite b{display:block;font-size:14px;color:#202124;font-weight:500}
+.gsite small{display:block;font-size:12px;color:#4d5156;font-family:"Manrope"}
+#gRes h5{font-size:19px;color:#1a0dab;font-weight:500;line-height:1.35;margin-top:10px}
+#gRes .rt{font-size:13px;color:#70757a;margin-top:6px}
+#gRes p{font-size:14px;color:#4d5156;line-height:1.55;margin-top:6px}
+.gsl{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.gsl span{border:1px solid #dadce0;border-radius:16px;padding:6px 14px;font-size:14px;color:#1a0dab}
+#gRes2{position:absolute;left:16px;right:16px;top:560px}
+/* website */
+#pgSite{background:var(--cream);z-index:13}
+#siteCol{position:absolute;left:0;top:0;width:390px}
+#siteHdr{position:absolute;left:0;right:0;top:0;height:108px;padding:52px 16px 0;display:flex;align-items:center;justify-content:space-between;z-index:5}
+.slogo{display:flex;align-items:center;gap:9px;color:var(--cream)}
+.emb{border-radius:50%;background:var(--green);border:2px solid var(--cream);display:grid;place-items:center;color:var(--cream);font-family:"Brush";line-height:1}
+.slogo b{display:block;font-family:"Manrope";font-weight:800;font-size:14px;letter-spacing:.06em}
+.slogo small{display:block;font-size:10px;letter-spacing:.5em;opacity:.8}
+.sbook{background:var(--saffron);color:#1b1408;font-size:13px;font-weight:700;padding:8px 14px;border-radius:20px}
+.hero{position:relative;height:720px;background:url(img/claypot.jpg) 60% center/cover;color:var(--cream)}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,40,25,.55) 0%,rgba(18,40,25,.25) 35%,rgba(18,40,25,.92) 78%,#16331f 100%)}
+.hero .in{position:absolute;left:20px;right:20px;bottom:44px}
+.eyebrow{font-size:11px;letter-spacing:.24em;font-weight:700;text-transform:uppercase}
+.hero h1{font-family:"Serif SC";font-weight:900;font-size:40px;line-height:1.2;margin:12px 0 14px}
+.hero p{font-size:14px;line-height:1.7;opacity:.88}
+.hbtns{display:flex;gap:10px;margin-top:20px}
+.hbtns span{height:44px;padding:0 20px;border-radius:24px;display:grid;place-items:center;font-size:15px;font-weight:700}
+.marq{height:54px;background:var(--saffron);color:#1b1408;overflow:hidden;white-space:nowrap;display:flex;align-items:center;font-family:"Serif SC";font-weight:900;font-size:18px}
+.sec{padding:40px 20px}
+.sec .eyebrow{color:var(--green2)}
+.sec h2{font-family:"Serif SC";font-weight:900;font-size:30px;line-height:1.25;color:var(--ink);margin:8px 0 10px}
+.sec .lead{font-size:14px;color:#55615a;line-height:1.7}
+.feat{margin-top:20px;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(30,74,44,.12)}
+.feat .img{height:200px;background:url(img/claypot.jpg) center/cover;position:relative}
+.feat .img span{position:absolute;left:12px;top:12px;background:var(--green);color:var(--cream);font-family:"Manrope";font-weight:800;font-size:12px;padding:5px 10px;border-radius:14px}
+.feat .t{padding:14px 16px}
+.feat .t b{font-family:"Serif SC";font-size:20px;font-weight:900;color:var(--ink)}
+.feat .t small{display:block;color:#6b756f;font-size:13px;margin-top:4px}
+.dish{display:flex;align-items:baseline;gap:12px;padding:13px 2px;border-bottom:1px solid #dcd2bf}
+.dish em{font-style:normal;font-family:"Young Serif";color:var(--saffron);font-size:18px;width:26px}
+.dish b{font-family:"Serif SC";font-weight:900;font-size:17px;color:var(--ink)}
+.dish small{display:block;font-size:12px;color:#6b756f;margin-top:2px}
+.dish code{margin-left:auto;font-family:"Manrope";font-weight:700;font-size:11px;color:#8a8f86}
+.sbtn{margin-top:18px;height:46px;border-radius:24px;background:var(--green);color:var(--cream);display:grid;place-items:center;font-weight:700;font-size:15px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d7ccb6;border-top:1px solid #d7ccb6;border-bottom:1px solid #d7ccb6}
+.stats div{background:var(--cream);padding:18px 16px}
+.stats b{font-family:"Young Serif";font-size:34px;color:var(--green);display:block;line-height:1}
+.stats small{font-size:12px;color:#6b756f}
+.open{display:inline-flex;align-items:center;gap:8px;background:#dfeee2;color:#1e6b36;font-size:14px;font-weight:700;padding:8px 14px;border-radius:20px;margin-top:6px}
+.open i{width:9px;height:9px;border-radius:50%;background:#22a04b}
+.hours{margin-top:14px;list-style:none}
+.hours li{display:flex;justify-content:space-between;font-size:14px;padding:8px 10px;border-radius:8px;color:#36433a}
+.hours li.off{color:#a39c8e}
+.hours li.today{background:var(--green);color:var(--cream);font-weight:700}
+.info{display:flex;gap:12px;align-items:center;font-size:14px;color:#36433a;padding:12px 0;border-bottom:1px solid #dcd2bf}
+.info i{width:32px;height:32px;border-radius:50%;background:#e6dcc6;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:"Manrope";color:var(--green);flex:none}
+.smap{height:170px;border-radius:16px;margin-top:14px;background:url(img/map.png) center/cover;position:relative;overflow:hidden}
+.nav2{display:flex;gap:10px;margin-top:12px}
+.nav2 span{flex:1;height:42px;border-radius:22px;border:1.5px solid var(--green);color:var(--green);display:grid;place-items:center;font-weight:700;font-size:14px}
+.book{background:#16331f;color:var(--cream);padding:46px 20px 60px}
+.book h2{color:var(--cream)}
+.book .eyebrow{color:var(--saffron)}
+.wa{background:#25d366;color:#06301a}
+/* site loader */
+#loader{position:absolute;inset:0;background:#16331f;z-index:20;display:grid;place-items:center}
+#ldIn{text-align:center;color:var(--cream)}
+#ldRing{width:150px;height:150px;position:relative;margin:0 auto}
+#ldRing svg{position:absolute;inset:0;transform:rotate(-90deg)}
+#ldRing .emb{position:absolute;left:25px;top:25px;width:100px;height:100px;font-size:52px;border:none}
+#ldWord{font-family:"Young Serif";font-size:22px;margin-top:18px;letter-spacing:.02em}
+#ldCount{font-family:"Manrope";font-weight:700;font-size:13px;letter-spacing:.2em;opacity:.7;margin-top:6px}
+.pt{position:absolute;top:0;bottom:0;width:25%;background:var(--saffron);z-index:21}
+/* whatsapp */
+#pgWa{background:#efeae2;z-index:14}
+#waHead{position:absolute;left:0;right:0;top:0;height:108px;padding-top:50px;background:#f6f5f3;display:flex;align-items:center;gap:10px;padding-left:12px;border-bottom:1px solid #ddd}
+#waHead b{display:block;font-size:16px}
+#waHead small{display:block;font-size:12px;color:#667781;font-family:"Manrope"}
+#waBody{position:absolute;left:0;right:0;top:108px;bottom:84px;background-image:radial-gradient(rgba(0,0,0,.035) 1.5px,transparent 1.5px);background-size:18px 18px}
+#waBubble{position:absolute;right:12px;top:230px;max-width:280px;background:#d9fdd3;border-radius:12px 12px 2px 12px;padding:8px 12px 20px;font-size:16px;line-height:1.45;color:#111b21;box-shadow:0 1px .5px rgba(0,0,0,.13)}
+#waBubble small{position:absolute;right:10px;bottom:4px;font-size:11px;color:#667781;font-family:"Manrope"}
+#waBubble small b{color:#53bdeb;letter-spacing:-3px;margin-left:4px}
+#waDate{position:absolute;left:0;right:0;top:130px;text-align:center}
+#waDate span{background:#fff;border-radius:8px;padding:5px 12px;font-size:12px;color:#54656f}
+#waComp{position:absolute;left:0;right:0;bottom:0;height:84px;background:#f6f5f3;display:flex;gap:8px;padding:10px 10px 0;align-items:flex-start}
+#waField{flex:1;background:#fff;border-radius:20px;min-height:40px;padding:9px 14px;font-size:15px;line-height:1.4;color:#111b21;white-space:nowrap;overflow:hidden}
+#waSend{width:42px;height:42px;border-radius:50%;background:#25d366;display:grid;place-items:center;color:#fff;font-size:18px;flex:none}
+
+/* ---------- chips ---------- */
+.chip{position:absolute;height:84px;border-radius:44px;display:flex;align-items:center;gap:16px;padding:0 34px 0 14px;font-size:36px;font-weight:700;white-space:nowrap;box-shadow:0 18px 50px rgba(0,0,0,.28);transform-origin:50% 50%}
+.chip .ic{position:relative;width:56px;height:56px;flex:none}
+.chip .ic i{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:"Manrope";font-weight:800;font-size:32px;color:#fff}
+
+/* ---------- compare / end ---------- */
+#cmpTop{left:0;top:0;width:1080px;height:960px;background:#15181b;overflow:hidden}
+#cmpBot{left:0;top:960px;width:1080px;height:960px;background:#f1e9da;overflow:hidden}
+.cmpIn{position:absolute;left:90px;right:90px;top:0;bottom:0}
+.cmpTag{position:absolute;left:0;font-size:36px;font-weight:700;letter-spacing:.2em}
+.cmpNum{position:absolute;left:-8px;font-family:"Manrope";font-weight:800;font-size:330px;line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.cmpUnit{position:absolute;font-family:"Serif SC";font-weight:900;font-size:80px}
+.cmpLine{position:absolute;left:0;right:0;font-size:38px;font-weight:500;line-height:1.7}
+#endEmb{left:540px;top:760px;width:220px;height:220px;margin:-110px 0 0 -110px;font-size:118px;border-width:3px}
+#grain{position:absolute;inset:0;z-index:900;mix-blend-mode:overlay;opacity:.10;pointer-events:none}
+#vig{position:absolute;inset:0;z-index:901;pointer-events:none;background:radial-gradient(1300px 1700px at 50% 50%,transparent 55%,rgba(0,0,0,.35) 100%)}
+#fade{position:absolute;inset:0;z-index:950;background:#000}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bgA" class="layer"><div class="grid"></div></div>
+  <div id="bgB" class="layer">
+    <div class="blob" id="blob1" style="width:700px;height:700px;background:#cfe0c8;left:-200px;top:200px"></div>
+    <div class="blob" id="blob2" style="width:600px;height:600px;background:#f2d7a4;right:-180px;top:1100px"></div>
+  </div>
+  <div id="iris" class="abs"></div>
+
+  <!-- camera: phone + chips -->
+  <div id="cam">
+    <div id="phoneWrap">
+      <div id="shadow"></div>
+      <div id="phone">
+        <div id="screenBox">
+          <div id="screen">
+            <!-- MAPS -->
+            <div class="pg" id="pgMaps">
+              <img id="mapImg" src="img/map.png">
+              <div id="mapSearch"><div class="ham"></div><div id="mapQ"></div>
+                <svg width="16" height="22" viewBox="0 0 16 22"><rect x="4" y="0" width="8" height="14" rx="4" fill="#5f6368"/><path d="M1 10a7 7 0 0 0 14 0M8 17v4" stroke="#5f6368" stroke-width="2" fill="none"/></svg></div>
+              <svg id="pin" viewBox="0 0 34 48"><path d="M17 0C7.6 0 0 7.5 0 16.8 0 29.4 17 48 17 48s17-18.6 17-31.2C34 7.5 26.4 0 17 0z" fill="#ea4335"/><path d="M17 0C7.6 0 0 7.5 0 16.8 0 29.4 17 48 17 48s17-18.6 17-31.2C34 7.5 26.4 0 17 0z" fill="none" stroke="#a50e0e" stroke-width="1"/><circle cx="17" cy="16.5" r="6" fill="#a50e0e"/></svg>
+              <div id="pinLabel">VEGO CANTEEN</div>
+              <div id="sheet">
+                <div class="hdl"></div>
+                <h3>VEGO CANTEEN</h3>
+                <div class="rate"><b style="color:#3c4043;font-weight:500">4.9</b><span class="stars">★★★★★</span>(470) · RM 1-20</div>
+                <div class="cat">素食餐馆</div>
+                <div class="gbtns"><span class="pri">◆ 路线</span><span>▲ 开始</span><span>✆ 致电</span><span>▮ 保存</span></div>
+                <div class="gphotos"><div style="background-image:url(img/store.jpg)"></div><div style="background-image:url(img/mushroom.jpg)"></div><div style="background-image:url(img/hall.jpg)"></div></div>
+                <div class="grow"><i></i>No. 21, Jalan Sultan Azlan Shah, Batu 4½</div>
+              </div>
+            </div>
+            <!-- PHOTO VIEWER -->
+            <div class="pg" id="pgPhoto">
+              <div class="top"><span style="font-size:22px">←</span>VEGO CANTEEN</div>
+              <div class="ph" style="background-image:url(img/store.jpg)"></div>
+              <div class="ph" style="background-image:url(img/hall.jpg)"></div>
+              <div class="ph" style="background-image:url(img/mushroom.jpg)"></div>
+              <div class="ph" style="background-image:url(img/room.jpg)"></div>
+              <div class="ph" style="background-image:url(img/veg.jpg)"></div>
+              <div id="phDots">照片</div>
+            </div>
+            <!-- APP MODAL -->
+            <div class="pg" id="modal">
+              <div id="modalDim"></div>
+              <div id="modalCard">
+                <svg width="46" height="64" viewBox="0 0 34 48"><defs><linearGradient id="gpg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ea4335"/><stop offset=".35" stop-color="#fbbc04"/><stop offset=".65" stop-color="#34a853"/><stop offset="1" stop-color="#4285f4"/></linearGradient></defs><path d="M17 0C7.6 0 0 7.5 0 16.8 0 29.4 17 48 17 48s17-18.6 17-31.2C34 7.5 26.4 0 17 0z" fill="url(#gpg)"/><circle cx="17" cy="16.5" r="6.5" fill="#fff"/></svg>
+                <h4>Google 地图在其应用中体验更佳</h4>
+                <p>实时。获取精细导航和实时路况数据</p>
+                <p>更快。查看到达时间和找出最佳路线</p>
+                <div class="mbtn" id="mBack" style="border:1px solid #dadce0;color:#5f6368;margin-top:20px">返回到网页版</div>
+                <div class="mbtn" style="background:#1a73e8;color:#fff">继续</div>
+              </div>
+            </div>
+            <!-- FACEBOOK -->
+            <div class="pg" id="pgFb">
+              <div id="fbHead"><span class="logo">facebook</span><span class="lg">登录</span></div>
+              <div id="fbBody">
+                <div id="fbCover"></div>
+                <div class="fbAv"><div class="emb" style="width:100%;height:100%;font-size:58px;border:none">蔬</div></div>
+                <div id="fbInfo"><h3>VEGO CANTEEN</h3><div class="sub">餐厅 · 素食餐馆</div>
+                  <div class="fbbtns"><span class="pri">关注</span><span>发消息</span></div></div>
+                <div class="fbtabs"><span>帖子</span><span>关于</span><span>照片</span><span>评论</span></div>
+                <div class="fbpost">
+                  <div style="display:flex;gap:10px;align-items:center"><div class="emb" style="width:40px;height:40px;font-size:22px;border:none">蔬</div><div style="flex:1"><div class="skl" style="width:50%;margin:0"></div><div class="skl" style="width:30%"></div></div></div>
+                  <div class="skl" style="width:92%;margin-top:14px"></div><div class="skl" style="width:70%"></div>
+                  <div style="height:220px;margin:12px -14px 0;background:url(img/mushroom.jpg) center/cover"></div>
+                </div>
+              </div>
+              <div id="fbDim"></div>
+              <div id="fbWall">
+                <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#0866ff"/><path d="M31 56V36h6l1-7h-7v-4c0-2 1-3.5 4-3.5h3.2v-6.2c-1.6-.2-3.5-.4-5.4-.4-5.4 0-9 3.3-9 9.2V29h-6v7h6v20" fill="#fff"/></svg>
+                <h4>在 Facebook 上查看<br>VEGO CANTEEN 的更多内容</h4>
+                <p>登录或注册即可继续浏览。</p>
+                <div class="fbL" style="background:#0866ff;color:#fff;margin-top:22px">登录</div>
+                <div class="fbL" style="border:1px solid #0866ff;color:#0866ff">创建新账户</div>
+              </div>
+            </div>
+            <!-- MESSENGER -->
+            <div class="pg" id="pgMsg">
+              <div id="msgHead"><span style="font-size:22px;color:#0866ff">‹</span><div class="av"><div class="emb" style="width:100%;height:100%;font-size:22px;border:none">蔬</div></div><b>VEGO CANTEEN</b></div>
+              <div id="msgIntro"><div class="av"><div class="emb" style="width:100%;height:100%;font-size:46px;border:none">蔬</div></div><b>VEGO CANTEEN</b><small>Facebook 公共主页 · 餐厅</small></div>
+              <div id="msgBubble">你好，请问今晚还有位吗？<br>有什么推荐的菜？</div>
+              <div id="msgSeen">已送达</div>
+              <div id="msgWait">· · ·</div>
+              <div id="msgComp"><span style="font-size:24px;color:#0866ff;line-height:38px">⊕</span><div id="msgField"></div></div>
+            </div>
+            <!-- GOOGLE -->
+            <div class="pg" id="pgGoogle">
+              <div id="gLogo"><span style="color:#4285f4">G</span><span style="color:#ea4335">o</span><span style="color:#fbbc04">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span></div>
+              <div id="gBox"><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="7.5" cy="7.5" r="5.5" stroke="#9aa0a6" stroke-width="2" fill="none"/><path d="M12 12l4.5 4.5" stroke="#9aa0a6" stroke-width="2"/></svg><span id="gQ"></span></div>
+              <div id="gTabs"><span>全部</span><span>地图</span><span>图片</span><span>新闻</span><span>视频</span></div>
+              <div id="gRes">
+                <div class="gsite"><div class="gfav">蔬</div><div><b>VEGO CANTEEN 蔬食堂</b><small>https://vegocanteen.my</small></div></div>
+                <h5>VEGO CANTEEN 蔬食堂 — 吉隆坡 Jalan Ipoh 素食堂</h5>
+                <div class="rt"><span class="stars" style="font-size:12px">★★★★★</span> 评分：4.9 · 465 则评价 · RM 1–20</div>
+                <p>椰浆饭、肉骨茶、咖喱面、瓦煲饭——从小吃到大的马来西亚味道，全部用植物食材做成。</p>
+                <div class="gsl"><span>菜单</span><span>十大必点</span><span>到访 · 订位</span><span>我们的故事</span></div>
+              </div>
+              <div id="gRes2"><div class="skl" style="width:40%"></div><div class="skl" style="width:85%;height:14px;margin-top:12px"></div><div class="skl" style="width:95%"></div><div class="skl" style="width:70%"></div></div>
+            </div>
+            <!-- WEBSITE -->
+            <div class="pg" id="pgSite">
+              <div id="siteCol">
+                <div class="hero"><div class="in">
+                  <div class="eyebrow" style="color:#f2c877">素食堂 · 吉隆坡 Jalan Ipoh 4½ 哩</div>
+                  <h1 id="heroH">素食，也可以<br>吃得好过瘾。</h1>
+                  <p>椰浆饭、肉骨茶、咖喱面、瓦煲饭——从小吃到大的马来西亚味道，全部用植物食材做成。</p>
+                  <div class="hbtns"><span style="background:var(--cream);color:var(--green)">查看菜单</span><span style="border:1.5px solid var(--cream)">订位</span></div>
+                </div></div>
+                <div class="marq"><span id="marqT">素食 ✦ 健康 ✦ 环保 ✦ 慈悲 ✦ 每日现煮 ✦ 素食 ✦ 健康 ✦ 环保 ✦ 慈悲 ✦ 每日现煮 ✦ 素食 ✦ 健康 ✦ 环保 ✦</span></div>
+                <div class="sec" id="secTop">
+                  <div class="eyebrow">十大必点</div>
+                  <h2>来这里，先点这十道</h2>
+                  <div class="lead">来自我们菜单的第一页。每张照片都是在店里拍的真实菜色。</div>
+                  <div class="feat"><div class="img"><span>SS1 · 01</span></div><div class="t"><b>养生瓦煲素古茶饭</b><small>药材汤底、豆卜、菇类</small></div></div>
+                  <div class="dish"><em>02</em><div><b>辣死你妈椰浆饭</b><small>蝶豆花椰浆饭、叁巴、煎蛋</small></div><code>R3</code></div>
+                  <div class="dish"><em>03</em><div><b>客家擂茶</b><small>糙米饭、多样配菜、现擂茶汤</small></div><code>LC</code></div>
+                  <div class="dish"><em>04</em><div><b>家乡炒饭</b><small>镬气十足，配沙爹与荷包蛋</small></div><code>SS3</code></div>
+                  <div class="dish"><em>05</em><div><b>娘惹咖喱面</b><small>椰浆咖喱、豆卜、长豆</small></div><code>N6</code></div>
+                  <div class="sbtn">浏览完整菜单 →</div>
+                </div>
+                <div class="stats"><div><b>4.9</b><small>Google 评分</small></div><div><b>465+</b><small>则顾客评价</small></div><div><b>2019</b><small>开始做素食</small></div><div><b>6 天</b><small>营业 · 星期二休息</small></div></div>
+                <div class="sec" id="secVisit">
+                  <div class="eyebrow">欢迎光临</div>
+                  <h2>Jalan Ipoh 等你来坐</h2>
+                  <div class="open"><i></i>营业中 · 今晚营业到 10pm</div>
+                  <ul class="hours">
+                    <li><span>星期一</span><span>10am–3pm · 5pm–10pm</span></li>
+                    <li class="off"><span>星期二</span><span>休息</span></li>
+                    <li><span>星期三</span><span>10am–3pm · 5pm–10pm</span></li>
+                    <li><span>星期四</span><span>10am–3pm · 5pm–10pm</span></li>
+                    <li class="today"><span>星期五 · 今天</span><span>10am–3pm · 5pm–10pm</span></li>
+                    <li><span>星期六</span><span>10am–3pm · 5pm–10pm</span></li>
+                    <li><span>星期日</span><span>10am–3pm · 5pm–10pm</span></li>
+                  </ul>
+                  <div class="info" style="margin-top:10px"><i>P</i>餐厅前方就有露天停车场</div>
+                  <div class="info"><i>✓</i>所有菜色都可外带</div>
+                  <div class="smap"><svg style="position:absolute;left:50%;top:50%;margin:-40px 0 0 -14px" width="28" height="40" viewBox="0 0 34 48"><path d="M17 0C7.6 0 0 7.5 0 16.8 0 29.4 17 48 17 48s17-18.6 17-31.2C34 7.5 26.4 0 17 0z" fill="#1e4a2c"/><circle cx="17" cy="16.5" r="6" fill="#f4efe4"/></svg></div>
+                  <div class="nav2"><span>Google 导航</span><span>Waze</span></div>
+                </div>
+                <div class="book" id="secBook">
+                  <div class="eyebrow">订位</div>
+                  <div style="font-size:15px;opacity:.8;margin-top:10px">两个人？还是二十个人？</div>
+                  <h2 style="font-family:'Serif SC';font-weight:900;font-size:30px;line-height:1.3;margin:8px 0 22px">先订位，<br>饭菜热腾腾等你。</h2>
+                  <div class="hbtns" style="flex-direction:column"><span style="background:var(--cream);color:var(--green)">网上订位</span><span class="wa" id="waBtn">WhatsApp 我们</span></div>
+                </div>
+              </div>
+              <div id="siteHdr"><div class="slogo"><div class="emb" style="width:38px;height:38px;font-size:21px">蔬</div><div><b>VEGO CANTEEN</b><small>蔬 食 堂</small></div></div><span class="sbook">订位</span></div>
+              <div id="loader"><div id="ldIn"><div id="ldRing"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="70" fill="none" stroke="rgba(244,239,228,.15)" stroke-width="3"/><circle id="ldArc" cx="75" cy="75" r="70" fill="none" stroke="#d99a2b" stroke-width="3" stroke-linecap="round" stroke-dasharray="440" stroke-dashoffset="440"/></svg><div class="emb">蔬</div></div><div id="ldWord">Vego Canteen</div><div id="ldCount">0%</div></div></div>
+              <div class="pt"></div><div class="pt"></div><div class="pt"></div><div class="pt"></div>
+            </div>
+            <!-- WHATSAPP -->
+            <div class="pg" id="pgWa">
+              <div id="waHead"><span style="font-size:24px;color:#007aff">‹</span><div class="emb" style="width:38px;height:38px;font-size:21px;border:none">蔬</div><div><b>蔬食堂 VEGO CANTEEN</b><small>+60 12-675 6363</small></div></div>
+              <div id="waBody"><div id="waDate"><span>今天</span></div><div id="waBubble"><span id="waBT">你好，蔬食堂！我想订位。<br>今晚 8 点，4 位。</span><small>19:14 <b>✓✓</b></small></div></div>
+              <div id="waComp"><span style="font-size:24px;color:#54656f;line-height:40px">＋</span><div id="waField"></div><div id="waSend">➤</div></div>
+            </div>
+            <!-- status bar -->
+            <div class="sb" id="sb"><span id="sbTime">7:12</span><span><svg viewBox="0 0 70 12" width="70"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/><path d="M26 4a10 10 0 0 1 14 0l-1.6 1.6a7.7 7.7 0 0 0-10.8 0zM29 7a6 6 0 0 1 8 0l-4 4z" fill="currentColor"/><rect x="46" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="48" y="3" width="15" height="6" rx="1.5" fill="currentColor"/></svg></span></div>
+            <div id="tap"></div>
+          </div>
+          <div id="glare"></div>
+          <div id="island"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="chips" class="layer"></div>
+
+  <!-- intro split -->
+  <div id="splitTop" class="abs"><div class="splitLabel big" id="stL" style="top:360px;color:#8b949c">没有网站</div><div class="splitSub" style="top:600px;color:#6b737a">只有 GOOGLE MAPS + FACEBOOK</div></div>
+  <div id="splitBot" class="abs"><div class="splitLabel big" id="sbL" style="top:250px;color:#1e4a2c">有网站</div><div class="splitSub" style="top:490px;color:#6d8a73">VEGOCANTEEN.MY</div></div>
+  <div id="splitMid" class="abs" style="left:0;right:0;top:936px;text-align:center"><span style="background:#d99a2b;color:#1b1408;font-size:30px;font-weight:700;letter-spacing:.2em;padding:10px 28px;border-radius:30px">同一家餐厅 · 同一位客人</span></div>
+
+  <!-- compare -->
+  <div id="cmpTop" class="abs"><div class="cmpIn">
+    <div class="cmpTag" style="top:170px;color:#8b949c">没有网站</div>
+    <div class="cmpNum" id="cmpN1" style="top:250px;color:#eef1f3">19</div>
+    <div class="cmpUnit" id="cmpU1" style="top:440px;color:#eef1f3">分钟</div>
+    <div class="cmpLine" id="cmpL1" style="top:640px;color:#aeb6bd"><span style="color:#e5484d">✕</span> 没看到菜单　<span style="color:#e5484d">✕</span> 没订到位<br>→ 最后去了别家</div>
+  </div></div>
+  <div id="cmpBot" class="abs"><div class="cmpIn">
+    <div class="cmpTag" style="top:150px;color:#56705c">有网站</div>
+    <div class="cmpNum" id="cmpN2" style="top:230px;color:#1e4a2c">2</div>
+    <div class="cmpUnit" id="cmpU2" style="top:420px;color:#1e4a2c">分钟</div>
+    <div class="cmpLine" id="cmpL2" style="top:620px;color:#36433a"><span style="color:#22a04b">✓</span> 看完菜单　<span style="color:#22a04b">✓</span> 订好位子<br>→ 今晚 8 点，4 位</div>
+  </div></div>
+
+  <!-- end -->
+  <div id="end" class="layer" style="background:#f1e9da">
+    <div class="emb abs" id="endEmb">蔬</div>
+    <div class="abs" id="endName" style="left:0;right:0;top:920px;text-align:center"><div style="font-family:'Manrope';font-weight:800;font-size:64px;letter-spacing:.08em;color:#1e4a2c">VEGO CANTEEN</div><div style="font-size:34px;letter-spacing:1.2em;margin-left:1.2em;color:#56705c;margin-top:10px">蔬食堂</div></div>
+    <div class="abs" id="endUrl" style="left:0;right:0;top:1150px;text-align:center"><span style="display:inline-block;border:2px solid #1e4a2c;color:#1e4a2c;font-family:'Manrope';font-weight:700;font-size:40px;padding:16px 44px;border-radius:50px;letter-spacing:.04em">vegocanteen.my</span></div>
+    <div class="abs" id="endNote" style="left:0;right:0;top:1780px;text-align:center;font-size:24px;color:#8d9a8f;letter-spacing:.2em">情境模拟 · 画面为示意</div>
+  </div>
+
+  <div id="caps"></div>
+  <div id="booked" class="abs" style="left:0;right:0;top:760px;text-align:center"><span style="display:inline-flex;align-items:center;gap:14px;background:#1e4a2c;color:#f4efe4;font-size:34px;font-weight:700;padding:14px 32px 14px 16px;border-radius:44px"><i style="width:52px;height:52px;border-radius:50%;background:#22a04b;display:grid;place-items:center;font-style:normal;font-family:Manrope;font-weight:800">✓</i>已订位 · 4 位</span></div>
+
+  <!-- HUD -->
+  <div id="hud" class="abs">
+    <div id="hudPill" class="abs"><b>A</b><span id="hudTxt">没有网站</span></div>
+    <div id="hudClock" class="abs"><small id="hudLbl">星期五</small><span id="hudTime">晚上 7:12</span></div>
+    <div id="hudFF" class="abs">▶▶ 快进</div>
+  </div>
+
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="vig"></div>
+  <div id="fade"></div>
+</div>
+
+<script>
+/* ================= utilities ================= */
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const E={
+  lin:x=>x,
+  o2:x=>1-(1-x)*(1-x),
+  o3:x=>1-Math.pow(1-x,3),
+  o4:x=>1-Math.pow(1-x,4),
+  expo:x=>x>=1?1:1-Math.pow(2,-11*x),
+  i3:x=>x*x*x,
+  io3:x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,
+  ioE:x=>x<=0?0:x>=1?1:x<.5?Math.pow(2,20*x-10)/2:(2-Math.pow(2,-20*x+10))/2,
+  back:x=>{const c1=1.5,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)},
+  spring:x=>x>=1?1:1-Math.exp(-7*x)*Math.cos(11*x),
+};
+const P=(t,a,b,e=E.o3)=>e(clamp((t-a)/(b-a)));
+const win=(t,a,b)=>t>=a&&t<b;
+function st(el,o){
+  if(typeof el==='string')el=$(el);
+  if(!el)return;
+  const tr=[];
+  if(o.x!=null||o.y!=null)tr.push(`translate3d(${(o.x||0).toFixed(2)}px,${(o.y||0).toFixed(2)}px,0)`);
+  if(o.rx!=null)tr.push(`rotateX(${o.rx.toFixed(3)}deg)`);
+  if(o.ry!=null)tr.push(`rotateY(${o.ry.toFixed(3)}deg)`);
+  if(o.r!=null)tr.push(`rotate(${o.r.toFixed(3)}deg)`);
+  if(o.s!=null)tr.push(`scale(${o.s.toFixed(4)})`);
+  el.style.transform=tr.join(' ');
+  if(o.o!=null){el.style.opacity=o.o.toFixed(3);el.style.visibility=o.o<=0.001?'hidden':'visible'}
+  if(o.f!=null)el.style.filter=o.f;
+}
+function seeded(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}}
+function hhmm(m){m=Math.round(m);const h=Math.floor(m/60),mm=m%60;return `${h}:${String(mm).padStart(2,'0')}`}
+
+/* ================= split text ================= */
+function splitInto(el,text){
+  el.innerHTML='';
+  const lines=text.split('\n');
+  lines.forEach((ln,li)=>{
+    for(const c of ln){
+      const s=document.createElement('span');s.className='ch';
+      const i=document.createElement('i');i.textContent=c===' '?' ':c;
+      s.appendChild(i);el.appendChild(s);
+    }
+    if(li<lines.length-1)el.appendChild(document.createElement('br'));
+  });
+  return [...el.querySelectorAll('.ch>i')];
+}
+/* animate chars in/out */
+function charAnim(chars,t,t0,t1,{stag=.028,dur=.7,exit=.45,dy=1.05}={}){
+  const n=chars.length;
+  chars.forEach((c,i)=>{
+    const a=t0+i*stag;
+    let p=P(t,a,a+dur,E.expo);
+    let y=(1-p)*dy*100, o=1, bl=(1-p)*6;
+    if(t1!=null&&t>t1-exit){
+      const q=P(t,t1-exit+i*stag*.35,t1-exit+i*stag*.35+exit*.8,E.i3);
+      y=-q*60;o=1-q;bl=q*8;
+    }
+    c.style.transform=`translateY(${y.toFixed(2)}%)`;
+    c.style.opacity=o.toFixed(3);
+    c.style.filter=bl>0.05?`blur(${bl.toFixed(2)}px)`:'none';
+  });
+}
+
+/* ================= timeline ================= */
+const T={
+  END:64,
+  splitIn:3.0, splitOut:5.6,
+  A0:5.9, phoneA:7.0,
+  mapsType:8.1, pinDrop:9.3, sheetUp:9.7, photoTap:12.9, photoEnd:16.0, modalIn:16.2, modalOut:17.7,
+  fbIn:18.0, fbWall:19.7, msgIn:22.7, msgSend:23.6, ffA:24.3, ffB:25.7, giveUp:26.5,
+  rew:29.4, iris:30.9, B0:31.6, phoneB:33.3,
+  gType:34.35, gTap:35.9, siteIn:36.15, heroIn:37.45, s1:40.0, s2:42.6, s3:43.9, s4:45.0, waTap:46.35, waIn:46.6, waSend:48.0,
+  bOut:49.6, cmp:51.4, cmpOut:57.0, close:57.0, endIn:60.3,
+};
+window.T=T;
+
+/* captions: [t0,t1,text,zone,theme] */
+const CAPS=[
+  [0.35,2.75,'星期五晚上，肚子饿了。','center','a'],
+  [10.1,12.5,'4.9 分，看起来不错。','top','a'],
+  [12.7,15.9,'可是……菜单在哪里？','top','a'],
+  [13.5,15.9,'翻来翻去，只有零散的照片。','bot','a'],
+  [16.25,17.85,'还要先下载 App？','top','a'],
+  [18.2,19.75,'去 Facebook 看看。','top','a'],
+  [19.9,22.55,'想看更多？请先登录。','top','a'],
+  [22.8,24.2,'那就私讯问问吧。','top','a'],
+  [24.35,26.35,'晚餐时间，老板在厨房忙。','top','a'],
+  [24.9,26.35,'15 分钟过去，没有回复。','bot','a'],
+  [27.0,29.3,'算了，去别家吧。','center','a'],
+  [30.0,30.95,'倒带。','top','a'],
+  [31.7,33.6,'这一次，\n他先找到了网站。','center','b'],
+  [37.7,39.9,'一打开，就知道是什么店。','top','b'],
+  [40.1,42.45,'招牌菜，一目了然。','top','b'],
+  [42.7,44.85,'营业时间、停车、导航。','top','b'],
+  [45.05,46.9,'想订位？一键就好。','top','b'],
+  [47.1,49.5,'2 分钟，决定好了。','top','b'],
+  [50.0,51.3,'今晚 8 点见。','center','b'],
+  [57.25,60.0,'客人不会等。\n好食物，值得被一眼看见。','center','b'],
+];
+const capEls=[];
+function buildCaps(){
+  const box=$('caps');
+  CAPS.forEach(c=>{
+    const el=document.createElement('div');
+    el.className=`cap ${c[3]} ${c[4]}`;
+    if(c[3]==='center'){el.style.top=(c[2].includes('\n')?830:900)+'px';el.style.lineHeight='1.3'}
+    if(c[2].startsWith('客人不会等')){el.style.fontSize='74px';el.style.top='760px'}
+    box.appendChild(el);
+    const chars=splitInto(el,c[2]);
+    capEls.push({c,el,chars});
+  });
+}
+
+/* question chips */
+const QS=[
+  {t:'有什么菜？',x:34,y:640,side:-1},
+  {t:'今天有开吗？',x:1046,y:820,side:1},
+  {t:'哪里停车？',x:34,y:1000,side:-1},
+  {t:'可以订位吗？',x:1046,y:1180,side:1},
+];
+function buildChips(){
+  const box=$('chips');
+  QS.forEach((q,i)=>{
+    const el=document.createElement('div');el.className='chip';
+    el.innerHTML=`<div class="ic"><i class="q" style="background:#5b646c">?</i><i class="x" style="background:#e5484d">✕</i><i class="ok" style="background:#22a04b">✓</i></div><span>${q.t}</span>`;
+    box.appendChild(el);
+    q.el=el;q.q=el.querySelector('.q');q.x_=el.querySelector('.x');q.ok=el.querySelector('.ok');q.span=el.querySelector('span');
+  });
+}
+/* chip timings */
+const CHIP_A_IN=[10.5,10.85,11.2,11.55];
+const CHIP_A_X=[26.6,26.72,26.84,26.96];
+const CHIP_B_IN=[38.5,38.75,39.0,39.25];
+const CHIP_B_OK=[41.0,43.35,44.45,46.55];
+
+/* taps: [t, x, y] in screen logical coords */
+const TAPS=[
+  [12.9,110,560],[16.95,195,405],[35.9,150,300],[46.35,195,694],[47.85,366,772],
+];
+/* ================= grain ================= */
+const grainFrames=[];
+function buildGrain(){
+  const r=seeded(7);
+  for(let k=0;k<8;k++){
+    const c=document.createElement('canvas');c.width=540;c.height=960;
+    const g=c.getContext('2d');const d=g.createImageData(540,960);
+    for(let i=0;i<d.data.length;i+=4){const v=r()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}
+    g.putImageData(d,0,0);grainFrames.push(c);
+  }
+}
+/* ================= typing helper ================= */
+function typed(str,t,t0,cps){const n=Math.floor(clamp((t-t0)*cps,0,[...str].length));return [...str].slice(0,n).join('')}
+
+/* ================= FRAME ================= */
+function frame(t){
+  const inA=t<T.iris+0.6, inB=t>=T.iris;
+  /* ---- backgrounds ---- */
+  st('bgA',{o:t<T.iris+1?1:0});
+  st(document.querySelector('#bgA .grid'),{x:0,y:-(t*14)%90});
+  st('bgB',{o:t>=T.iris+0.5?1:0});
+  st('blob1',{x:Math.sin(t*.3)*60,y:Math.cos(t*.25)*50});
+  st('blob2',{x:Math.cos(t*.28)*70,y:Math.sin(t*.33)*50});
+  const ip=P(t,T.iris,T.iris+0.9,E.ioE);
+  st('iris',{o:ip>0&&t<T.iris+1.2?1:0,s:ip*520});
+  $('iris').style.transform=`translate(-50%,-50%) scale(${(ip*520).toFixed(2)})`;
+
+  /* ---- intro split ---- */
+  {
+    const sIn=P(t,T.splitIn,T.splitIn+0.9,E.expo);
+    const sOut=P(t,T.splitOut,T.splitOut+0.55,E.ioE);
+    const on=t>=T.splitIn-0.01&&t<T.splitOut+0.6;
+    st('splitTop',{o:on?1:0,y:-(1-sIn)*960 - sOut*960*0});
+    st('splitBot',{o:on?1:0,y:(1-sIn)*960 + sOut*960});
+    // top panel grows to full when bottom leaves -> the A world
+    $('splitTop').style.height=(960+sOut*960)+'px';
+    st('stL',{o:1-P(t,T.splitOut,T.splitOut+.35),y:(1-P(t,T.splitIn+.2,T.splitIn+1.1,E.expo))*120 - sOut*200});
+    st('sbL',{o:1,y:(1-P(t,T.splitIn+.3,T.splitIn+1.2,E.expo))*-120});
+    const mp=P(t,T.splitIn+0.7,T.splitIn+1.2,E.back);
+    st('splitMid',{o:on?P(t,T.splitIn+.7,T.splitIn+.9)*(1-P(t,T.splitOut-.2,T.splitOut)):0,s:.6+.4*mp});
+    const bgp=P(t,T.splitOut,T.splitOut+.6);
+    $('splitTop').style.background=`rgb(${lerp(21,21,bgp)},${lerp(24,24,bgp)},${lerp(27,27,bgp)})`;
+    if(t>T.splitOut+.55) st('splitTop',{o:0});
+  }
+
+  /* ---- phone ---- */
+  let py=0,prx=0,pry=0,ps=1,pr=0,po=1,pf='none',sh=1;
+  const floatY=Math.sin(t*1.1)*6, floatRY=Math.sin(t*.55)*2.2, floatRX=Math.sin(t*.4)*1.2;
+  if(t<T.phoneA){po=0}
+  else if(t<T.rew){
+    const e=P(t,T.phoneA,T.phoneA+1.25,E.spring);
+    py=(1-e)*1500; prx=(1-e)*38; pry=floatRY*e; ps=.92+.08*e; prx+=floatRX; py+=floatY;
+    // give up: fall away
+    const g=P(t,T.giveUp+.2,T.giveUp+1.5,E.io3);
+    if(g>0){py+=g*700;ps*=1-g*.25;prx+=g*18;pr=g*-6;pf=`grayscale(${g}) brightness(${1-g*.55}) blur(${g*6}px)`;sh=1-g}
+  } else if(t<T.iris+0.9){
+    // rewind: comes back up
+    const g=1-P(t,T.rew,T.rew+.8,E.io3);
+    const jit=(seeded(Math.floor(t*60)+3)()-.5)*14*(t<T.iris?1:0);
+    py=g*700+floatY;ps=1-g*.25;prx=g*18;pr=g*-6+jit*.1;pry=jit*.4;
+    pf=`grayscale(1) brightness(${1-g*.55}) blur(${g*6}px)`;
+    po=1-P(t,T.iris+.2,T.iris+.5);
+  } else if(t<T.phoneB){po=0}
+  else if(t<T.cmp){
+    const e=P(t,T.phoneB,T.phoneB+1.25,E.spring);
+    py=(1-e)*1500+floatY; prx=(1-e)*38+floatRX; pry=floatRY*e; ps=.92+.08*e;
+    const o=P(t,T.bOut,T.bOut+1.0,E.io3);
+    if(o>0){py-=o*1700;prx-=o*30;ps*=1-o*.2;sh=1-P(t,T.bOut,T.bOut+.4)}
+  } else po=0;
+  st('phone',{o:po,y:py,rx:prx,ry:pry,r:pr,s:ps,f:pf});
+  st('shadow',{o:po*sh*.9,y:py*.05,s:1-Math.abs(py)/2500});
+  $('glare').style.background=`linear-gradient(${115+Math.sin(t*.55)*10}deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%)`;
+
+  /* ---- camera ---- */
+  {
+    let cs=1,cy=0;
+    const z1=P(t,T.fbWall+.1,T.fbWall+1.1,E.io3)*(1-P(t,T.msgIn-.2,T.msgIn+.4,E.io3));
+    cs+=z1*.12;cy+=z1*10;
+    const z2=P(t,T.ffA-.1,T.ffA+1.2,E.io3)*(1-P(t,T.giveUp,T.giveUp+.8,E.io3));
+    cs+=z2*.06;
+    const z3=P(t,T.waIn,T.waIn+1,E.io3)*(1-P(t,T.bOut-.3,T.bOut+.3,E.io3));
+    cs+=z3*.08;cy+=z3*10;
+    st('cam',{y:cy,s:cs});
+  }
+
+  screenFrame(t);
+  chipsFrame(t);
+  capsFrame(t);
+  hudFrame(t);
+  compareFrame(t);
+  {const b=P(t,50.0,50.5,E.back),bo=P(t,51.1,51.4);st('booked',{o:P(t,49.95,50.15)*(1-bo),s:.6+.4*b,y:-bo*30});}
+  endFrame(t);
+
+  /* grain */
+  const g=$('grain').getContext('2d');g.drawImage(grainFrames[Math.floor(t*24)%8],0,0);
+  $('grain').style.opacity=(inB&&t>T.iris+.8?.07:.11).toString();
+  st('fade',{o:Math.max(1-P(t,0,.35,E.lin),P(t,T.END-.6,T.END,E.lin))});
+}
+
+function screenFrame(t){
+  const sbColor=(c)=>{$('sb').style.color=c};
+  /* pages visibility */
+  const pages=['pgMaps','pgPhoto','modal','pgFb','pgMsg','pgGoogle','pgSite','pgWa'];
+  const vis={};pages.forEach(p=>vis[p]={o:0});
+  let rewPage=null;
+  if(win(t,T.rew,T.iris+1)){
+    // rewind flashes pages backwards
+    const seq=['pgMsg','pgFb','pgPhoto','pgMaps'];
+    const k=clamp(Math.floor(P(t,T.rew+.1,T.iris-.1,E.lin)*seq.length),0,seq.length-1);
+    rewPage=seq[k];
+  }
+  // A
+  if(t<T.rew||rewPage){
+    // maps
+    vis.pgMaps={o:1};
+    const q=typed('素食 Jalan Ipoh',t,T.mapsType,12);
+    $('mapQ').innerHTML=(q||'<span style="color:#80868b">在此处搜索</span>')+(t>T.mapsType&&t<T.sheetUp&&Math.floor(t*3)%2===0?'<span class="caret"></span>':'');
+    const mz=1.25-0.25*P(t,T.pinDrop-.6,T.pinDrop+1.2,E.io3)+P(t,T.sheetUp,T.sheetUp+3,E.io3)*.04;
+    st('mapImg',{s:mz,y:-P(t,T.sheetUp,T.sheetUp+.8,E.io3)*110});
+    const pd=P(t,T.pinDrop,T.pinDrop+.7,E.spring);
+    st('pin',{o:t>T.pinDrop?1:0,y:-(1-pd)*80-P(t,T.sheetUp,T.sheetUp+.8,E.io3)*110,s:.6+.4*pd});
+    st('pinLabel',{o:P(t,T.pinDrop+.3,T.pinDrop+.6),y:-P(t,T.sheetUp,T.sheetUp+.8,E.io3)*110});
+    const su=P(t,T.sheetUp,T.sheetUp+.8,E.expo);
+    st('sheet',{y:-su*460});
+    // photo viewer
+    const pin_=P(t,T.photoTap+.1,T.photoTap+.5,E.o3), pout=P(t,T.photoEnd+1.5,T.photoEnd+1.9,E.io3);
+    vis.pgPhoto={o:pin_*(1-pout),s:.85+.15*pin_};
+    const phs=document.querySelectorAll('#pgPhoto .ph');
+    const pt0=T.photoTap+.5, step=.6;
+    phs.forEach((el,i)=>{
+      // index position = i - progress
+      let prog=0;
+      for(let k=1;k<phs.length;k++) prog+=P(t,pt0+k*step-.2,pt0+k*step+.15,E.io3);
+      st(el,{x:(i-prog)*390});
+    });
+    $('phDots').textContent='顾客上传的照片';
+    // modal
+    const mi=P(t,T.modalIn,T.modalIn+.45,E.o3), mo=P(t,T.modalOut-.3,T.modalOut,E.io3);
+    vis.modal={o:mi*(1-mo)};
+    st('modalCard',{s:.9+.1*P(t,T.modalIn,T.modalIn+.6,E.back)-mo*.05,y:(1-mi)*40});
+    // facebook
+    const fi=P(t,T.fbIn,T.fbIn+.55,E.expo);
+    vis.pgFb={o:t>=T.fbIn?1:0,x:(1-fi)*390};
+    const fw=P(t,T.fbWall,T.fbWall+.7,E.expo);
+    st('fbWall',{y:-fw*420});st('fbDim',{o:fw});
+    // content fades in skeleton-style
+    st('fbBody',{o:P(t,T.fbIn+.3,T.fbIn+.8),y:-P(t,T.fbIn+.5,T.fbWall,E.io3)*60});
+    // messenger
+    const mgi=P(t,T.msgIn,T.msgIn+.55,E.expo);
+    vis.pgMsg={o:t>=T.msgIn?1:0,x:(1-mgi)*390};
+    const msgTxt='你好，请问今晚还有位吗？有什么推荐的菜？';
+    $('msgField').textContent=t<T.msgSend?typed(msgTxt,t,T.msgIn+.35,26):'';
+    if(t<T.msgSend&&!$('msgField').textContent)$('msgField').innerHTML='<span style="color:#8a8d91">Aa</span>';
+    const bs=P(t,T.msgSend,T.msgSend+.45,E.back);
+    st('msgBubble',{o:t>=T.msgSend?1:0,s:.6+.4*bs,y:(1-bs)*120});
+    $('msgBubble').style.transformOrigin='100% 100%';
+    st('msgSeen',{o:P(t,T.msgSend+.5,T.msgSend+.8)});
+    st('msgWait',{o:P(t,T.ffA,T.ffA+.3)*(.4+.4*Math.sin(t*9))});
+    sbColor(vis.pgPhoto.o>.5&&t<T.fbIn?'#fff':'#111');
+    if(rewPage){pages.forEach(p=>vis[p]={o:0});vis[rewPage]={o:1};if(rewPage==='pgPhoto')vis.pgMaps={o:1};}
+  }
+  // B
+  if(t>=T.phoneB-0.1){
+    vis.pgGoogle={o:1};
+    const q=typed('素食 Jalan Ipoh',t,T.gType,13);
+    $('gQ').innerHTML=q+(t<T.gTap&&Math.floor(t*3)%2===0?'<span class="caret"></span>':'');
+    const rp=P(t,T.gType+1.15,T.gType+1.7,E.expo);
+    st('gRes',{o:rp,y:(1-rp)*30});st('gRes2',{o:P(t,T.gType+1.3,T.gType+1.8)*.8,y:(1-rp)*40});
+    st('gTabs',{o:P(t,T.gType+1.0,T.gType+1.4)});
+    // site
+    const si=P(t,T.siteIn,T.siteIn+.3);
+    vis.pgSite={o:t>=T.siteIn?si:0};
+    // loader
+    const lp=P(t,T.siteIn+.1,T.heroIn-.35,E.io3);
+    $('ldArc').setAttribute('stroke-dashoffset',(440*(1-lp)).toFixed(1));
+    $('ldCount').textContent=Math.round(lp*100)+'%';
+    st('loader',{o:t<T.heroIn?1:0});
+    st('ldIn',{s:.9+.1*P(t,T.siteIn,T.siteIn+.5,E.expo),o:P(t,T.siteIn,T.siteIn+.3)*(1-P(t,T.heroIn-.3,T.heroIn-.1))});
+    // panel transition
+    document.querySelectorAll('#pgSite .pt').forEach((el,i)=>{
+      el.style.left=(i*25)+'%';
+      const a=T.heroIn-.35+i*.05, inP=P(t,a,a+.3,E.io3), outP=P(t,a+.38,a+.7,E.io3);
+      el.style.transform=`translateY(${((1-inP)*100 - outP*100).toFixed(2)}%)`;
+      el.style.visibility=(inP>0&&outP<1)?'visible':'hidden';
+    });
+    // hero in
+    const hk=P(t,T.heroIn,T.heroIn+1.6,E.expo);
+    $('pgSite').querySelector('.hero').style.backgroundSize=`${(100+ (1-hk)*18).toFixed(2)}% auto, cover`;
+    $('pgSite').querySelector('.hero').style.backgroundSize='cover';
+    st(document.querySelector('.hero .in'),{o:P(t,T.heroIn+.15,T.heroIn+.7),y:(1-P(t,T.heroIn+.1,T.heroIn+1.1,E.expo))*40});
+    // scroll
+    let sy=0;
+    sy+=P(t,T.s1,T.s1+.85,E.ioE)*($('secTop').offsetTop-70);
+    sy+=P(t,T.s2,T.s2+.85,E.ioE)*($('secVisit').offsetTop-40-($('secTop').offsetTop-70));
+    sy+=P(t,T.s3,T.s3+.65,E.ioE)*(($('secVisit').offsetTop+440)-($('secVisit').offsetTop-40));
+    sy+=P(t,T.s4,T.s4+.75,E.ioE)*(($('secBook').offsetTop-230)-($('secVisit').offsetTop+440));
+    st('siteCol',{y:-sy});
+    const hdrDark=sy>600;
+    $('siteHdr').style.background=hdrDark?'rgba(244,239,228,.94)':'transparent';
+    $('siteHdr').style.boxShadow=hdrDark?'0 1px 0 #dcd2bf':'none';
+    document.querySelector('.slogo').style.color=hdrDark?'var(--green)':'var(--cream)';
+    sbColor(t>=T.siteIn&&t<T.heroIn?'#f4efe4':(t>=T.heroIn&&!hdrDark&&t<T.waIn?'#f4efe4':'#111'));
+    $('marqT').style.transform=`translateX(${-(t*40)%300}px)`;
+    // highlights
+    const hl=P(t,T.s2+.9,T.s2+1.2);
+    document.querySelector('.hours li.today').style.boxShadow=`0 0 0 ${(hl*3).toFixed(1)}px rgba(217,154,43,${hl})`;
+    // whatsapp
+    const wi=P(t,T.waIn,T.waIn+.55,E.expo);
+    vis.pgWa={o:t>=T.waIn?1:0,y:(1-wi)*844};
+    const pre='你好，蔬食堂！我想订位。';
+    const add=' 今晚 8 点，4 位。';
+    const tt=typed(add,t,T.waIn+.6,10);
+    $('waField').textContent=t<T.waSend?pre+tt:'';
+    if(t<T.waSend){ // scroll the field text to show end
+      $('waField').scrollLeft=9999;
+    }
+    const wb=P(t,T.waSend,T.waSend+.45,E.back);
+    st('waBubble',{o:t>=T.waSend?1:0,s:.6+.4*wb,y:(1-wb)*140});
+    $('waBubble').style.transformOrigin='100% 100%';
+    if(t<T.phoneB+.2 && t>=T.phoneB-0.1) sbColor('#111');
+    if(t>=T.waIn) sbColor('#111');
+  }
+  pages.forEach(p=>{
+    const v=vis[p];st(p,{o:v.o,x:v.x||0,y:v.y||0,s:v.s!=null?v.s:1});
+  });
+  /* status time */
+  $('sbTime').textContent=hhmm(clockMin(t)).replace(/^19/,'7').replace(/^(\d+):/,(m,h)=>(h>12?h-12:h)+':');
+  /* taps */
+  let tapO=0,tapS=1,tx=0,ty=0;
+  TAPS.forEach(([tt,x,y])=>{
+    if(t>=tt-.35&&t<tt+.5){
+      const a=P(t,tt-.35,tt-.05,E.o3),b=P(t,tt,tt+.5,E.o2);
+      tapO=a*(1-b);tapS=1.3-.3*a-.15*P(t,tt-.05,tt+.05)+b*1.1;tx=x;ty=y;
+    }
+  });
+  const tap=$('tap');tap.style.left=tx+'px';tap.style.top=ty+'px';st(tap,{o:tapO,s:tapS});
+}
+
+function clockMin(t){
+  const base=19*60+12;
+  if(t<T.fbIn) return base+P(t,T.phoneA,T.fbIn,E.lin)*3;          // 7:12 -> 7:15
+  if(t<T.msgSend) return base+3+P(t,T.fbIn,T.msgSend,E.lin)*1;    // -> 7:16
+  if(t<T.rew) return base+4+P(t,T.ffA,T.ffB,E.io3)*15;               // -> 7:31
+  if(t<T.iris+.4) return base+19-P(t,T.rew+.1,T.iris,E.io3)*19;       // rewind
+  if(t<T.waSend) return base+P(t,T.phoneB,T.waSend,E.lin)*2;       // 7:12 -> 7:14
+  return base+2;
+}
+
+function chipsFrame(t){
+  QS.forEach((q,i)=>{
+    let o=0,x=q.x,y=q.y,s=1,r=0,state='q',f='none';
+    const w=q.el.offsetWidth;
+    const bx=q.side<0?q.x:q.x-w;
+    // A
+    if(t<T.rew){
+      const a=P(t,CHIP_A_IN[i],CHIP_A_IN[i]+.7,E.spring);
+      o=P(t,CHIP_A_IN[i],CHIP_A_IN[i]+.2);
+      x=bx+(1-a)*q.side*-120;s=.7+.3*a;
+      y=q.y+Math.sin(t*1.3+i*1.7)*7;
+      // wobble when unanswered moments
+      if(t>T.photoTap+.6&&t<T.photoEnd&&i===0) r=Math.sin(t*18)*2*P(t,T.photoTap+.6,T.photoTap+.9)*(1-P(t,T.photoEnd-.4,T.photoEnd));
+      if(t>=CHIP_A_X[i]) state='x';
+      const d=P(t,CHIP_A_X[i]+.35,CHIP_A_X[i]+1.4,E.i3);
+      if(d>0){y+=d*700;r+=d*q.side*25;o*=1-d}
+    } else if(t>=T.phoneB){
+      const a=P(t,CHIP_B_IN[i],CHIP_B_IN[i]+.7,E.spring);
+      o=P(t,CHIP_B_IN[i],CHIP_B_IN[i]+.2);
+      x=bx+(1-a)*q.side*-120;s=.7+.3*a;
+      y=q.y+Math.sin(t*1.3+i*1.7)*7;
+      if(t>=CHIP_B_OK[i]){state='ok';s*=1+.12*Math.sin(Math.PI*P(t,CHIP_B_OK[i],CHIP_B_OK[i]+.35))}
+      const d=P(t,T.bOut-.2+i*.06,T.bOut+.6+i*.06,E.io3);
+      if(d>0){y-=d*900;o*=1-d}
+    }
+    const dark=t<T.iris;
+    const ok=state==='ok',x_=state==='x';
+    q.el.style.background=dark?(x_?'#2a1d1f':'#262c31'):(ok?'#ffffff':'#fbf8f2');
+    q.el.style.color=dark?(x_?'#f0a3a5':'#e6e9ec'):(ok?'#1e4a2c':'#7c847e');
+    q.el.style.border=dark?'1px solid rgba(255,255,255,.08)':(ok?'2px solid #22a04b':'1px solid #e0d7c5');
+    q.span.style.textDecoration='none';
+    const okP=ok?P(t,CHIP_B_OK[i],CHIP_B_OK[i]+.35,E.back):0;
+    const xP=x_?P(t,CHIP_A_X[i],CHIP_A_X[i]+.3,E.back):0;
+    st(q.q,{o:(!ok&&!x_)?1:0});
+    st(q.x_,{o:x_?1:0,s:xP});
+    st(q.ok,{o:ok?1:0,s:okP,r:(1-okP)*-90});
+    st(q.el,{o,x:x-q.x+ (q.side<0?0:0),y:0,s,r});
+    q.el.style.left=(q.side<0?q.x:q.x-w)+'px';
+    q.el.style.top=y+'px';
+    q.el.style.transform=`translateX(${(x-bx).toFixed(2)}px) scale(${s.toFixed(3)}) rotate(${r.toFixed(2)}deg)`;
+  });
+}
+
+function capsFrame(t){
+  capEls.forEach(({c,el,chars})=>{
+    const [t0,t1]=c;
+    if(t<t0-.05||t>t1+.1){el.style.visibility='hidden';return}
+    el.style.visibility='visible';
+    charAnim(chars,t,t0,t1,{stag:c[3]==='center'?.045:.03});
+  });
+}
+
+function hudFrame(t){
+  const aOn=P(t,T.A0+.9,T.A0+1.5,E.expo)*(1-P(t,T.rew,T.rew+.4));
+  const bOn=P(t,T.phoneB-.3,T.phoneB+.3,E.expo)*(1-P(t,T.bOut+.4,T.bOut+.9));
+  const on=Math.max(aOn,bOn);
+  const isB=t>=T.iris;
+  $('hudPill').style.background=isB?'#1e4a2c':'#2a3036';
+  $('hudPill').style.color=isB?'#f4efe4':'#e6e9ec';
+  $('hudPill').querySelector('b').textContent=isB?'B':'A';
+  $('hudPill').querySelector('b').style.background=isB?'#d99a2b':'#e5484d';
+  $('hudPill').querySelector('b').style.color=isB?'#1b1408':'#fff';
+  $('hudTxt').textContent=isB?'有网站':'没有网站 · 只有 Maps + FB';
+  st('hudPill',{o:on,x:(1-on)*-40});
+  // clock: visible in A/B and intro
+  const introOn=P(t,T.A0+.9,T.A0+1.5)*(1);
+  const cOn=Math.max(aOn,bOn, t>T.rew&&t<T.iris+.3?1:0);
+  st('hudClock',{o:cOn,x:(1-cOn)*40});
+  $('hudClock').style.color=isB?'#1e4a2c':'#eef1f3';
+  $('hudLbl').textContent='星期五 · 客人的时间';
+  const m=clockMin(t);
+  $('hudTime').textContent='晚上 '+hhmm(m-12*60);
+  const ff=(t>T.ffA&&t<T.ffB+.2)||(t>T.rew+.1&&t<T.iris);
+  $('hudFF').textContent=t<T.rew?'▶▶ 快进':'◀◀ 倒带';
+  st('hudFF',{o:ff?(.7+.3*Math.sin(t*14)):0});
+  $('hudTime').style.color=(t>T.ffA&&t<T.rew)?'#ff7b7f':'';
+}
+
+function compareFrame(t){
+  const on=t>=T.cmp-.05&&t<T.cmpOut+.8;
+  const a=P(t,T.cmp,T.cmp+.8,E.expo), out=P(t,T.cmpOut,T.cmpOut+.7,E.ioE);
+  st('cmpTop',{o:on?1:0,y:-(1-a)*960-out*960});
+  st('cmpBot',{o:on?1:0,y:(1-a)*960+out*960});
+  const n1=Math.round(P(t,T.cmp+.6,T.cmp+2.2,E.o3)*19), n2=Math.round(P(t,T.cmp+1.4,T.cmp+2.2,E.o3)*2);
+  $('cmpN1').textContent=n1;$('cmpN2').textContent=n2;
+  const w1=$('cmpN1').offsetWidth, w2=$('cmpN2').offsetWidth;
+  $('cmpU1').style.left=(w1+10)+'px';$('cmpU2').style.left=(w2+10)+'px';
+  st('cmpU1',{o:P(t,T.cmp+.7,T.cmp+1.1)});st('cmpU2',{o:P(t,T.cmp+1.5,T.cmp+1.9)});
+  st('cmpL1',{o:P(t,T.cmp+2.2,T.cmp+2.7),y:(1-P(t,T.cmp+2.2,T.cmp+2.9,E.expo))*30});
+  st('cmpL2',{o:P(t,T.cmp+2.9,T.cmp+3.4),y:(1-P(t,T.cmp+2.9,T.cmp+3.6,E.expo))*30});
+}
+
+function endFrame(t){
+  const on=t>=T.cmpOut;
+  st('end',{o:on?1:0});
+  const e=P(t,T.endIn,T.endIn+1.1,E.spring);
+  st('endEmb',{o:P(t,T.endIn,T.endIn+.3),s:.4+.6*e,r:(1-e)*-40});
+  st('endName',{o:P(t,T.endIn+.35,T.endIn+.8),y:(1-P(t,T.endIn+.3,T.endIn+1.2,E.expo))*40});
+  st('endUrl',{o:P(t,T.endIn+.7,T.endIn+1.1),y:(1-P(t,T.endIn+.7,T.endIn+1.5,E.expo))*30});
+  st('endNote',{o:P(t,T.endIn+1.2,T.endIn+1.7)*.9});
+  // fade the closing caption out when end appears
+}
+
+/* ================= boot ================= */
+buildCaps();buildChips();buildGrain();
+window.frame=frame;
+window.ready=(async()=>{
+  await document.fonts.load('900 60px "Serif SC"','没有网站');
+  await document.fonts.load('500 30px "Sans SC"','有网站');
+  await document.fonts.load('700 30px "Manrope"','VEGO');
+  await document.fonts.load('30px "Young Serif"','01');
+  await document.fonts.load('30px "Brush"','蔬');
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(i=>i.decode().catch(()=>0)));
+  return true;
+})();
+/* sound events exported for the audio script */
+window.SFX=()=>{
+  const ev=[];
+  const add=(t,k,g=1)=>ev.push({t,k,g});
+  add(T.splitIn,'whoosh');add(T.splitIn+.7,'pop',.6);add(T.splitOut,'whooshLow');
+  add(T.phoneA,'rise');
+  for(let i=0;i<14;i++)add(T.mapsType+i/12,'key',.35);
+  add(T.pinDrop,'drop');add(T.sheetUp,'swish',.6);
+  CHIP_A_IN.forEach(x=>add(x,'bubble',.7));
+  TAPS.forEach(([x])=>add(x,'tap'));
+  for(let k=1;k<5;k++)add(T.photoTap+.5+k*.6-.2,'swipe',.5);
+  add(T.modalIn,'thud',.8);add(T.fbIn,'swish',.7);add(T.fbWall,'error');
+  add(T.msgIn,'swish',.6);
+  for(let i=0;i<20;i++)add(T.msgIn+.35+i/26,'key',.3);
+  add(T.msgSend,'send');add(T.ffA,'ff');
+  CHIP_A_X.forEach(x=>add(x,'buzz',.6));
+  add(T.giveUp+.2,'fall');
+  add(T.rew,'rewind');add(T.iris,'iris');
+  add(T.phoneB,'rise');
+  for(let i=0;i<14;i++)add(T.gType+i/13,'key',.35);
+  add(T.siteIn,'swish',.6);add(T.heroIn-.35,'panel');add(T.heroIn,'shimmer');
+  CHIP_B_IN.forEach(x=>add(x,'bubble',.6));
+  CHIP_B_OK.forEach(x=>add(x,'ding'));
+  [T.s1,T.s2,T.s3,T.s4].forEach(x=>add(x,'scroll',.5));
+  add(T.waIn,'swish',.6);
+  for(let i=0;i<9;i++)add(T.waIn+.6+i/10,'key',.3);
+  add(T.waSend,'send');add(T.waSend+.5,'success');
+  add(T.bOut,'whoosh');add(T.cmp,'slam');
+  add(T.cmp+.6,'tickRun');add(T.cmp+2.2,'pop',.7);add(T.cmp+2.9,'pop',.7);
+  add(T.cmpOut,'whooshLow');add(T.endIn,'logo');
+  return ev;
+};
+const qs=new URLSearchParams(location.search);
+if(qs.has('t')){window.ready.then(()=>frame(parseFloat(qs.get('t'))))}
+</script>
+</body>
+</html>
