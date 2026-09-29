@@ -13,7 +13,7 @@ It is a pitch video for the VEGO CANTEEN owner. It follows one hungry customer o
 | 29–32s | Rewind (clock runs back to 7:12), then an iris opens into the warm palette |
 | 32–51s | **B · 有网站.** Google result for vegocanteen.my, the site's own loader, then the hero (素食，也可以吃得好过瘾。), 十大必点, hours with "营业中", open-air parking + Google 导航 / Waze, 订位, then WhatsApp with the site's prefilled 「你好，蔬食堂！我想订位。」. Each question turns into a green ✓. Done by 7:14. |
 | 51–57s | Side by side: 19 分钟 (放弃，去了别家) vs 2 分钟 (今晚 8 点，4 位), marked * 情境模拟 |
-| 57–65s | Research: **77%** 的食客去餐厅之前会先上网站看；**近 70%** 曾因为餐厅的网站打消了去吃的念头；决定去不去，最看重的是菜单。Source line: MGH 餐饮消费者调查（1,101 位美国成年人，2019）· Restaurant Dive |
+| 57–65s | Research: **77%** 的食客去餐厅之前会先上网站看；**近 70%** 曾因为餐厅的网站打消了去吃的念头；Source line: MGH 餐饮消费者调查（1,101 位美国成年人，2019）· Restaurant Dive. Closing line, set below the source as the video's own conclusion (not a survey finding): 决定去不去，最看重的是——速度。 |
 
 ## Sources and what is illustrative
 
