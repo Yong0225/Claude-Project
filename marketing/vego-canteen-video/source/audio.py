@@ -6,7 +6,7 @@ from scipy import signal
 import soundfile as sf
 
 SR = 48000
-DUR = 64.0
+DUR = 64.8
 N = int(SR * DUR)
 rng = np.random.default_rng(3)
 music = np.zeros((N, 2))
@@ -14,7 +14,7 @@ fx = np.zeros((N, 2))
 
 # ---------- time map (mirrors T in comp/index.html) ----------
 T = dict(splitIn=3.0, splitOut=5.6, A0=5.9, ffA=24.3, ffB=25.7, giveUp=26.5, rew=29.4, iris=30.9,
-         B0=31.6, phoneB=33.3, bOut=49.6, cmp=51.4, cmpOut=57.0, endIn=60.3)
+         B0=31.6, phoneB=33.3, bOut=49.6, cmp=51.4, cmpOut=57.0, endIn=61.3)
 BEAT = 0.5  # 120 bpm
 
 
@@ -246,10 +246,10 @@ while t < B_END - 0.01:
     t += bar; k += 1
 
 # closing: breakdown pad + marimba, then logo chord
-add(music, T['cmpOut'], pad([41, 48, 53, 57, 64], 3.6, bright=2200, a=.4, r=1.2), .26)
-for j, n in enumerate([77, 76, 72, 69, 72, 76]):
+add(music, T['cmpOut'], pad([41, 48, 53, 57, 64], 4.6, bright=2200, a=.4, r=1.2), .26)
+for j, n in enumerate([77, 76, 72, 69, 72, 76, 77, 79]):
     add(music, T['cmpOut'] + .3 + j * .5, marimba(n, 1.2), .10, pan=-.3 + (j % 2) * .6)
-add(music, T['endIn'], pad([36, 48, 55, 59, 64, 67], 3.7, bright=3000, a=.05, r=2.0), .32)
+add(music, T['endIn'], pad([36, 48, 55, 59, 64, 67], 3.5, bright=3000, a=.05, r=2.0), .32)
 add(music, T['endIn'], kick(1.0, .6), .45)
 for j, n in enumerate([60, 67, 72, 76, 79]):
     add(music, T['endIn'] + j * .07, bell(n, 3.0), .09, pan=-.4 + j * .2)

@@ -1,6 +1,6 @@
 # VEGO CANTEEN 蔬食堂: website vs. no website (visitor POV)
 
-`vego-website-vs-no-website.mp4`: 1:04, vertical 1080×1920, 60 fps, H.264 + AAC, loudness −14 LUFS. All on-screen text is in Chinese. There is no voiceover; the video uses a synthesized score and sound design.
+`vego-website-vs-no-website.mp4`: 1:05, vertical 1080×1920, 60 fps, H.264 + AAC, loudness −14 LUFS. All on-screen text is in Chinese. There is no voiceover; the video uses a synthesized score and sound design.
 
 It is a pitch video for the VEGO CANTEEN owner. It follows one hungry customer on a Friday at 7:12pm, twice: once with only Google Maps + Facebook, and once with the website.
 
@@ -9,20 +9,22 @@ It is a pitch video for the VEGO CANTEEN owner. It follows one hungry customer o
 | Time | Scene |
 |---|---|
 | 0–6s | 星期五晚上，肚子饿了。 Then a split title: 没有网站 / 有网站, 同一家餐厅 · 同一位客人 |
-| 6–29s | **A · 没有网站.** Maps search, 4.9 rating (470 reviews). Four questions float around the phone: 有什么菜？今天有开吗？哪里停车？可以订位吗？ The customer flips through photos but finds no menu. Maps pushes the app download. Facebook shows a login wall. A Messenger message goes unanswered: 晚餐时间，老板在厨房忙 (fast-forward 7:16 → 7:31). The questions turn red ✕, and the customer thinks 算了，去别家吧。 |
+| 6–29s | **A · 没有网站.** Maps search, 4.9 rating (470 reviews). Four questions float around the phone: 有什么菜？今天有开吗？哪里停车？可以订位吗？ The customer flips through photos but finds no menu, and Maps pushes the app download. On the (logged-in) Facebook page, the customer scrolls past festival posters, opening notices and birthday posts but still finds no menu (资讯很多，可是很乱). A Messenger message goes unanswered: 晚餐时间，老板在厨房忙 (fast-forward 7:16 → 7:31). The questions turn red ✕, and the customer thinks 算了，去别家吧。 |
 | 29–32s | Rewind (clock runs back to 7:12), then an iris opens into the warm palette |
 | 32–51s | **B · 有网站.** Google result for vegocanteen.my, the site's own loader, then the hero (素食，也可以吃得好过瘾。), 十大必点, hours with "营业中", open-air parking + Google 导航 / Waze, 订位, then WhatsApp with the site's prefilled 「你好，蔬食堂！我想订位。」. Each question turns into a green ✓. Done by 7:14. |
-| 51–57s | Side by side: 19 分钟 (放弃，去了别家) vs 2 分钟 (今晚 8 点，4 位) |
-| 57–64s | 客人不会等。好食物，值得被一眼看见。 Then the end card: VEGO CANTEEN 蔬食堂 · vegocanteen.my · 情境模拟 · 画面为示意 |
+| 51–57s | Side by side: 19 分钟 (放弃，去了别家) vs 2 分钟 (今晚 8 点，4 位), marked * 情境模拟 |
+| 57–65s | Research: **77%** 的食客去餐厅之前会先上网站看；**近 70%** 曾因为餐厅的网站打消了去吃的念头；决定去不去，最看重的是菜单。Source line: MGH 餐饮消费者调查（1,101 位美国成年人，2019）· Restaurant Dive |
 
 ## Sources and what is illustrative
 
-- Rating, review count, price range, category and the "open in the app" prompt come from the live Google Maps listing (Sept 2026). The mobile Facebook login wall is real: the page shows nothing without logging in.
+- Rating, review count, price range, category and the "open in the app" prompt come from the live Google Maps listing (Sept 2026).
+- The Facebook page (`fb-page.jpg`, `fb-bar.png`) is stitched from the owner's own screenshots of the page while logged in. The logo (`logo.png`) is cropped from the page's profile picture.
+- Research figures come from https://www.restaurantdive.com/news/77-of-diners-visit-restaurant-websites-before-going-survey-finds/562008/ (MGH, Aug 2019, 1,101 US adults): 77% visit the website first; of those, "nearly 70%" were discouraged from visiting by the website; the menu was the biggest factor. The "68% abandon because they can't find a clear menu" figure is not in the article, so it is not used.
 - Website copy, dish names, hours, parking note and the WhatsApp prefill text come from the client's `index.html`.
-- Photos: the 6 images in `source/comp/img/` are customer photos from the Google Maps listing. They are used because the site's own `assets/img/*` files were not available. The site's `logo.png` was not available either, so the round 「蔬」 emblem is a stand-in.
-- The Facebook page, the Messenger chat, the website and the WhatsApp screens are recreated in HTML, not screen-recorded. The timings (19 vs 2 minutes) are a scenario, and the end card labels them 情境模拟.
+- Photos: the 6 food/store images in `source/comp/img/` are customer photos from the Google Maps listing. They are used because the site's own `assets/img/*` files were not available.
+- The Messenger chat, the website and the WhatsApp screens are recreated in HTML, not screen-recorded. The timings (19 vs 2 minutes) are a scenario, labelled 情境模拟.
 
-To swap in the real site assets, replace `hero` / `.feat .img` backgrounds and the `.emb` emblem in `source/comp/index.html`, then re-render.
+To swap in the real site assets, replace the `hero` / `.feat .img` backgrounds in `source/comp/index.html`, then re-render.
 
 ## Rebuilding
 

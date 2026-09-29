@@ -111,11 +111,12 @@ body{font-family:"Sans SC","Manrope",sans-serif;-webkit-font-smoothing:antialias
 #modalCard p:before{content:"✓";color:#1a73e8;font-weight:700}
 .mbtn{height:44px;border-radius:22px;display:grid;place-items:center;font-size:16px;margin-top:12px}
 /* facebook */
-#pgFb{background:#f0f2f5;z-index:10}
+#pgFb{background:#fff;z-index:10}
 #fbHead{position:absolute;left:0;right:0;top:47px;height:52px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e4e6eb;z-index:3}
 #fbHead .logo{font-family:"Manrope";font-weight:800;font-size:28px;color:#0866ff;letter-spacing:-.04em}
 #fbHead .lg{background:#0866ff;color:#fff;font-size:14px;font-weight:600;padding:7px 14px;border-radius:8px}
-#fbBody{position:absolute;left:0;right:0;top:99px}
+#fbScroll{position:absolute;left:0;top:98px;width:390px}
+#fbBar{position:absolute;left:0;top:47px;width:390px;height:51px;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 #fbCover{height:150px;background:url(img/store.jpg) center 40%/cover}
 .fbAv{position:absolute;left:14px;top:92px;width:112px;height:112px;border-radius:50%;border:4px solid #fff;background:#fff;overflow:hidden}
 #fbInfo{background:#fff;padding:62px 14px 14px}
@@ -256,6 +257,10 @@ body{font-family:"Sans SC","Manrope",sans-serif;-webkit-font-smoothing:antialias
 .cmpUnit{position:absolute;font-family:"Serif SC";font-weight:900;font-size:80px}
 .cmpLine{position:absolute;left:0;right:0;font-size:38px;font-weight:500;line-height:1.7}
 #endEmb{left:540px;top:760px;width:220px;height:220px;margin:-110px 0 0 -110px;font-size:118px;border-width:3px}
+.emb{background:#fff url(img/logo.png) center/100% no-repeat!important;color:transparent!important;border-color:#fff!important}
+.stNum{font-family:"Manrope";font-weight:800;font-size:250px;line-height:1;letter-spacing:-.05em;color:#1e4a2c;font-variant-numeric:tabular-nums}
+.stNum small{font-family:"Serif SC";font-weight:900;font-size:90px;letter-spacing:0;margin-right:10px}
+.stTxt{font-family:"Serif SC";font-weight:900;font-size:58px;line-height:1.3;color:#16201a;margin-top:14px}
 #grain{position:absolute;inset:0;z-index:900;mix-blend-mode:overlay;opacity:.10;pointer-events:none}
 #vig{position:absolute;inset:0;z-index:901;pointer-events:none;background:radial-gradient(1300px 1700px at 50% 50%,transparent 55%,rgba(0,0,0,.35) 100%)}
 #fade{position:absolute;inset:0;z-index:950;background:#000}
@@ -318,27 +323,8 @@ body{font-family:"Sans SC","Manrope",sans-serif;-webkit-font-smoothing:antialias
             </div>
             <!-- FACEBOOK -->
             <div class="pg" id="pgFb">
-              <div id="fbHead"><span class="logo">facebook</span><span class="lg">登录</span></div>
-              <div id="fbBody">
-                <div id="fbCover"></div>
-                <div class="fbAv"><div class="emb" style="width:100%;height:100%;font-size:58px;border:none">蔬</div></div>
-                <div id="fbInfo"><h3>VEGO CANTEEN</h3><div class="sub">餐厅 · 素食餐馆</div>
-                  <div class="fbbtns"><span class="pri">关注</span><span>发消息</span></div></div>
-                <div class="fbtabs"><span>帖子</span><span>关于</span><span>照片</span><span>评论</span></div>
-                <div class="fbpost">
-                  <div style="display:flex;gap:10px;align-items:center"><div class="emb" style="width:40px;height:40px;font-size:22px;border:none">蔬</div><div style="flex:1"><div class="skl" style="width:50%;margin:0"></div><div class="skl" style="width:30%"></div></div></div>
-                  <div class="skl" style="width:92%;margin-top:14px"></div><div class="skl" style="width:70%"></div>
-                  <div style="height:220px;margin:12px -14px 0;background:url(img/mushroom.jpg) center/cover"></div>
-                </div>
-              </div>
-              <div id="fbDim"></div>
-              <div id="fbWall">
-                <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="28" fill="#0866ff"/><path d="M31 56V36h6l1-7h-7v-4c0-2 1-3.5 4-3.5h3.2v-6.2c-1.6-.2-3.5-.4-5.4-.4-5.4 0-9 3.3-9 9.2V29h-6v7h6v20" fill="#fff"/></svg>
-                <h4>在 Facebook 上查看<br>VEGO CANTEEN 的更多内容</h4>
-                <p>登录或注册即可继续浏览。</p>
-                <div class="fbL" style="background:#0866ff;color:#fff;margin-top:22px">登录</div>
-                <div class="fbL" style="border:1px solid #0866ff;color:#0866ff">创建新账户</div>
-              </div>
+              <div id="fbScroll"><img src="img/fb-page.jpg" style="width:390px;display:block"></div>
+              <img id="fbBar" src="img/fb-bar.png">
             </div>
             <!-- MESSENGER -->
             <div class="pg" id="pgMsg">
@@ -449,14 +435,23 @@ body{font-family:"Sans SC","Manrope",sans-serif;-webkit-font-smoothing:antialias
     <div class="cmpNum" id="cmpN2" style="top:230px;color:#1e4a2c">2</div>
     <div class="cmpUnit" id="cmpU2" style="top:420px;color:#1e4a2c">分钟</div>
     <div class="cmpLine" id="cmpL2" style="top:620px;color:#36433a"><span style="color:#22a04b">✓</span> 看完菜单　<span style="color:#22a04b">✓</span> 订好位子<br>→ 今晚 8 点，4 位</div>
+    <div class="abs" style="left:0;top:830px;font-size:24px;color:#8d9a8f;letter-spacing:.15em">* 情境模拟</div>
   </div></div>
 
-  <!-- end -->
-  <div id="end" class="layer" style="background:#f1e9da">
-    <div class="emb abs" id="endEmb">蔬</div>
-    <div class="abs" id="endName" style="left:0;right:0;top:920px;text-align:center"><div style="font-family:'Manrope';font-weight:800;font-size:64px;letter-spacing:.08em;color:#1e4a2c">VEGO CANTEEN</div><div style="font-size:34px;letter-spacing:1.2em;margin-left:1.2em;color:#56705c;margin-top:10px">蔬食堂</div></div>
-    <div class="abs" id="endUrl" style="left:0;right:0;top:1150px;text-align:center"><span style="display:inline-block;border:2px solid #1e4a2c;color:#1e4a2c;font-family:'Manrope';font-weight:700;font-size:40px;padding:16px 44px;border-radius:50px;letter-spacing:.04em">vegocanteen.my</span></div>
-    <div class="abs" id="endNote" style="left:0;right:0;top:1780px;text-align:center;font-size:24px;color:#8d9a8f;letter-spacing:.2em">情境模拟 · 画面为示意</div>
+  <!-- research -->
+  <div id="stats" class="layer">
+    <div class="abs" id="stTag" style="left:90px;top:230px"><span style="display:inline-block;background:#1e4a2c;color:#f4efe4;font-size:30px;font-weight:700;letter-spacing:.2em;padding:10px 26px;border-radius:30px">真实调研</span></div>
+    <div class="abs" id="st1" style="left:90px;right:90px;top:330px">
+      <div class="stNum" id="st1n">77%</div>
+      <div class="stTxt">的食客，去餐厅之前<br>会先上网站看一看。</div>
+    </div>
+    <div class="abs" id="stRule" style="left:90px;right:90px;top:870px;height:2px;background:#cdbf9f;transform-origin:0 50%"></div>
+    <div class="abs" id="st2" style="left:90px;right:90px;top:930px">
+      <div class="stNum" id="st2n"><small>近</small>70%</div>
+      <div class="stTxt">曾因为餐厅的网站，<br>打消了去吃的念头。</div>
+    </div>
+    <div class="abs" id="st3" style="left:90px;right:90px;top:1470px"><span style="font-family:'Serif SC';font-weight:900;font-size:50px;color:#16201a">决定去不去，最看重的是——<span style="color:#d99a2b">菜单</span>。</span></div>
+    <div class="abs" id="stSrc" style="left:90px;right:90px;top:1720px;font-size:25px;line-height:1.6;color:#7f8a80">资料来源：MGH 餐饮消费者调查（1,101 位美国成年人，2019）<br>Restaurant Dive 报道</div>
   </div>
 
   <div id="caps"></div>
@@ -542,14 +537,14 @@ function charAnim(chars,t,t0,t1,{stag=.028,dur=.7,exit=.45,dy=1.05}={}){
 
 /* ================= timeline ================= */
 const T={
-  END:64,
+  END:64.8,
   splitIn:3.0, splitOut:5.6,
   A0:5.9, phoneA:7.0,
   mapsType:8.1, pinDrop:9.3, sheetUp:9.7, photoTap:12.9, photoEnd:16.0, modalIn:16.2, modalOut:17.7,
-  fbIn:18.0, fbWall:19.7, msgIn:22.7, msgSend:23.6, ffA:24.3, ffB:25.7, giveUp:26.5,
+  fbIn:18.0, fbWall:18.9, msgIn:22.7, msgSend:23.6, ffA:24.3, ffB:25.7, giveUp:26.5,
   rew:29.4, iris:30.9, B0:31.6, phoneB:33.3,
   gType:34.35, gTap:35.9, siteIn:36.15, heroIn:37.45, s1:40.0, s2:42.6, s3:43.9, s4:45.0, waTap:46.35, waIn:46.6, waSend:48.0,
-  bOut:49.6, cmp:51.4, cmpOut:57.0, close:57.0, endIn:60.3,
+  bOut:49.6, cmp:51.4, cmpOut:57.0, st1:57.4, st2:59.4, st3:61.3, stOut:99, close:61.3,
 };
 window.T=T;
 
@@ -560,8 +555,10 @@ const CAPS=[
   [12.7,15.9,'可是……菜单在哪里？','top','a'],
   [13.5,15.9,'翻来翻去，只有零散的照片。','bot','a'],
   [16.25,17.85,'还要先下载 App？','top','a'],
-  [18.2,19.75,'去 Facebook 看看。','top','a'],
-  [19.9,22.55,'想看更多？请先登录。','top','a'],
+  [18.2,19.6,'去 Facebook 看看。','top','a'],
+  [19.75,21.2,'节日海报、营业通知……','top','a'],
+  [21.35,22.55,'菜单呢？还是找不到。','top','a'],
+  [19.95,22.55,'资讯很多，可是很乱。','bot','a'],
   [22.8,24.2,'那就私讯问问吧。','top','a'],
   [24.35,26.35,'晚餐时间，老板在厨房忙。','top','a'],
   [24.9,26.35,'15 分钟过去，没有回复。','bot','a'],
@@ -574,7 +571,6 @@ const CAPS=[
   [45.05,46.9,'想订位？一键就好。','top','b'],
   [47.1,49.5,'2 分钟，决定好了。','top','b'],
   [50.0,51.3,'今晚 8 点见。','center','b'],
-  [57.25,60.0,'客人不会等。\n好食物，值得被一眼看见。','center','b'],
 ];
 const capEls=[];
 function buildCaps(){
@@ -583,7 +579,7 @@ function buildCaps(){
     const el=document.createElement('div');
     el.className=`cap ${c[3]} ${c[4]}`;
     if(c[3]==='center'){el.style.top=(c[2].includes('\n')?830:900)+'px';el.style.lineHeight='1.3'}
-    if(c[2].startsWith('客人不会等')){el.style.fontSize='74px';el.style.top='760px'}
+    if(c[2].startsWith('客人不会等')){el.style.fontSize='74px';el.style.top='820px'}
     box.appendChild(el);
     const chars=splitInto(el,c[2]);
     capEls.push({c,el,chars});
@@ -692,8 +688,8 @@ function frame(t){
   /* ---- camera ---- */
   {
     let cs=1,cy=0;
-    const z1=P(t,T.fbWall+.1,T.fbWall+1.1,E.io3)*(1-P(t,T.msgIn-.2,T.msgIn+.4,E.io3));
-    cs+=z1*.12;cy+=z1*10;
+    const z1=P(t,T.fbWall+.6,T.fbWall+1.6,E.io3)*(1-P(t,T.msgIn-.4,T.msgIn+.3,E.io3));
+    cs+=z1*.07;cy+=z1*10;
     const z2=P(t,T.ffA-.1,T.ffA+1.2,E.io3)*(1-P(t,T.giveUp,T.giveUp+.8,E.io3));
     cs+=z2*.06;
     const z3=P(t,T.waIn,T.waIn+1,E.io3)*(1-P(t,T.bOut-.3,T.bOut+.3,E.io3));
@@ -759,10 +755,8 @@ function screenFrame(t){
     // facebook
     const fi=P(t,T.fbIn,T.fbIn+.55,E.expo);
     vis.pgFb={o:t>=T.fbIn?1:0,x:(1-fi)*390};
-    const fw=P(t,T.fbWall,T.fbWall+.7,E.expo);
-    st('fbWall',{y:-fw*420});st('fbDim',{o:fw});
-    // content fades in skeleton-style
-    st('fbBody',{o:P(t,T.fbIn+.3,T.fbIn+.8),y:-P(t,T.fbIn+.5,T.fbWall,E.io3)*60});
+    const fsy=P(t,T.fbWall,T.fbWall+.8,E.ioE)*560+P(t,20.55,21.3,E.ioE)*286+Math.sin(Math.PI*P(t,21.3,21.6))*-6;
+    st('fbScroll',{y:-fsy,o:P(t,T.fbIn+.2,T.fbIn+.6)});
     // messenger
     const mgi=P(t,T.msgIn,T.msgIn+.55,E.expo);
     vis.pgMsg={o:t>=T.msgIn?1:0,x:(1-mgi)*390};
@@ -877,6 +871,7 @@ function chipsFrame(t){
       y=q.y+Math.sin(t*1.3+i*1.7)*7;
       // wobble when unanswered moments
       if(t>T.photoTap+.6&&t<T.photoEnd&&i===0) r=Math.sin(t*18)*2*P(t,T.photoTap+.6,T.photoTap+.9)*(1-P(t,T.photoEnd-.4,T.photoEnd));
+      if(t>19.8&&t<22.4&&i===0) r+=Math.sin(t*18)*2*P(t,19.8,20.1)*(1-P(t,22.1,22.4));
       if(t>=CHIP_A_X[i]) state='x';
       const d=P(t,CHIP_A_X[i]+.35,CHIP_A_X[i]+1.4,E.i3);
       if(d>0){y+=d*700;r+=d*q.side*25;o*=1-d}
@@ -957,14 +952,19 @@ function compareFrame(t){
 }
 
 function endFrame(t){
-  const on=t>=T.cmpOut;
-  st('end',{o:on?1:0});
-  const e=P(t,T.endIn,T.endIn+1.1,E.spring);
-  st('endEmb',{o:P(t,T.endIn,T.endIn+.3),s:.4+.6*e,r:(1-e)*-40});
-  st('endName',{o:P(t,T.endIn+.35,T.endIn+.8),y:(1-P(t,T.endIn+.3,T.endIn+1.2,E.expo))*40});
-  st('endUrl',{o:P(t,T.endIn+.7,T.endIn+1.1),y:(1-P(t,T.endIn+.7,T.endIn+1.5,E.expo))*30});
-  st('endNote',{o:P(t,T.endIn+1.2,T.endIn+1.7)*.9});
-  // fade the closing caption out when end appears
+  const on=t>=T.cmpOut&&t<T.stOut+.8;
+  const out=P(t,T.stOut,T.stOut+.5,E.io3);
+  st('stats',{o:on?1-out:0,y:-out*40});
+  st('stTag',{o:P(t,T.st1-.2,T.st1+.2),x:(1-P(t,T.st1-.2,T.st1+.6,E.expo))*-30});
+  const a=P(t,T.st1,T.st1+.8,E.expo);
+  st('st1',{o:P(t,T.st1,T.st1+.3),y:(1-a)*60});
+  $('st1n').textContent=Math.round(P(t,T.st1,T.st1+1.3,E.o3)*77)+'%';
+  st('stRule',{o:1});$('stRule').style.transform=`scaleX(${P(t,T.st2-.4,T.st2+.4,E.ioE).toFixed(3)})`;
+  const b=P(t,T.st2,T.st2+.8,E.expo);
+  st('st2',{o:P(t,T.st2,T.st2+.3),y:(1-b)*60});
+  $('st2n').innerHTML='<small>近</small>'+Math.round(P(t,T.st2,T.st2+1.2,E.o3)*70)+'%';
+  st('st3',{o:P(t,T.st3,T.st3+.4),y:(1-P(t,T.st3,T.st3+.9,E.expo))*40});
+  st('stSrc',{o:P(t,T.st1+.6,T.st1+1.1)});
 }
 
 /* ================= boot ================= */
@@ -991,7 +991,7 @@ window.SFX=()=>{
   CHIP_A_IN.forEach(x=>add(x,'bubble',.7));
   TAPS.forEach(([x])=>add(x,'tap'));
   for(let k=1;k<5;k++)add(T.photoTap+.5+k*.6-.2,'swipe',.5);
-  add(T.modalIn,'thud',.8);add(T.fbIn,'swish',.7);add(T.fbWall,'error');
+  add(T.modalIn,'thud',.8);add(T.fbIn,'swish',.7);add(T.fbWall,'scroll',.8);add(20.55,'scroll',.8);add(19.9,'buzz',.35);
   add(T.msgIn,'swish',.6);
   for(let i=0;i<20;i++)add(T.msgIn+.35+i/26,'key',.3);
   add(T.msgSend,'send');add(T.ffA,'ff');
@@ -1009,7 +1009,7 @@ window.SFX=()=>{
   add(T.waSend,'send');add(T.waSend+.5,'success');
   add(T.bOut,'whoosh');add(T.cmp,'slam');
   add(T.cmp+.6,'tickRun');add(T.cmp+2.2,'pop',.7);add(T.cmp+2.9,'pop',.7);
-  add(T.cmpOut,'whooshLow');add(T.endIn,'logo');
+  add(T.cmpOut,'whooshLow');add(T.st1,'pop',.8);add(T.st1,'tickRun',.7);add(T.st2,'pop',.8);add(T.st2,'tickRun',.7);add(T.st3,'ding',.8);add(T.close,'logo');
   return ev;
 };
 const qs=new URLSearchParams(location.search);
