@@ -25,3 +25,6 @@ venv/
 # Output files
 leads_output/
 *.xlsx
+
+# Claude Code local skills (private lead-gen data, never publish)
+.claude/skills/
