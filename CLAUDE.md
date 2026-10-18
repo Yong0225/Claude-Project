@@ -11,6 +11,8 @@ Several independent projects share one repo, `Claude-Project` (renamed from `spa
 | `business-tracker/` | **Pulse** — business metrics tracker. Single-file web app, data in localStorage | `business-tracker/README.md` |
 | `staff-scheduler/` | 班表 — restaurant scheduling, timesheets, payroll. Single-file web app | `staff-scheduler/README.md` |
 | `restaurant-site/` | 拾山 SHISHAN restaurant landing page | — |
+| `heritage-collection/` | The Heritage Collection by Daily Coffee (Penang) website. Single page + `images/` + vendored GSAP/Lenis in `js/` | — |
+| `marketing/pulse-launch-video/` | Pulse launch video (VSL, English, 1:30 MP4) and the scripts that render it | `marketing/pulse-launch-video/README.md` |
 | root `*.py` | F&B lead pipeline: scraping (`scrap*.py`), ICP qualification with Gemini (`analyze_leads.py`), cold emails (`generate_emails.py`), `leads_app.py` | `scrap.md`, `pp.md`, `icp.md`, `coldemail.md` |
 
 The web apps have no build step and no dependencies: open `index.html` in a browser, or serve with `py -m http.server`.
@@ -20,13 +22,13 @@ The web apps have no build step and no dependencies: open `index.html` in a brow
 GitHub Pages serves the `master` branch from the repo root:
 
 - https://yong0225.github.io/Claude-Project/business-tracker/ — Pulse. The owner uses this daily on their phone from the home screen.
-- Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`).
+- Other folders are reachable the same way (`/staff-scheduler/`, `/restaurant-site/`, `/heritage-collection/`).
 
 **Anything pushed to `master` is live within 1–2 minutes.** Never push broken work to `master`.
 
 Pulse stores each user's data in their own browser's localStorage (key `pulse.v1`). Every code change must keep reading existing saved data: extend `normalize()` for new fields, and never rename or remove stored keys without a migration.
 
-Pulse cloud sync uses the Supabase project `rlaeklherxdfrlbduqde` (shared with staff-scheduler's `bb_*` objects — never touch those). Pulse's tables and functions are prefixed `pulse_`; the schema is in `business-tracker/supabase.sql`. Devices running an older cached copy of the page keep calling these functions, so change them only in backward-compatible ways, and keep the sync fields (`u`, `su`, `setu`, `del`) and merge rules in `mergeDB()` compatible.
+Pulse cloud sync uses the Supabase project `rlaeklherxdfrlbduqde` (shared with staff-scheduler's `bb_*` objects — never touch those). Pulse's tables and functions are prefixed `pulse_`; the schema is in `business-tracker/supabase.sql`. Devices running an older cached copy of the page keep calling these functions, so change them only in backward-compatible ways, and keep the sync fields (`u`, `su`, `setu`, `nu`, `del`, entry keys from `entryKey()`) and merge rules in `mergeDB()` compatible. If a change adds data that an older page would drop when it saves, bump `DATA_FV` in `index.html`: `pulse_push` rejects pushes whose `fv` is lower than the stored one, so stale open tabs can't overwrite newer data.
 
 ## Git workflow
 
