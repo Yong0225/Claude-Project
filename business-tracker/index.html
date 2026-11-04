@@ -469,7 +469,7 @@ button.row:active,.row.tap:active{background:var(--fill2);transition:none}
 const I18N = {
   en: {
     'nav.overview':'Overview','nav.log':'Log','nav.metrics':'Metrics','nav.goals':'Goals','nav.settings':'Settings',
-    'period.week':'Week','period.month':'Month','period.quarter':'Quarter','period.year':'Year','period.all':'All',
+    'period.day':'Day','period.week':'Week','period.month':'Month','period.quarter':'Quarter','period.year':'Year','period.all':'All',
     'period.vs':'vs {x}','period.vsToDate':'vs same days of {x}','period.allTime':'All time','period.thisWeek':'This week','period.lastWeek':'Last week',
     'save':'Save','cancel':'Cancel','done':'Done','add':'Add','undo':'Undo','today':'Today','yesterday':'Yesterday','confirm':'Confirm','delete':'Delete',
 
@@ -537,7 +537,7 @@ const I18N = {
     'md.payback':'Months of gross profit needed to earn back the CAC. Under 12 months is good.',
     'better.up':'Higher is better','better.down':'Lower is better',
 
-    'ov.title':'Overview','ov.trend':'Trend','ov.funnel':'Funnel','ov.goals':'Goals','ov.ins':'Highlights','ov.seeAll':'See all',
+    'ov.title':'Overview','ov.trend':'Trend','ov.funnel':'Funnel','ov.splitHint':'Log engaged / referral replies under Replied to see engaged, referral and negative rates here','ov.goals':'Goals','ov.ins':'Highlights','ov.seeAll':'See all',
     'ov.empty.h':'Track your business, for real','ov.empty.p':'Log leads, deals, revenue and costs. Conversion rate, CAC, LTV and profit are calculated for you.',
     'ov.empty.add':'Log first entry','ov.empty.sample':'Try sample data','ov.noGoals':'No goals yet. Set one to see your pace.','ov.addGoal':'Add goal',
     'ins.up':'{m} up {p} vs {prev}','ins.down':'{m} down {p} vs {prev}',
@@ -695,7 +695,7 @@ const I18N = {
   },
   zh: {
     'nav.overview':'概览','nav.log':'记录','nav.metrics':'指标','nav.goals':'目标','nav.settings':'设置',
-    'period.week':'周','period.month':'月','period.quarter':'季','period.year':'年','period.all':'全部',
+    'period.day':'日','period.week':'周','period.month':'月','period.quarter':'季','period.year':'年','period.all':'全部',
     'period.vs':'对比 {x}','period.vsToDate':'对比 {x} 同期','period.allTime':'全部时间','period.thisWeek':'本周','period.lastWeek':'上周',
     'save':'保存','cancel':'取消','done':'完成','add':'添加','undo':'撤销','today':'今天','yesterday':'昨天','confirm':'确认','delete':'删除',
 
@@ -763,7 +763,7 @@ const I18N = {
     'md.payback':'需要几个月的毛利才能赚回 CAC。12 个月以内算好。',
     'better.up':'越高越好','better.down':'越低越好',
 
-    'ov.title':'概览','ov.trend':'趋势','ov.funnel':'转化漏斗','ov.goals':'目标','ov.ins':'洞察','ov.seeAll':'全部',
+    'ov.title':'概览','ov.trend':'趋势','ov.funnel':'转化漏斗','ov.splitHint':'在「已回复」下面记录正面 / 转介回复，这里就会显示正面、转介、负面回复率','ov.goals':'目标','ov.ins':'洞察','ov.seeAll':'全部',
     'ov.empty.h':'认真追踪你的生意','ov.empty.p':'记录线索、成交、收入和成本，转化率、CAC、LTV、利润全部自动算好。',
     'ov.empty.add':'记录第一笔数据','ov.empty.sample':'载入示例数据','ov.noGoals':'还没有目标，设一个就能看到进度。','ov.addGoal':'添加目标',
     'ins.up':'{m} 比{prev}提升 {p}','ins.down':'{m} 比{prev}下降 {p}',
@@ -947,7 +947,7 @@ const POS = 'pos', REF = 'ref';
 /* one entry per day per test variant ("t"); untagged entries keep the plain date as their key */
 const entryKey = e => e.t ? e.date + '|' + e.t : e.date;
 const byEntry = (a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.t || '') < (b.t || '') ? -1 : (a.t || '') > (b.t || '') ? 1 : 0;
-const PERIODS = ['week', 'month', 'quarter', 'year', 'all'];
+const PERIODS = ['day', 'week', 'month', 'quarter', 'year', 'all'];
 
 function defaultDB() {
   return {
@@ -1042,7 +1042,9 @@ function fmtMonth(s, long) {
 function periodRange(type, offset = 0) {
   const td = today(), d = parseD(td);
   let from, to;
-  if (type === 'week') {
+  if (type === 'day') {
+    from = to = addDays(td, offset);
+  } else if (type === 'week') {
     const s = new Date(d); s.setDate(d.getDate() - (d.getDay() + 6) % 7 + offset * 7);
     from = ymd(s); to = addDays(from, 6);
   } else if (type === 'month') {
@@ -1061,6 +1063,7 @@ function periodRange(type, offset = 0) {
 function periodLabel(r) {
   const f = parseD(r.from);
   switch (r.type) {
+    case 'day': return fmtDayLong(r.from);
     case 'week':
       if (r.offset === 0) return t('period.thisWeek');
       if (r.offset === -1) return t('period.lastWeek');
@@ -1352,8 +1355,8 @@ function delta(cur, prev, fmt, better) {
 function bucketsFor(r) {
   const out = [];
   const span = daysBetween(r.from, r.to) + 1;
-  if (r.type === 'week' || r.type === 'month' || (r.type === 'all' && span <= 45)) {
-    for (let d = r.from; d <= r.to; d = addDays(d, 1)) out.push({ from: d, to: d, label: fmtDay(d), axis: fmtDay(d, { day: 'numeric' }) });
+  if (r.type === 'day' || r.type === 'week' || r.type === 'month' || (r.type === 'all' && span <= 45)) {
+    for (let d = r.type === 'day' ? addDays(r.to, -13) : r.from; d <= r.to; d = addDays(d, 1)) out.push({ from: d, to: d, label: fmtDay(d), axis: fmtDay(d, { day: 'numeric' }) });
   } else if (r.type === 'quarter' || (r.type === 'all' && span <= 180)) {
     let d = parseD(r.from); d.setDate(d.getDate() - (d.getDay() + 6) % 7);
     for (let s = ymd(d); s <= r.to; s = addDays(s, 7)) {
@@ -1378,7 +1381,7 @@ function historyRanges(type, offset, n) {
   return out;
 }
 function shortPeriod(r) {
-  if (r.type === 'week') return fmtDay(r.from);
+  if (r.type === 'day' || r.type === 'week') return fmtDay(r.from);
   if (r.type === 'month') return fmtMonth(r.from);
   if (r.type === 'quarter') return 'Q' + (Math.floor(parseD(r.from).getMonth() / 3) + 1);
   return r.from.slice(0, 4);
@@ -2490,9 +2493,10 @@ function emptyHero() {
     <button class="btn sec" data-act="sample">${esc(t('ov.empty.sample'))}</button></div></div>`;
 }
 /* the funnel's "replied" bar split into engaged / referral / negative; replies from before the
-   split was first logged keep the plain stage colour */
+   split was first logged keep the plain stage colour. No split logged in the period: a hint instead */
 function replySplit(c, col) {
   const S = c.S, neg = S._pr - S.pos - S.ref;
+  if (!(S._pr > 0)) return { bar: '', legend: `<div class="fn-split">${esc(t('ov.splitHint'))}</div>` };
   const segs = [[S.pos, 'var(--green)'], [S.ref, 'var(--orange)'], [neg, `color-mix(in srgb,${col} 35%,transparent)`], [S.replied - S._pr, col]];
   const bar = segs.filter(([n]) => n > 0).map(([n, bg]) => `<i style="flex:${n};background:${bg}"></i>`).join('');
   const legend = [['posRate', 'f.posShort', segs[0][1]], ['refRate', 'f.refShort', segs[1][1]], ['negRate', 'f.negShort', segs[2][1]]]
@@ -2521,9 +2525,9 @@ function viewOverview() {
     const conv = i ? `<div class="fn-conv">${icon('down', 2.6)}${esc(fmtVal(div(n, prevN), 'pct'))}</div>` : '';
     const hue = ['var(--blue)', 'var(--indigo)', 'var(--purple)', 'var(--pink)', 'var(--orange)', 'var(--green)'];
     const col = i === DB.stages.length - 1 ? 'var(--green)' : hue[Math.min(i, hue.length - 2)];
-    const split = s.id === 'replied' && MX.posRate && c.S._pr > 0 ? replySplit(c, col) : null;
+    const split = s.id === 'replied' && MX.posRate ? replySplit(c, col) : null;
     return `${conv}<div class="fn-row"><div class="fn-top"><span>${esc(stageName(s))}</span><b>${numHTML('fn:' + s.id, n, 'num')}</b></div>
-      <div class="fn-track"><div class="fn-fill${split ? ' seg' : ''}" data-bar="fn:${esc(s.id)}" data-v="${n / maxStage * 100}" style="background:${split ? 'none' : col}">${split ? split.bar : ''}</div></div>${split ? split.legend : ''}</div>`;
+      <div class="fn-track"><div class="fn-fill${split && split.bar ? ' seg' : ''}" data-bar="fn:${esc(s.id)}" data-v="${n / maxStage * 100}" style="background:${split && split.bar ? 'none' : col}">${split ? split.bar : ''}</div></div>${split ? split.legend : ''}</div>`;
   }).join('');
 
   const gs = DB.goals.slice(0, 4).map(g => goalStatus(g)).filter(Boolean);
