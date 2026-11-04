@@ -324,6 +324,8 @@ button.row:active,.row.tap:active{background:var(--fill2);transition:none}
 .ctr+.ctr{box-shadow:0 -.5px 0 var(--sep)}
 .ctr .nm{flex:1;min-width:0;font-size:16px}
 .ctr .nm small{display:block;font-size:12px;color:var(--text2)}
+.ctr.pos{padding-top:6px}
+.ctr.pos .nm{font-size:15px;color:var(--text2);padding-left:6px}
 .step{width:38px;height:38px;border-radius:50%;border:0;background:var(--fill2);color:var(--blue);display:grid;place-items:center;flex:none;
   transition:transform .15s var(--ease),background-color .2s}
 .step:active{transform:scale(.86);background:var(--fill)}
@@ -471,6 +473,7 @@ const I18N = {
     'fh.revNew':'Paid by clients you won','fh.revRec':'Retainers, renewals, repeat buys','fh.mkt':'Ads, boosts, lead lists',
     'fh.sales':'Email tools, CRM, commissions','fh.cogs':'Freelancers, production, software for delivery','fh.opex':'Rent, salaries, everything else',
     'fh.churned':'Clients who cancelled or didn’t renew',
+    'f.pos':'Engaged replies','f.posShort':'engaged','fh.pos':'Of the replies, how many showed interest','f.neg':'Negative replies',
 
     'g.funnel':'Funnel','g.acq':'Acquisition','g.money':'Revenue & profit','g.ret':'Retention & value','g.custom':'Custom','g.inputs':'Raw numbers',
     'm.revenue':'Revenue','m.newCust':'New clients','m.convOverall':'Overall conversion','m.cpl':'Cost per lead','m.cpm':'Cost per meeting',
@@ -502,6 +505,11 @@ const I18N = {
     'md.newCust':'Deals closed. Your last funnel stage counts as a new client.',
     'md.convOverall':'Out of every lead, how many became paying clients. For cold outreach, 0.5–3% is typical.',
     'md.conv':'Share of {a} that made it to {b}. Watch the step with the biggest drop — that’s where the money leaks.',
+    'm.posRate':'Engaged rate','m.negRate':'Negative reply rate','m.posShare':'Engaged share of replies','m.posBook':'Engaged → booked',
+    'md.posRate':'Replies that raised their hand — Hormozi’s engaged leads. This is the number your offer and opener should move. Counted from the first day you logged an engaged reply.',
+    'md.negRate':'Replies that said no, not now or stop. Together with the engaged rate it adds up to the response rate.',
+    'md.posShare':'Of everyone who replied, how many were interested. Low means you reach people, but the wrong ones or with the wrong offer.',
+    'md.posBook':'Share of engaged replies that turned into {b}. Negative replies never book, so this is the honest follow-up rate.',
     'md.cpl':'What each new lead costs you.',
     'md.cpm':'What it costs to get one sales conversation.',
     'md.cac':'Customer acquisition cost — what you spend to win one client. Compare it to LTV.',
@@ -560,7 +568,7 @@ const I18N = {
     's.kbd':'Shortcuts','s.kbdF':'N  new entry  ·  1–5  switch tabs  ·  ← →  previous / next period  ·  Esc  close',
     's.moveUp':'Move up','s.moveDown':'Move down','edit':'Edit',
 
-    'term.contacted':'Contact rate','term.opened':'Open rate','term.replied':'Reply rate','term.meeting':'Booking rate',
+    'term.contacted':'Contact rate','term.opened':'Open rate','term.replied':'Response rate','term.meeting':'Booking rate',
     'term.proposal':'Proposal rate','term.won':'Close rate',
 
     'mv.tabMetrics':'Metrics','mv.tabTests':'A/B tests',
@@ -689,6 +697,7 @@ const I18N = {
     'fh.revNew':'本期新成交客户付的钱','fh.revRec':'月费、续约、回头客','fh.mkt':'广告、推广、购买线索',
     'fh.sales':'邮件工具、CRM、提成','fh.cogs':'外包、制作、交付用的软件','fh.opex':'房租、工资及其他',
     'fh.churned':'取消合作或没有续约的客户',
+    'f.pos':'正面回复','f.posShort':'正面','fh.pos':'回复里有多少人表示有兴趣','f.neg':'负面回复',
 
     'g.funnel':'转化漏斗','g.acq':'获客','g.money':'收入与利润','g.ret':'留存与价值','g.custom':'自定义','g.inputs':'原始数据',
     'm.revenue':'总收入','m.newCust':'新客户','m.convOverall':'总转化率','m.cpl':'单条线索成本','m.cpm':'单次会议成本',
@@ -720,6 +729,11 @@ const I18N = {
     'md.newCust':'成交数。漏斗最后一个阶段就算作新客户。',
     'md.convOverall':'每条线索里有多少变成了付费客户。冷邮件开发一般在 0.5–3%。',
     'md.conv':'{a} 中进入 {b} 的比例。掉得最多的那一步，就是钱漏掉的地方。',
+    'm.posRate':'正面回复率','m.negRate':'负面回复率','m.posShare':'正面占比','m.posBook':'正面 → 约见率',
+    'md.posRate':'举手表示有兴趣的回复，也就是 Hormozi 说的 engaged leads（意向线索）。你的开场白和 offer 要推动的就是这个数。从你第一次记录正面回复的那天开始算。',
+    'md.negRate':'说不要、以后再说或别再发的回复。和正面回复率加起来，就是总回复率。',
+    'md.posShare':'所有回复的人里，有兴趣的占多少。偏低说明你触达到了人，但人不对，或者 offer 不对。',
+    'md.posBook':'正面回复里，最后进入 {b} 的比例。负面回复本来就不会约，所以这个才是真实的跟进转化率。',
     'md.cpl':'每获得一条线索要花多少钱。',
     'md.cpm':'每约到一次销售沟通要花多少钱。',
     'md.cac':'获客成本——赢得一个客户要花多少钱。要和 LTV 一起看。',
@@ -916,7 +930,9 @@ const parseNum = s => { const n = parseFloat(String(s ?? '').replace(/[,\s]/g, '
 
 const MONEY_FIELDS = ['revNew', 'revRec', 'mkt', 'sales', 'cogs', 'opex'];
 const DEFAULT_STAGES = ['leads', 'contacted', 'opened', 'replied', 'meeting', 'proposal', 'won'];
-const DATA_FV = 2;   // data format version; the server refuses pushes from pages that write an older one
+const DATA_FV = 3;   // data format version; the server refuses pushes from pages that write an older one (3: positive replies)
+/* positive replies ("pos") are logged as a subset of the "replied" stage; negative = replied − pos */
+const POS = 'pos';
 /* one entry per day per test variant ("t"); untagged entries keep the plain date as their key */
 const entryKey = e => e.t ? e.date + '|' + e.t : e.date;
 const byEntry = (a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.t || '') < (b.t || '') ? -1 : (a.t || '') > (b.t || '') ? 1 : 0;
@@ -1058,12 +1074,27 @@ const firstStage = () => DB.stages[0].id;
 const wonStage = () => DB.stages[DB.stages.length - 1].id;
 const stageName = s => s.label || t('stage.' + s.id);
 const stageById = id => DB.stages.find(s => s.id === id);
-function inputKeys() { return [...DB.stages.map(s => s.id), ...MONEY_FIELDS, 'churned']; }
+function inputKeys() { return [...DB.stages.map(s => s.id), POS, ...MONEY_FIELDS, 'churned']; }
+/* positive replies need a "replied" stage with a stage before it (the reply-rate base) */
+function posStages() {
+  const i = DB.stages.findIndex(s => s.id === 'replied');
+  return i > 0 ? { a: DB.stages[i - 1].id, n: DB.stages[i + 1] ? DB.stages[i + 1].id : null } : null;
+}
+/* first day a positive reply was logged; days before it were never split, so pos/neg rates skip them */
+function posStart() {
+  if (ctxCache.has('posStart')) return ctxCache.get('posStart');
+  const e = DB.entries.find(x => x.v[POS]), d = e ? e.date : null;
+  ctxCache.set('posStart', d);
+  return d;
+}
 
-/* totals include every entry; pass a variant id to sum only that A/B test variant */
+/* totals include every entry; pass a variant id to sum only that A/B test variant.
+   _pa/_pr/_pn: reply-rate base, replies and next stage counted only from posStart() on */
 function sumRange(from, to, variant) {
   const S = {};
   for (const k of inputKeys()) S[k] = 0;
+  S._pa = S._pr = S._pn = 0;
+  const ps = posStages(), p0 = ps && posStart();
   let n = 0;
   for (const e of DB.entries) {
     if (e.date < from) continue;
@@ -1071,8 +1102,16 @@ function sumRange(from, to, variant) {
     if (variant && e.t !== variant) continue;
     n++;
     for (const k in e.v) if (k in S) S[k] += e.v[k];
+    if (p0 && e.date >= p0) { S._pa += e.v[ps.a] || 0; S._pr += e.v.replied || 0; if (ps.n) S._pn += e.v[ps.n] || 0; }
   }
   return { S, n };
+}
+/* keep pos within replied: logging a positive reply implies a reply, lowering replies trims positives */
+function fixPos(v, changed) {
+  if (!v[POS]) { delete v[POS]; return v; }
+  if (changed === POS) { if ((v.replied || 0) < v[POS]) v.replied = v[POS]; }
+  else if ((v.replied || 0) < v[POS]) { if (v.replied) v[POS] = v.replied; else delete v[POS]; }
+  return v;
 }
 /* A ctx is everything metrics need for one date range. Unit economics (ARPA, churn, LTV,
    payback) are noisy over a week, so they read ctx.U: the period itself when it spans
@@ -1132,6 +1171,7 @@ function rebuildMetrics() {
   const st = DB.stages, won = wonStage(), first = firstStage();
   const sn = id => stageName(stageById(id));
   const fv = { first: () => sn(first), last: () => sn(won) };
+  const ps = posStages();
 
   add({ key: 'newCust', group: 'funnel', additive: true, name: () => t('m.newCust'), calc: c => c.S[won],
     parts: c => [[sn(won), c.S[won], 'num']] });
@@ -1143,6 +1183,23 @@ function rebuildMetrics() {
     add({ key: 'conv:' + b, group: 'funnel', fmt: 'pct', name: () => convTerm(a, b) || `${sn(a)} → ${sn(b)}`,
       formula: () => t('mf.conv', { a: sn(a), b: sn(b) }), desc: () => t('md.conv', { a: sn(a), b: sn(b) }),
       calc: c => div(c.S[b], c.S[a]), parts: c => [[sn(b), c.S[b], 'num'], [sn(a), c.S[a], 'num']] });
+    if (b === 'replied' && ps) addPos();
+  }
+  /* reply rate split into positive (engaged) and negative replies; counted from the first logged positive */
+  function addPos() {
+    const pn = () => t('f.pos'), ng = () => t('f.neg'), base = () => sn(ps.a);
+    add({ key: 'posRate', group: 'funnel', fmt: 'pct', name: () => t('m.posRate'),
+      formula: () => t('mf.conv', { a: base(), b: pn() }), desc: () => t('md.posRate'),
+      calc: c => div(c.S.pos, c.S._pa), parts: c => [[pn(), c.S.pos, 'num'], [base(), c.S._pa, 'num']] });
+    add({ key: 'negRate', group: 'funnel', fmt: 'pct', better: 'down', name: () => t('m.negRate'),
+      formula: () => t('mf.conv', { a: base(), b: ng() }), desc: () => t('md.negRate'),
+      calc: c => div(c.S._pr - c.S.pos, c.S._pa), parts: c => [[ng(), c.S._pr - c.S.pos, 'num'], [base(), c.S._pa, 'num']] });
+    add({ key: 'posShare', group: 'funnel', fmt: 'pct', name: () => t('m.posShare'),
+      formula: () => t('mf.conv', { a: sn('replied'), b: pn() }), desc: () => t('md.posShare'),
+      calc: c => div(c.S.pos, c.S._pr), parts: c => [[pn(), c.S.pos, 'num'], [sn('replied'), c.S._pr, 'num']] });
+    if (ps.n) add({ key: 'posBook', group: 'funnel', fmt: 'pct', name: () => ps.n === 'meeting' ? t('m.posBook') : `${pn()} → ${sn(ps.n)}`,
+      formula: () => t('mf.conv', { a: pn(), b: sn(ps.n) }), desc: () => t('md.posBook', { b: sn(ps.n) }),
+      calc: c => div(c.S._pn, c.S.pos), parts: c => [[sn(ps.n), c.S._pn, 'num'], [pn(), c.S.pos, 'num']] });
   }
 
   const spendParts = c => [[t('f.mkt'), c.S.mkt, 'money'], [t('f.sales'), c.S.sales, 'money']];
@@ -1211,8 +1268,12 @@ function rebuildMetrics() {
     formula: () => t('mf.actions', { s: sn(r100Stage()) }),
     calc: c => c.S[r100Stage()] / c.days, parts: c => [[sn(r100Stage()), c.S[r100Stage()], 'num'], [t('hz.days'), c.days, 'num']] });
 
-  for (const s of st) add({ key: s.id, group: 'inputs', additive: true, stage: s.id, name: () => stageName(stageById(s.id)) || s.id,
-    formula: () => '', desc: () => '', calc: c => c.S[s.id] ?? 0, parts: () => [] });
+  for (const s of st) {
+    add({ key: s.id, group: 'inputs', additive: true, stage: s.id, name: () => stageName(stageById(s.id)) || s.id,
+      formula: () => '', desc: () => '', calc: c => c.S[s.id] ?? 0, parts: () => [] });
+    if (s.id === 'replied' && ps) add({ key: POS, group: 'inputs', additive: true, name: () => t('f.pos'),
+      formula: () => '', desc: () => t('fh.pos'), calc: c => c.S.pos, parts: () => [] });
+  }
   for (const f of MONEY_FIELDS) add({ key: f, group: 'inputs', fmt: 'money', additive: true, better: ['mkt', 'sales', 'cogs', 'opex'].includes(f) ? 'down' : 'up',
     name: () => t('f.' + f), formula: () => '', desc: () => t('fh.' + f), calc: c => c.S[f], parts: () => [] });
   add({ key: 'churned', group: 'inputs', additive: true, better: 'down', name: () => t('f.churned'), formula: () => '', desc: () => t('fh.churned'),
@@ -1678,12 +1739,14 @@ function sampleDB() {
       const cA = Math.floor(contacted / 2), cB = contacted - cA;
       const oA = Math.round(cA * R(.4, .5)), oB = Math.round(cB * R(.56, .68));
       const rA = Math.round(oA * R(.07, .13)), rB = Math.round(oB * R(.12, .2));
-      d.entries.push({ id: uid(), date, t: vA, v: cleanVals({ contacted: cA, opened: oA, replied: rA }), note: '' });
-      d.entries.push({ id: uid(), date, t: vB, v: cleanVals({ contacted: cB, opened: oB, replied: rB }), note: '' });
+      const pA = Math.min(rA, Math.floor(rA * R(.25, .5) + rnd())), pB = Math.min(rB, Math.floor(rB * R(.4, .65) + rnd()));
+      d.entries.push({ id: uid(), date, t: vA, v: cleanVals({ contacted: cA, opened: oA, replied: rA, pos: pA }), note: '' });
+      d.entries.push({ id: uid(), date, t: vB, v: cleanVals({ contacted: cB, opened: oB, replied: rB, pos: pB }), note: '' });
       opened = oA + oB; replied = rA + rB;
     } else {
       opened = Math.round(contacted * R(.45, .62));
       replied = Math.round(opened * R(.1, .17));
+      v.pos = Math.min(replied, Math.floor(replied * R(.35, .6) + rnd()));
     }
     accM += replied * R(.28, .5); const meeting = Math.floor(accM); accM -= meeting;
     accP += meeting * R(.5, .75); const proposal = Math.floor(accP); accP -= proposal;
@@ -2526,7 +2589,7 @@ function entrySummary(e) {
   const parts = [];
   const first = DB.stages[0], won = DB.stages[DB.stages.length - 1];
   if (e.v[first.id]) parts.push(`${stageName(first)} ${fmtNum(e.v[first.id])}`);
-  for (const s of DB.stages.slice(1, -1)) if (e.v[s.id]) parts.push(`${stageName(s)} ${fmtNum(e.v[s.id])}`);
+  for (const s of DB.stages.slice(1, -1)) if (e.v[s.id]) parts.push(`${stageName(s)} ${fmtNum(e.v[s.id])}` + (s.id === 'replied' && e.v[POS] ? ` (${t('f.posShort')} ${fmtNum(e.v[POS])})` : ''));
   if (e.v[won.id]) parts.push(`${stageName(won)} ${fmtNum(e.v[won.id])}`);
   const cost = (e.v.mkt || 0) + (e.v.sales || 0) + (e.v.cogs || 0) + (e.v.opex || 0);
   if (cost) parts.push(`${t('m.totalCost')} ${fmtVal(cost, 'money')}`);
@@ -2538,10 +2601,11 @@ function viewLog() {
   const vchips = DB.tests.length ? `<div class="chips" style="margin:4px 0 6px">${[['', t('tv.none')], ...DB.tests.flatMap(ts => ts.variants.map(v => [v.id, `${ts.name} · ${v.name}`]))]
       .map(([id, label]) => `<button class="chip${id === qv ? ' on' : ''}" data-qvpick="${esc(id)}">${esc(label)}</button>`).join('')}</div>
     ${qv ? `<div class="small muted" style="margin:0 2px 2px">${esc(t('log.qvHint'))}</div>` : ''}` : '';
-  const rows = DB.stages.map(s => `<div class="ctr"><div class="nm">${nameHTML(s.id)}</div>
-    <button class="step" data-step="${esc(s.id)}" data-d="-1" aria-label="−">${icon('minus', 2.6)}</button>
-    <input class="val num" inputmode="numeric" data-qv="${esc(s.id)}" value="${fmtNum(e && e.v[s.id] || 0)}" aria-label="${esc(stageName(s))}">
-    <button class="step" data-step="${esc(s.id)}" data-d="1" aria-label="+">${icon('plus', 2.6)}</button></div>`).join('');
+  const ctr = (id, label, sub) => `<div class="ctr${sub ? ' pos' : ''}"><div class="nm">${sub ? '↳ ' : ''}${nameHTML(id)}</div>
+    <button class="step" data-step="${esc(id)}" data-d="-1" aria-label="−">${icon('minus', 2.6)}</button>
+    <input class="val num" inputmode="numeric" data-qv="${esc(id)}" value="${fmtNum(e && e.v[id] || 0)}" aria-label="${esc(label)}">
+    <button class="step" data-step="${esc(id)}" data-d="1" aria-label="+">${icon('plus', 2.6)}</button></div>`;
+  const rows = DB.stages.map(s => ctr(s.id, stageName(s)) + (s.id === 'replied' && posStages() ? ctr(POS, t('f.pos'), true) : '')).join('');
   const list = [...DB.entries].reverse().slice(0, UI.histLimit);
   let hist = '', month = '';
   for (const x of list) {
@@ -2575,8 +2639,11 @@ function setQuick(stageId, value, date = UI.quick) {
   if (!e) { e = { id: uid(), date, v: {}, note: '', ...(qv ? { t: qv } : {}) }; DB.entries.push(e); }
   const n = Math.max(0, Math.round(value));
   if (n) e.v[stageId] = n; else delete e.v[stageId];
+  fixPos(e.v, stageId);
   if (!Object.keys(e.v).length && !e.note) DB.entries.splice(DB.entries.indexOf(e), 1);
   commit();
+  // fixPos may have moved the other half of the replied/positive pair
+  for (const k of ['replied', POS]) { const el = k !== stageId && $(`[data-qv="${k}"]`); if (el) el.value = fmtNum(e.v[k] || 0); }
   if (watch) hzMilestone(before, r100State().today);
   return n;
 }
@@ -2620,6 +2687,7 @@ function testCard(ts, r) {
   for (let i = 1; i <= last; i++) {
     const a = st[i - 1].id, b = st[i].id;
     if (sums.some(S => S[a] > 0)) rows.push({ key: 'conv:' + b, a, b });
+    if (b === 'replied' && MX.posRate && sums.some(S => S.pos > 0)) rows.push({ key: 'posRate', a: '_pa', b: POS });
   }
   const head = `<div class="srow"><b class="tt1">${esc(ts.name)}</b><span class="sp"></span><button class="link" data-open="test:${esc(ts.id)}">${esc(t('edit'))}</button></div>`;
   if (!rows.length) return `<div class="card test">${head}<p class="small muted" style="margin:10px 0 2px">${esc(t('tv.noData'))}</p></div>`;
@@ -2758,7 +2826,7 @@ function openEntry(key) {
     <div class="list"><label class="row"><span class="lbl">${esc(t('e.date'))}</span><input class="inl" type="date" data-date value="${d0}"></label>
       ${DB.tests.length || v0 ? `<div class="row"><span class="lbl">${esc(t('tv.variant'))}</span><select class="inl" data-var>${variantOptions(v0)}</select></div>` : ''}</div>
     <div class="gf ${target ? '' : 'hide'}" data-exists style="color:var(--blue)">${esc(t('e.exists'))}</div>
-    <div class="gh">${esc(t('e.funnel'))}</div><div class="list">${DB.stages.map(s => field(s.id, stageName(s))).join('')}</div>
+    <div class="gh">${esc(t('e.funnel'))}</div><div class="list">${DB.stages.map(s => field(s.id, stageName(s)) + (s.id === 'replied' && posStages() ? field(POS, '↳ ' + t('f.pos'), t('fh.pos')) : '')).join('')}</div>
     <div class="gh">${esc(t('e.rev'))}</div><div class="list">${['revNew', 'revRec'].map(k => field(k, t('f.' + k), t('fh.' + k), true)).join('')}</div>
     <div class="gh">${esc(t('e.cost'))}</div><div class="list">${['mkt', 'sales', 'cogs', 'opex'].map(k => field(k, t('f.' + k), t('fh.' + k), true)).join('')}</div>
     <div class="gh">${esc(t('e.clients'))}</div><div class="list">${field('churned', t('f.churned'), t('fh.churned'))}</div>
@@ -2800,6 +2868,7 @@ function openEntry(key) {
     const [nd, nv] = keyNow();
     const v = {};
     inputs.forEach(i => { const n = parseNum(i.value); if (n) v[i.dataset.f] = i.dataset.f in { revNew: 1, revRec: 1, mkt: 1, sales: 1, cogs: 1, opex: 1 } ? Math.round(n * 100) / 100 : Math.round(n); });
+    fixPos(v, POS);
     const note = $('[data-note]', sb).value.trim();
     const hit = findEntry(nd, nv);
     if (orig && orig !== hit) DB.entries.splice(DB.entries.indexOf(orig), 1);   // moved to another day or variant
@@ -2988,7 +3057,7 @@ function download(name, text, type) {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 function exportCSV() {
-  const cols = [...DB.stages.map(s => [s.id, stageName(s)]), ...MONEY_FIELDS.map(f => [f, t('f.' + f)]), ['churned', t('f.churned')]];
+  const cols = [...DB.stages.flatMap(s => s.id === 'replied' && posStages() ? [[s.id, stageName(s)], [POS, t('f.pos')]] : [[s.id, stageName(s)]]), ...MONEY_FIELDS.map(f => [f, t('f.' + f)]), ['churned', t('f.churned')]];
   const q = s => /[",\n]/.test(s) ? `"${String(s).replace(/"/g, '""')}"` : s;
   const lines = [[t('e.date'), t('tv.variant'), ...cols.map(c => c[1]), t('e.note')].map(q).join(',')];
   for (const e of DB.entries) lines.push([e.date, q(e.t ? variantLabel(e.t) : ''), ...cols.map(c => e.v[c[0]] || 0), q(e.note || '')].join(','));
