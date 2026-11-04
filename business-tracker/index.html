@@ -284,6 +284,12 @@ svg{display:block}
 .fn-fill{height:100%;width:0;border-radius:6px;transform-origin:left}
 .fn-conv{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);padding:4px 0 0 2px;font-weight:500;letter-spacing:0}
 .fn-conv svg{width:11px;height:11px}
+.fn-fill.seg{display:flex;gap:2px;overflow:hidden}
+.fn-fill.seg i{min-width:2px}
+.fn-split{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--text2);margin-top:6px}
+.fn-split span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.fn-split span>i{width:8px;height:8px;border-radius:50%}
+.fn-split b{color:var(--text);font-weight:600}
 
 /* grouped list */
 .list{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
@@ -474,7 +480,7 @@ const I18N = {
     'fh.sales':'Email tools, CRM, commissions','fh.cogs':'Freelancers, production, software for delivery','fh.opex':'Rent, salaries, everything else',
     'fh.churned':'Clients who cancelled or didn’t renew',
     'f.pos':'Engaged replies','f.posShort':'engaged','fh.pos':'Of the replies, how many showed interest','f.neg':'Negative replies',
-    'f.ref':'Referral replies','f.refShort':'referral','fh.ref':'“Please contact our manager / the person in charge”',
+    'f.ref':'Referral replies','f.refShort':'referral','f.negShort':'negative','fh.ref':'“Please contact our manager / the person in charge”',
 
     'g.funnel':'Funnel','g.acq':'Acquisition','g.money':'Revenue & profit','g.ret':'Retention & value','g.custom':'Custom','g.inputs':'Raw numbers',
     'm.revenue':'Revenue','m.newCust':'New clients','m.convOverall':'Overall conversion','m.cpl':'Cost per lead','m.cpm':'Cost per meeting',
@@ -700,7 +706,7 @@ const I18N = {
     'fh.sales':'邮件工具、CRM、提成','fh.cogs':'外包、制作、交付用的软件','fh.opex':'房租、工资及其他',
     'fh.churned':'取消合作或没有续约的客户',
     'f.pos':'正面回复','f.posShort':'正面','fh.pos':'回复里有多少人表示有兴趣','f.neg':'负面回复',
-    'f.ref':'转介回复','f.refShort':'转介','fh.ref':'“请联系我们老板 / 负责人（PIC）”这种回复',
+    'f.ref':'转介回复','f.refShort':'转介','f.negShort':'负面','fh.ref':'“请联系我们老板 / 负责人（PIC）”这种回复',
 
     'g.funnel':'转化漏斗','g.acq':'获客','g.money':'收入与利润','g.ret':'留存与价值','g.custom':'自定义','g.inputs':'原始数据',
     'm.revenue':'总收入','m.newCust':'新客户','m.convOverall':'总转化率','m.cpl':'单条线索成本','m.cpm':'单次会议成本',
@@ -2483,6 +2489,16 @@ function emptyHero() {
     <div class="btns"><button class="btn" data-act="add">${icon('plus', 2.4)}${esc(t('ov.empty.add'))}</button>
     <button class="btn sec" data-act="sample">${esc(t('ov.empty.sample'))}</button></div></div>`;
 }
+/* the funnel's "replied" bar split into engaged / referral / negative; replies from before the
+   split was first logged keep the plain stage colour */
+function replySplit(c, col) {
+  const S = c.S, neg = S._pr - S.pos - S.ref;
+  const segs = [[S.pos, 'var(--green)'], [S.ref, 'var(--orange)'], [neg, `color-mix(in srgb,${col} 35%,transparent)`], [S.replied - S._pr, col]];
+  const bar = segs.filter(([n]) => n > 0).map(([n, bg]) => `<i style="flex:${n};background:${bg}"></i>`).join('');
+  const legend = [['posRate', 'f.posShort', segs[0][1]], ['refRate', 'f.refShort', segs[1][1]], ['negRate', 'f.negShort', segs[2][1]]]
+    .map(([k, l, bg]) => `<span><i style="background:${bg}"></i>${esc(t(l))} <b>${esc(fmtVal(MX[k].calc(c), 'pct'))}</b></span>`).join('');
+  return { bar, legend: `<div class="fn-split">${legend}</div>` };
+}
 function viewOverview() {
   const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p>`;
   if (!DB.entries.length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
@@ -2505,8 +2521,9 @@ function viewOverview() {
     const conv = i ? `<div class="fn-conv">${icon('down', 2.6)}${esc(fmtVal(div(n, prevN), 'pct'))}</div>` : '';
     const hue = ['var(--blue)', 'var(--indigo)', 'var(--purple)', 'var(--pink)', 'var(--orange)', 'var(--green)'];
     const col = i === DB.stages.length - 1 ? 'var(--green)' : hue[Math.min(i, hue.length - 2)];
+    const split = s.id === 'replied' && MX.posRate && c.S._pr > 0 ? replySplit(c, col) : null;
     return `${conv}<div class="fn-row"><div class="fn-top"><span>${esc(stageName(s))}</span><b>${numHTML('fn:' + s.id, n, 'num')}</b></div>
-      <div class="fn-track"><div class="fn-fill" data-bar="fn:${esc(s.id)}" data-v="${n / maxStage * 100}" style="background:${col}"></div></div></div>`;
+      <div class="fn-track"><div class="fn-fill${split ? ' seg' : ''}" data-bar="fn:${esc(s.id)}" data-v="${n / maxStage * 100}" style="background:${split ? 'none' : col}">${split ? split.bar : ''}</div></div>${split ? split.legend : ''}</div>`;
   }).join('');
 
   const gs = DB.goals.slice(0, 4).map(g => goalStatus(g)).filter(Boolean);
