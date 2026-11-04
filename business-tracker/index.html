@@ -2503,8 +2503,8 @@ function replySplit(c, col) {
   if (!(S._pr > 0)) return { bar: '', legend: `<div class="fn-split">${esc(t('ov.splitHint'))}</div>` };
   const segs = [[S.pos, 'var(--green)'], [S.ref, 'var(--orange)'], [S.neg, 'var(--red)'], [rest + S.replied - S._pr, `color-mix(in srgb,${col} 35%,transparent)`]];
   const bar = segs.filter(([n]) => n > 0).map(([n, bg]) => `<i style="flex:${n};background:${bg}"></i>`).join('');
-  const legend = [['posRate', 'f.posShort', segs[0][1]], ['refRate', 'f.refShort', segs[1][1]], ['negRate', 'f.negShort', segs[2][1]]]
-    .map(([k, l, bg]) => `<span><i style="background:${bg}"></i>${esc(t(l))} <b>${esc(fmtVal(MX[k].calc(c), 'pct'))}</b></span>`).join('')
+  const legend = [['posRate', 'f.posShort', segs[0]], ['refRate', 'f.refShort', segs[1]], ['negRate', 'f.negShort', segs[2]]]
+    .map(([k, l, [n, bg]]) => `<span><i style="background:${bg}"></i>${esc(t(l))} <b>${esc(fmtNum(n))}</b> · ${esc(fmtVal(MX[k].calc(c), 'pct'))}</span>`).join('')
     + (rest > 0 ? `<span><i style="background:${segs[3][1]}"></i>${esc(t('f.restShort'))} <b>${esc(fmtNum(rest))}</b></span>` : '');
   return { bar, legend: `<div class="fn-split">${legend}</div>` };
 }
