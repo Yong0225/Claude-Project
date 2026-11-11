@@ -722,7 +722,7 @@ body{background:var(--brand)}
 @media (min-width:901px){
   .app{grid-template-columns:300px 1fr;position:relative}
   .main{margin:12px 12px 12px 0;border-radius:0 36px 36px 0}
-  .app .wave{position:absolute;top:0;bottom:0;left:240px;width:61px;height:100%;z-index:3;pointer-events:none;display:block}
+  .app .wave{position:absolute;top:0;bottom:0;left:220px;width:81px;height:100%;z-index:3;pointer-events:none;display:block}
   .wave path{fill:var(--bg)}
   .sidebar{padding:24px 66px 14px 20px}
 }
@@ -878,7 +878,7 @@ body{background:var(--brand)}
     <div class="side-spark" aria-hidden="true"><svg class="spark" viewBox="0 0 30 30"><path d="M5 17 2 26" fill="none"/><path d="M13 12 17 3" fill="none"/><path d="M19 19 28 15" fill="none"/></svg></div>
     <div class="side-mascot" id="sideMascot"></div>
   </aside>
-  <svg class="wave" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true"><path d="M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z"><animate attributeName="d" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" values="M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z;M60,14 L60,986 L24,986 C9,986 3,976 3,960 C3,902 8,860 11,802 C17,708 31,642 27,562 C22,466 10,388 13,286 C16,194 25,132 26,88 C28,40 40,14 60,14 Z;M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z"/></path></svg>
+  <svg class="wave" aria-hidden="true"><path/></svg>
   <main class="main" id="main">
     <div class="m-mascot" id="mMascot"></div>
     <div class="topbar" id="topbar"></div>
@@ -2811,6 +2811,52 @@ const NavInd = {
     });
   },
 };
+/* 左边红白交界的波浪：一直缓缓流动；白色在选中项旁边鼓出一个包，
+   跟着侧边栏的白色滑块走，切换栏目时晃一下 */
+const Wave = {
+  el: null, path: null, raf: 0, last: 0, t: 0, amp: 22, vel: 0, cy: null,
+  mount() {
+    this.el = $('.wave'); if (!this.el) return;
+    this.path = this.el.querySelector('path');
+    addEventListener('resize', () => this.kick());
+    document.addEventListener('visibilitychange', () => this.kick());
+    this.kick();
+  },
+  hit() { this.vel += 300; this.kick(); },
+  kick() {
+    if (this.raf || !this.el || document.hidden) return;
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(n => this.frame(n));
+  },
+  frame(now) {
+    this.raf = 0;
+    const r = this.el.getBoundingClientRect();
+    if (!r.width || document.hidden) return;                     // 手机上没有侧边栏：停下
+    const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
+    if (!REDUCED) this.t += dt;
+    /* 鼓包的大小：弹簧回到 22px，切换时被推一下会冲到快碰到白色胶囊再晃回来 */
+    this.vel += (-(this.amp - 22) * 95 - this.vel * 8.5) * dt; this.amp += this.vel * dt;
+    const on = $('#nav .nav-item.on');
+    const target = on ? (NavInd.y != null ? NavInd.y : on.offsetTop) + on.offsetHeight / 2 : -999;
+    this.cy = this.cy == null ? target : this.cy + (target - this.cy) * (1 - Math.exp(-dt * 18));
+    this.draw(r.width, r.height);
+    if (!REDUCED) this.raf = requestAnimationFrame(n => this.frame(n));
+  },
+  draw(W, H) {
+    const t = this.t, TOP = 12, BOT = H - 12, R = 46, TAU = Math.PI * 2;
+    let d = `M${W},${TOP}`;
+    for (let y = TOP; y <= BOT + 0.1; y += 8) {
+      const flow = 4.5 * Math.sin(y / 430 * TAU + t * 0.9) + 3 * Math.sin(y / 230 * TAU - t * 1.35) + 1.4 * Math.sin(y / 97 * TAU + t * 2.2);
+      const g = (y - this.cy) / 42;
+      let x = 44 + flow - this.amp * Math.exp(-g * g);
+      const e = Math.min(y - TOP, BOT - y);                        // 上下两个圆角
+      if (e < R) { const u = 1 - e / R; x = W - (W - x) * Math.sqrt(Math.max(0, 1 - u * u)); }
+      d += `L${x.toFixed(1)},${y}`;
+    }
+    this.path.setAttribute('d', d + `L${W},${BOT}Z`);
+  },
+};
+
 /* 手机底栏：选中项背后的小胶囊（位置交给 CSS 弹性过渡） */
 function syncTabInd() {
   const bar = $('#tabbar'), ind = bar && bar.querySelector('.tab-ind'), on = bar && bar.querySelector('.tab.on');
@@ -3317,6 +3363,7 @@ const navDirTo = (mode, from, to) => Math.sign(NAV_ORDER[mode].indexOf(to) - NAV
 function go(v) {
   const same = state.mode === 'boss' && state.view === v;
   Motion.navDir = navDirTo('boss', state.view, v);
+  if (!same) Wave.hit();
   state.view = v; state.mode = 'boss'; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }   // 再点一次当前页：回到顶部
   else { render('tab'); Mascot.react(v === 'pay' ? 'payday' : 'hop'); }
@@ -3324,6 +3371,7 @@ function go(v) {
 function ego(v) {
   const same = state.eview === v;
   Motion.navDir = navDirTo('emp', state.eview, v);
+  if (!same) Wave.hit();
   state.eview = v; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }
   else { render('tab'); Mascot.react('hop'); }
@@ -6112,6 +6160,7 @@ async function joinFromLink(p) {
   Motion.firstVisit();
   Motion.attachSwipe();
   Mascot.mount($('#sideMascot'), { ambient: true });
+  Wave.mount();
   Mascot.mount($('#mMascot'));
   addEventListener('resize', () => { NavInd.sync(true); syncTabInd(); });
   const joinLink = Cloud.takeHash();
