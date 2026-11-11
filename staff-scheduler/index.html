@@ -470,165 +470,234 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
 }
 
 /* =====================================================================
-   改版：大色块 · 红色 · 活泼（2026-11）
+   改版：照「浮夸程度 1」设计图 —— 红色底 + 白色大面板 + 大色块（2026-11）
    颜色都在下面这组变量里，想换配色只改这里
    ===================================================================== */
 :root{
   --brand:#E8232A; --brand-d:#B9141B; --brand-tint:#FFE1DC;
-  --tile-1:#E8232A; --tile-1-ink:#FFFFFF; --tile-1-d:#B9141B;
-  --tile-2:#FFC928; --tile-2-ink:#2A1A00; --tile-2-d:#D9A400;
-  --tile-3:#2457FF; --tile-3-ink:#FFFFFF; --tile-3-d:#1638B8;
-  --tile-4:#17A957; --tile-4-ink:#FFFFFF; --tile-4-d:#0E7F3F;
-  --ink:#1E1414;
-  --bg:#FFF4EE; --chrome:rgba(255,244,238,.84);
+  --tile-1:#E8232A; --tile-1-ink:#FFFFFF;
+  --tile-2:#FFD12E; --tile-2-ink:#1E1414;
+  --tile-3:#1F4FFF; --tile-3-ink:#FFFFFF;
+  --tile-4:#16A94F; --tile-4-ink:#FFFFFF;
+  --good-bg:#C9F6D7; --good-ink:#0A7536; --bad-bg:#FFE0DC; --bad-ink:#C4161D;
+  --sky:#DCEBFF; --ink:#1E1414;
+  --bg:#FFFFFF; --chrome:rgba(255,255,255,.9); --ring:#F0E6E2;
   --r-s:12px; --r-m:18px; --r-l:24px; --r-xl:30px;
-  --shadow-1:0 1px 0 rgba(70,20,10,.04),0 3px 10px rgba(70,20,10,.06);
-  --shadow-2:0 10px 26px rgba(70,20,10,.12),0 2px 4px rgba(70,20,10,.05);
+  --shadow-1:0 0 0 1.5px var(--ring);
+  --shadow-2:0 0 0 1.5px var(--ring),0 12px 28px rgba(70,20,10,.10);
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
   --font-fun:"Nunito","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
 }
-:root[data-theme="dark"]{--brand-tint:#4A1C1E;--chrome:rgba(18,14,16,.84);--bg:#120E10;--bg-elev:#1F1A1C}
-@media (prefers-color-scheme:dark){:root[data-theme="auto"]{--brand-tint:#4A1C1E;--chrome:rgba(18,14,16,.84);--bg:#120E10;--bg-elev:#1F1A1C}}
+:root[data-theme="dark"]{--brand-tint:#4A1C1E;--chrome:rgba(26,21,23,.9);--bg:#1A1517;--bg-elev:#231D1F;--ring:#3A3033;--sky:#1C2A44}
+@media (prefers-color-scheme:dark){:root[data-theme="auto"]{--brand-tint:#4A1C1E;--chrome:rgba(26,21,23,.9);--bg:#1A1517;--bg-elev:#231D1F;--ring:#3A3033;--sky:#1C2A44}}
 
-.tb-title,.stat-v,.card-t,.brand-t,.hero-h,.clock,.sheet-t,.sh-n,.big-btn,.mono{font-family:var(--font-fun)}
-.tb-title{font-size:27px;font-weight:900;letter-spacing:-.01em}
-.tb-sub{font-weight:600}
-.card-t{font-size:17px;font-weight:850;letter-spacing:0}
-.sheet-t{font-weight:900}
+body{background:var(--brand)}
+.app{background:var(--brand)}
+.main{background:var(--bg);margin:12px 12px 12px 0;border-radius:34px;isolation:isolate}
+.page-ghost{background:var(--bg)}
+.tb-title,.stat-v,.card-t,.brand-t,.sheet-t,.sh-n,.big-btn,.mono,.today-t,.sc-v,.wk-v,.me-n,.mh-t{font-family:var(--font-fun)}
 
-/* ---- 红色侧边栏：背后的圆块慢慢飘 ---- */
-.sidebar{background:var(--brand);color:#fff;border-right:0;-webkit-backdrop-filter:none;backdrop-filter:none;
-  position:relative;isolation:isolate;padding:18px 14px 12px;overflow-x:hidden}
-.side-blobs{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.side-blobs i{position:absolute;border-radius:50%;background:var(--brand-d);opacity:.5;will-change:transform}
-.side-blobs i:nth-child(1){width:230px;height:230px;right:-110px;top:-90px;animation:blob1 13s ease-in-out infinite alternate}
-.side-blobs i:nth-child(2){width:150px;height:150px;left:-80px;top:40%;background:#FF4B3E;opacity:.55;animation:blob2 17s ease-in-out infinite alternate}
-.side-blobs i:nth-child(3){width:280px;height:280px;left:-30px;bottom:-170px;opacity:.45;animation:blob3 15s ease-in-out infinite alternate}
-@keyframes blob1{to{transform:translate(-34px,46px) scale(1.14)}}
-@keyframes blob2{to{transform:translate(56px,-36px) scale(.86)}}
-@keyframes blob3{to{transform:translate(46px,-26px) scale(1.1)}}
-.brand-mark{background:#fff;color:var(--brand);width:40px;height:40px;border-radius:13px;font-size:19px;font-weight:900;
-  font-family:var(--font-fun);box-shadow:0 3px 0 var(--brand-d)}
-.brand-t{color:#fff;font-size:18px;font-weight:900}
-.brand-s{color:rgba(255,255,255,.8);font-weight:650}
-.nav-sec{color:rgba(255,255,255,.66);font-weight:850}
-.nav-item{color:#fff;font-size:15px;font-weight:750;padding:10px 12px;border-radius:14px;position:relative;z-index:1;
+/* ---- 顶部：小字标签 + 超大标题 + 黄色小火花 ---- */
+.topbar{background:var(--chrome);padding:20px 30px 14px}
+.tb-kick{font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--label-2);margin-bottom:2px}
+.tb-title{font-size:44px;font-weight:900;letter-spacing:-.015em;line-height:1.05;display:inline-flex;align-items:flex-start;gap:4px}
+.tb-sub{font-size:14.5px;font-weight:750;color:var(--label);opacity:.8;margin-top:6px}
+.spark{width:.62em;height:.62em;flex:none;margin-top:-.18em;overflow:visible}
+.spark path{stroke:var(--tile-2);stroke-width:5.5;stroke-linecap:round;transform-box:fill-box;transform-origin:0% 100%;
+  animation:spark-wiggle 2.8s ease-in-out infinite}
+.spark path:nth-child(2){animation-delay:.18s}.spark path:nth-child(3){animation-delay:.36s}
+@keyframes spark-wiggle{0%,70%,100%{transform:none}80%{transform:scale(1.25)}90%{transform:scale(.92)}}
+.page{padding:8px 30px 96px}
+.bell .ico{width:20px;height:20px}
+
+/* ---- 红色侧边栏 ---- */
+.sidebar{background:transparent;color:#fff;border-right:0;-webkit-backdrop-filter:none;backdrop-filter:none;
+  position:relative;isolation:isolate;padding:20px 16px 12px;overflow:hidden}
+.side-blobs{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.side-blobs i{position:absolute;border-radius:50%;will-change:transform}
+.side-blobs i:nth-child(1){width:220px;height:220px;right:-120px;top:-100px;background:var(--brand-d);opacity:.45;animation:blob1 13s ease-in-out infinite alternate}
+.side-blobs i:nth-child(2){width:120px;height:120px;left:-70px;top:46%;background:#FF4B3E;opacity:.6;animation:blob2 17s ease-in-out infinite alternate}
+.side-blobs i:nth-child(3){width:250px;height:250px;left:-110px;bottom:-120px;background:var(--tile-2);animation:blob3 9s ease-in-out infinite alternate}
+@keyframes blob1{to{transform:translate(-30px,40px) scale(1.12)}}
+@keyframes blob2{to{transform:translate(50px,-30px) scale(.86)}}
+@keyframes blob3{to{transform:translate(18px,-14px) scale(1.07)}}
+.brand{padding:4px 6px 20px;gap:10px}
+.logo-head{width:50px;height:auto;flex:none;overflow:visible;filter:drop-shadow(0 2px 0 rgba(0,0,0,.18))}
+.brand-t{color:#fff;font-size:20px;font-weight:900;letter-spacing:.01em;line-height:1.1;white-space:nowrap}
+@media (min-width:901px){.app{grid-template-columns:264px 1fr}}
+.brand-s{color:rgba(255,255,255,.82);font-weight:700}
+.nav-sec{display:none}
+#modeSwitch{padding:0 2px 12px}
+#modeSwitch .btn{background:rgba(255,255,255,.18);color:#fff;box-shadow:none}
+.nav-item{color:#fff;font-size:16.5px;font-weight:800;padding:11px 14px;border-radius:16px;position:relative;z-index:1;gap:12px;margin-bottom:4px;
   transition:color 200ms ease,background-color 150ms ease,transform 420ms var(--ease-spring)}
 .nav-item:active{transform:scale(.95);transition-duration:200ms,150ms,90ms}
-.nav-item.on{background:transparent;color:var(--brand);box-shadow:none}
+.nav-item.on{background:transparent;color:var(--ink);box-shadow:none}
+.nav-item.on .ni-ico{color:var(--brand)}
 .sidebar:not(.has-ind) .nav-item.on{background:#fff}
-.nav-item .ni-badge{background:var(--tile-2);color:var(--tile-2-ink)}
+.ni-ico{width:24px;font-size:inherit}
+.ni-ico .ico{width:22px;height:22px;stroke-width:2.2}
+.nav-item .ni-badge{background:#fff;color:var(--brand);min-width:22px;height:22px;border-radius:11px;font-size:12px}
 .nav-item.on .ni-badge{background:var(--brand);color:#fff}
-.nav-ind{position:absolute;left:0;top:0;height:40px;border-radius:14px;background:#fff;box-shadow:0 4px 0 var(--brand-d);
+.nav-ind{position:absolute;left:0;top:0;height:44px;border-radius:16px;background:#fff;
   z-index:0;pointer-events:none;opacity:0;transform-origin:50% 50%;will-change:transform}
-#modeSwitch .btn{background:rgba(255,255,255,.18);color:#fff}
-.side-foot{margin-top:0}
+.side-foot{margin-top:10px;position:relative;z-index:1}
 .side-foot .btn.gho{color:#fff}
-.side-foot .tiny.dim{color:rgba(255,255,255,.8)}
-.side-mascot{margin-top:auto;display:flex;justify-content:center;padding-top:10px;min-height:0}
-.side-mascot .mascot-svg{width:150px}
-@media (max-height:760px){.side-mascot .mascot-svg{width:108px}}
+.side-foot .tiny.dim{color:rgba(255,255,255,.82)}
+.side-mascot{position:absolute;left:-26px;bottom:-62px;width:230px;z-index:-1;pointer-events:none}
+.side-mascot .mascot-svg{width:100%;pointer-events:auto}
+@media (max-height:780px){.side-mascot{width:180px;bottom:-50px}}
+@media (max-height:640px){.side-mascot{display:none}}
 .mascot-svg{display:block;height:auto;overflow:visible;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 
-/* ---- 数字大色块 ---- */
-.grid-cards>.card:has(>.stat){--t:var(--tile-1);--ti:var(--tile-1-ink);--td:var(--tile-1-d);
-  background:var(--t);color:var(--ti);box-shadow:0 5px 0 var(--td);overflow:hidden;
-  transition:transform 460ms var(--ease-spring),box-shadow 200ms ease}
-.grid-cards>.card:has(>.stat):nth-child(4n+2){--t:var(--tile-2);--ti:var(--tile-2-ink);--td:var(--tile-2-d)}
-.grid-cards>.card:has(>.stat):nth-child(4n+3){--t:var(--tile-3);--ti:var(--tile-3-ink);--td:var(--tile-3-d)}
-.grid-cards>.card:has(>.stat):nth-child(4n+4){--t:var(--tile-4);--ti:var(--tile-4-ink);--td:var(--tile-4-d)}
-.grid-cards.g2>.card:has(>.stat):nth-child(2){--t:var(--tile-3);--ti:var(--tile-3-ink);--td:var(--tile-3-d)}  /* 员工首页上面已经是黄卡 */
-.card:has(>.stat)::after{content:"";position:absolute;right:-30px;top:-34px;width:104px;height:104px;border-radius:50%;
-  background:rgba(255,255,255,.16);pointer-events:none}
-.card:has(>.stat) .stat{position:relative;z-index:1}
-.card:has(>.stat) .stat-l{color:inherit;opacity:.92;font-weight:850;font-size:13.5px}
-.card:has(>.stat) .stat-d{color:inherit;opacity:.85;font-weight:650}
-.stat-v{font-weight:900;font-size:36px;letter-spacing:-.01em}
-.card:has(>.stat) .up,.card:has(>.stat) .down{color:inherit;background:rgba(255,255,255,.24);padding:1px 7px;border-radius:999px;font-weight:850}
-.card:has(>.stat) .meter{background:rgba(0,0,0,.15)}
+/* ---- 数字大色块：图标 + 标签 + 涨跌小胶囊，数字超大 ---- */
+.grid-cards>.card:has(>.stat){--t:var(--tile-1);--ti:var(--tile-1-ink);
+  background:var(--t);color:var(--ti);box-shadow:none;border-radius:26px;padding:18px 20px 20px;overflow:hidden;
+  transition:transform 460ms var(--ease-spring)}
+.grid-cards>.card:has(>.stat):nth-child(4n+2){--t:var(--tile-2);--ti:var(--tile-2-ink)}
+.grid-cards>.card:has(>.stat):nth-child(4n+3){--t:var(--tile-3);--ti:var(--tile-3-ink)}
+.grid-cards>.card:has(>.stat):nth-child(4n+4){--t:var(--tile-4);--ti:var(--tile-4-ink)}
+.grid-cards>.card.t-red:has(>.stat){--t:var(--tile-1);--ti:var(--tile-1-ink)}
+.card:has(>.stat) .stat{position:relative;z-index:1;gap:2px}
+.card:has(>.stat) .stat-l{color:inherit;font-weight:850;font-size:15.5px;gap:8px}
+.card:has(>.stat) .stat-l .ico{width:22px;height:22px;stroke-width:2.2}
+.stat-b{margin-left:auto;font-size:12.5px;font-weight:900;padding:3px 9px;border-radius:999px;background:var(--good-bg);color:var(--good-ink);white-space:nowrap;font-family:var(--font-fun)}
+.stat-b.bad{background:var(--bad-bg);color:var(--bad-ink)}
+.stat-b.neu{background:rgba(255,255,255,.9);color:var(--ink)}
+.stat-v{font-weight:900;font-size:58px;letter-spacing:-.02em;line-height:1.08;margin-top:4px}
+.card:has(>.stat) .stat-d{color:inherit;opacity:.88;font-weight:700}
+.card:has(>.stat) .up,.card:has(>.stat) .down{color:inherit;font-weight:850}
+.card:has(>.stat) .meter{background:rgba(0,0,0,.16)}
 .card:has(>.stat) .meter i{background:currentColor !important}
-.card:has(>.stat) .btn,.card:has(>.stat) .pill{background:rgba(255,255,255,.94);color:var(--ink)}
+.card:has(>.stat) .btn,.card:has(>.stat) .pill{background:rgba(255,255,255,.94);color:var(--ink);box-shadow:none}
+@media (max-width:1250px){.stat-v{font-size:44px}}
 
 /* ---- 按钮：按下去压扁，松手弹回 ---- */
-.btn{height:38px;padding:0 16px;font-weight:750;
+.btn{height:40px;padding:0 17px;font-weight:800;
   transition:transform 440ms var(--ease-spring),background-color 150ms ease,box-shadow 150ms ease,opacity 150ms ease,filter 150ms ease}
 .btn:active{transform:scale(.93);transition-duration:90ms,150ms,90ms,150ms,150ms}
-.btn.sm{height:30px}
-.btn.ico{width:38px}
-.btn.pri{background:var(--brand);box-shadow:0 3px 0 var(--brand-d)}
-.btn.grn{background:var(--tile-4);box-shadow:0 3px 0 var(--tile-4-d)}
-.btn.pri:active,.btn.grn:active{box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.sm{height:32px}
+.btn.ico{width:40px}
+.btn.pri{background:var(--brand);box-shadow:none}
+.btn.grn{background:var(--tile-4)}
 .btn.gho{color:var(--brand)}
-.seg{border-radius:13px}
-.seg button{border-radius:11px;font-weight:750;transition:background-color 150ms ease,transform 420ms var(--ease-spring)}
+.seg{border-radius:14px;background:var(--fill)}
+.seg button{border-radius:11px;font-weight:800;transition:background-color 150ms ease,transform 420ms var(--ease-spring)}
 .seg button:active{transform:scale(.92);transition-duration:150ms,90ms}
 .seg-ind i{border-radius:11px}
-.pill{height:24px;padding:0 10px;font-weight:800;white-space:nowrap}
-.tglchip{font-weight:750;transition:transform 420ms var(--ease-spring),background-color 150ms ease,color 150ms ease}
+.pill{height:26px;padding:0 11px;font-weight:850;white-space:nowrap}
+.pill.b{background:var(--sky);color:var(--tile-3)}
+.tglchip{font-weight:800;transition:transform 420ms var(--ease-spring),background-color 150ms ease,color 150ms ease}
 .tglchip.on{background:var(--brand)}
 .inp:focus{border-color:var(--brand);box-shadow:0 0 0 3.5px color-mix(in srgb,var(--brand) 20%,transparent)}
 .reddot{background:var(--brand)}
 .row.unread{background:color-mix(in srgb,var(--brand) 6%,var(--bg-elev))}
+.card-t{font-size:18px;font-weight:900;letter-spacing:0}
+.row-t{font-weight:750}
 
-/* ---- 排班表 / 图表 ---- */
-.chip{border-radius:10px;font-weight:750}
-.sh.today{background:color-mix(in srgb,var(--brand) 9%,var(--bg-elev))}
-.sh.today .sh-n{background:var(--brand)}
-.bars .b i{background:linear-gradient(180deg,var(--brand),#FF6A5E);border-radius:9px 9px 4px 4px}
-.bars .b.wk i{background:linear-gradient(180deg,var(--tile-3),#6B8BFF)}
+/* ---- 排班表：饱和的彩色班块，没班的格子是灰色「—」 ---- */
+.sched-wrap{border-radius:26px}
+.sh-d{font-size:15px;font-weight:850;color:var(--label);font-family:var(--font-fun)}
+.sh-n{font-size:13px;font-weight:700;color:var(--label-2)}
+.sh.today .sh-n{background:var(--brand);color:#fff}
+.sh.today{background:color-mix(in srgb,var(--brand) 8%,var(--bg-elev))}
+.snc-n{font-size:15px;font-weight:850}
+.scell{padding:6px;gap:5px}
+.chip{border-radius:12px;padding:8px 6px;text-align:center}
+.chip .ct{font-family:var(--font-fun);font-weight:900;font-size:13.5px;letter-spacing:0}
+.chip .cr{justify-content:center;font-weight:750}
+.scell:not(.off):not(:has(.chip)):not(:has(.offtag))::before{content:"—";display:grid;place-items:center;height:38px;border-radius:12px;
+  background:var(--fill);color:var(--label-3);font-weight:900}
+.bars .b i{background:var(--brand);border-radius:10px 10px 5px 5px}
+.bars .b.wk i{background:var(--tile-3)}
 .cb-t i{background:var(--brand)}
 
-/* ---- 员工首页：黄色大卡 + 绿色大打卡键 ---- */
-.hero{background:var(--tile-2);color:var(--tile-2-ink);box-shadow:0 5px 0 var(--tile-2-d)}
-.hero::before{background:radial-gradient(circle at 96% 0%,rgba(255,255,255,.5) 0 90px,transparent 91px)}
-.hero .row-s,.hero .dim{color:inherit;opacity:.8}
-.hero-h{font-weight:900}
-.hero .clock{font-size:40px;font-weight:900}
-.hero-mascot{width:84px;margin:-18px 8px -14px 0;flex:none}
-.hero-mascot .mascot-svg{width:100%}
-.big-btn{height:62px;border-radius:20px;font-size:20px;font-weight:900;margin-top:14px;position:relative}
-.big-btn.pri{background:var(--tile-4);box-shadow:0 5px 0 var(--tile-4-d)}
-.big-btn.grn{background:var(--brand);box-shadow:0 5px 0 var(--brand-d)}
-.big-btn:active{transform:translateY(3px) scale(.985);box-shadow:0 2px 0 rgba(0,0,0,.3)}
-.big-btn[disabled]{background:rgba(0,0,0,.1);color:inherit;box-shadow:none;opacity:1}
-.big-btn.pri:not([disabled])::after{content:"";position:absolute;inset:-5px;border-radius:25px;border:3px solid var(--tile-4);
+/* ---- 员工首页：照手机设计图 ---- */
+.me-row{display:flex;align-items:center;gap:14px;margin:4px 0 18px}
+.me-row .avatar.lg{width:58px;height:58px;font-size:19px}
+.me-n{font-size:22px;font-weight:900;line-height:1.1}
+.me-row .pill{margin-top:5px}
+.me-row .chev{margin-left:auto;font-size:26px;color:var(--label)}
+.today-h{margin-bottom:14px}
+.today-t{font-size:42px;font-weight:900;line-height:1;display:inline-flex;align-items:flex-start;gap:4px}
+.today-d{font-size:16px;font-weight:800;margin-top:6px;opacity:.85}
+.shift-card{background:var(--tile-2);color:var(--tile-2-ink);border-radius:28px;padding:18px 22px 20px;position:relative;overflow:hidden}
+.sc-l{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:850}
+.sc-l .ico{width:22px;height:22px;stroke-width:2.2}
+.sc-v{font-size:76px;font-weight:900;line-height:1;letter-spacing:-.02em;margin:8px 0 10px}
+.sc-v.rest{font-size:44px}
+.sc-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.75);font-weight:900;font-size:15px;font-family:var(--font-fun)}
+.sc-s{margin-top:10px;font-weight:750;font-size:14px;opacity:.85}
+.big-btn{height:70px;border-radius:999px;font-size:26px;font-weight:900;margin-top:14px;position:relative;gap:10px}
+.big-btn .ico{width:28px;height:28px;stroke-width:2.6}
+.big-btn.pri{background:var(--tile-4);box-shadow:none}
+.big-btn.grn{background:var(--brand)}
+.big-btn:active{transform:scale(.97)}
+.big-btn[disabled]{background:var(--fill-2);color:var(--label);box-shadow:none;opacity:1}
+.big-btn.pri:not([disabled])::after{content:"";position:absolute;inset:-5px;border-radius:999px;border:3px solid var(--tile-4);
   pointer-events:none;opacity:0;animation:invite 2.4s ease-out infinite}
-@keyframes invite{0%{opacity:.75;transform:scale(.97)}70%,100%{opacity:0;transform:scale(1.07)}}
+@keyframes invite{0%{opacity:.75;transform:scale(.98)}70%,100%{opacity:0;transform:scale(1.06)}}
+.wk-card{background:var(--sky);border-radius:28px;padding:18px 22px;position:relative;overflow:hidden;min-height:150px}
+.wk-h{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:850}
+.wk-h .ico{width:22px;height:22px;stroke-width:2.4}
+.wk-h .wk-d{margin-left:auto;font-size:12.5px;font-weight:850;background:var(--bg-elev);padding:4px 10px;border-radius:999px}
+.wk-v{font-size:58px;font-weight:900;line-height:1;margin-top:12px;letter-spacing:-.02em}
+.wk-card .meter{margin-top:14px;max-width:62%;background:rgba(0,0,0,.08)}
+.wk-mascot{position:absolute;right:6px;bottom:-34px;width:118px}
+.wk-mascot .mascot-svg{width:100%}
+.emp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.emp-grid>*{min-width:0}
 .pickcard{transition:transform 460ms var(--ease-spring),box-shadow 200ms ease}
 
-/* ---- 手机底栏：选中项背后的小胶囊会滑过去 ---- */
+/* ---- 手机：红色顶条 + 白色圆角面板 ---- */
+.mhead{display:none}
+.m-mascot{display:none}
 .tab-ind{opacity:0}
 @media (max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .mhead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 18px 12px;color:#fff}
+  .mhead .logo-head{width:40px}
+  .mh-t{font-size:22px;font-weight:900}
+  .main{margin:0;border-radius:26px 26px 0 0}
+  .topbar{padding:16px 16px 10px;position:relative;background:transparent}   /* 大标题在手机上不吸顶，不然占掉半个屏幕 */
+  .tb-title{font-size:32px}
+  .tb-kick{font-size:10.5px}
+  .topbar>div:first-child{padding-right:84px}
+  .m-mascot{display:block;position:absolute;top:10px;right:8px;width:86px;z-index:41}
+  .m-mascot .mascot-svg{width:100%}
+  body[data-view="emp:my"] .m-mascot{display:none}
+  body[data-view="emp:my"] .topbar>div:first-child{display:none}   /* 员工首页下面已经有大大的「今天」 */
+  body[data-view="emp:my"] .tb-right{margin-left:0}
+  .page{padding:6px 16px 110px}
   .tabbar{background:var(--bg-elev);border-top:0;box-shadow:0 -6px 22px rgba(70,20,10,.08);-webkit-backdrop-filter:none;backdrop-filter:none}
-  .tab{font-weight:800;position:relative;z-index:1;transition:color 200ms ease,transform 420ms var(--ease-spring)}
+  .tab{font-weight:850;font-size:11px;position:relative;z-index:1;transition:color 200ms ease,transform 420ms var(--ease-spring)}
   .tab:active{transform:scale(.9);transition-duration:200ms,90ms}
   .tab.on{color:var(--brand)}
-  .tab-ind{position:absolute;top:5px;left:0;height:30px;display:flex;justify-content:center;pointer-events:none;z-index:0;
+  .tab-ico .ico{width:24px;height:24px;stroke-width:2.2}
+  .tab-ind{position:absolute;top:5px;left:0;height:32px;display:flex;justify-content:center;pointer-events:none;z-index:0;
     transition:transform 560ms var(--ease-spring),width 300ms ease,opacity 200ms ease}
-  .tab-ind i{display:block;width:56px;height:30px;border-radius:999px;background:var(--brand-tint)}
-  .hero .clock{font-size:32px}
-  .hero-mascot{width:70px}
+  .tab-ind i{display:block;width:56px;height:32px;border-radius:999px;background:var(--brand-tint)}
 }
-
-/* 手机上数字色块两两一排，不要一块占一整屏 */
 @media (max-width:640px){
   .grid-cards.g4:has(>.card>.stat),.grid-cards.g2:has(>.card>.stat){grid-template-columns:1fr 1fr;gap:12px}
-  .grid-cards>.card:has(>.stat){padding:14px}
-  .card:has(>.stat) .stat-v{font-size:27px}
-  .card:has(>.stat) .stat-l{font-size:12.5px}
+  .grid-cards>.card:has(>.stat){padding:14px 14px 16px;border-radius:22px}
+  .stat-v{font-size:32px}
+  .card:has(>.stat) .stat-l{font-size:13px;flex-wrap:wrap}
+  .stat-b{margin-left:0;order:3}
   .card:has(>.stat) .stat-d{font-size:11.5px}
+  .sc-v{font-size:64px}
+  .wk-v{font-size:46px}
+  .big-btn{height:64px;font-size:23px}
+  .emp-grid{grid-template-columns:1fr}
 }
-@media (max-width:520px){
-  .hero .rowline>div:nth-child(2){min-width:0}
-  .hero-h{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .hero-mascot{width:54px;margin:-10px 2px -8px 0}
-  .hero .clock{font-size:26px}
-}
+
 /* ---- 提示条：弹一下出来 ---- */
-.toast{transition:transform 460ms var(--ease-spring),opacity 260ms var(--ease-out);font-weight:750}
+.toast{transition:transform 460ms var(--ease-spring),opacity 260ms var(--ease-out);font-weight:800}
 .toast.is-hidden{transform:translateY(-16px) scale(.9)}
 
-.scell.drop{background:color-mix(in srgb,var(--brand) 10%,transparent);box-shadow:inset 0 0 0 2px var(--brand)}
+/* ---- 打卡彩纸 ---- */
+.cf{position:fixed;left:0;top:0;width:9px;height:13px;border-radius:2px;will-change:transform;pointer-events:none}
+
 @media (hover:hover) and (pointer:fine){
   .scell:not(.drop):not(.off):hover{background:color-mix(in srgb,var(--brand) 5%,var(--bg-elev))}
   .scell.wknd:not(.drop):not(.off):hover{background:color-mix(in srgb,var(--brand) 5%,var(--fill))}
@@ -636,20 +705,20 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
   .btn.gho:hover{background:color-mix(in srgb,var(--brand) 9%,transparent)}
   .side-foot .btn.gho:hover,#modeSwitch .btn:hover{background:rgba(255,255,255,.22)}
   .nav-item:not(.on):hover{background:rgba(255,255,255,.14)}
-  .grid-cards>.card:has(>.stat):hover{transform:translateY(-3px) rotate(-.6deg)}
+  .grid-cards>.card:has(>.stat):hover{transform:translateY(-4px) rotate(-.8deg)}
 }
-/* ---- 打卡彩纸 ---- */
-.cf{position:fixed;left:0;top:0;width:9px;height:13px;border-radius:2px;will-change:transform;pointer-events:none}
+.scell.drop{background:color-mix(in srgb,var(--brand) 10%,transparent);box-shadow:inset 0 0 0 2px var(--brand)}
 </style>
 </head>
 <body>
 <div id="stage">
 <div class="app">
+  <header class="mhead"><svg class="logo-head" viewBox="104 14 192 236" aria-hidden="true"><ellipse cx="200" cy="168" rx="80" ry="48" fill="#3a2418" stroke="#1a1a1a" stroke-width="7"/><circle cx="126" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><circle cx="274" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="200" cy="190" rx="72" ry="52" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="152" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="248" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="174" cy="182" rx="9" ry="12" fill="#1a1a1a"/><ellipse cx="226" cy="182" rx="9" ry="12" fill="#1a1a1a"/><circle cx="171" cy="177" r="3.4" fill="#fff"/><circle cx="223" cy="177" r="3.4" fill="#fff"/><path d="M184,205 Q200,228 216,205 Z" fill="#3a1a1a" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round"/><g fill="#1a1a1a"><circle cx="160" cy="82" r="38"/><circle cx="240" cy="82" r="38"/><circle cx="200" cy="58" r="42"/><rect x="144" y="80" width="112" height="65" rx="8"/></g><g fill="#fff"><circle cx="160" cy="82" r="31"/><circle cx="240" cy="82" r="31"/><circle cx="200" cy="58" r="35"/><rect x="151" y="86" width="98" height="52" rx="4"/></g><g stroke="#b5b5b5" stroke-width="5" stroke-linecap="round"><path d="M178,104 L180,126"/><path d="M200,102 L200,126"/><path d="M222,104 L220,126"/></g></svg><span class="mh-t" id="mhBiz">拾山 SHISHAN</span></header>
   <aside class="sidebar">
     <div class="side-blobs" aria-hidden="true"><i></i><i></i><i></i></div>
     <span class="nav-ind" id="navInd" aria-hidden="true"></span>
     <div class="brand">
-      <div class="brand-mark">班</div>
+      <svg class="logo-head" viewBox="104 14 192 236" aria-hidden="true"><ellipse cx="200" cy="168" rx="80" ry="48" fill="#3a2418" stroke="#1a1a1a" stroke-width="7"/><circle cx="126" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><circle cx="274" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="200" cy="190" rx="72" ry="52" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="152" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="248" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="174" cy="182" rx="9" ry="12" fill="#1a1a1a"/><ellipse cx="226" cy="182" rx="9" ry="12" fill="#1a1a1a"/><circle cx="171" cy="177" r="3.4" fill="#fff"/><circle cx="223" cy="177" r="3.4" fill="#fff"/><path d="M184,205 Q200,228 216,205 Z" fill="#3a1a1a" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round"/><g fill="#1a1a1a"><circle cx="160" cy="82" r="38"/><circle cx="240" cy="82" r="38"/><circle cx="200" cy="58" r="42"/><rect x="144" y="80" width="112" height="65" rx="8"/></g><g fill="#fff"><circle cx="160" cy="82" r="31"/><circle cx="240" cy="82" r="31"/><circle cx="200" cy="58" r="35"/><rect x="151" y="86" width="98" height="52" rx="4"/></g><g stroke="#b5b5b5" stroke-width="5" stroke-linecap="round"><path d="M178,104 L180,126"/><path d="M200,102 L200,126"/><path d="M222,104 L220,126"/></g></svg>
       <div>
         <div class="brand-t" id="bizName">拾山 SHISHAN</div>
         <div class="brand-s" id="bizTag">排班 · 工时 · 薪资</div>
@@ -657,10 +726,11 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
     </div>
     <div id="modeSwitch"></div>
     <nav id="nav"></nav>
-    <div class="side-mascot" id="sideMascot"></div>
     <div class="side-foot" id="sideFoot"></div>
+    <div class="side-mascot" id="sideMascot"></div>
   </aside>
   <main class="main" id="main">
+    <div class="m-mascot" id="mMascot"></div>
     <div class="topbar" id="topbar"></div>
     <div class="page" id="page"></div>
   </main>
@@ -678,6 +748,20 @@ const LANGS = { zh: '中文', en: 'English', ms: 'Bahasa Melayu' };
 /* 线条图标（跟文字同色、同粗细），代替按钮上的 emoji */
 const svgIco = d => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const ICON = {
+  home: svgIco('<path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/>'),
+  cal: svgIco('<rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10.5h17M8 3v4M16 3v4"/>'),
+  clock: svgIco('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+  cash: svgIco('<rect x="2.5" y="6" width="19" height="12" rx="3"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/>'),
+  users: svgIco('<circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.2" cy="9.3" r="2.7"/><path d="M16.5 14.1c2.9.3 5 2.5 5 5.9"/>'),
+  plane: svgIco('<path d="M21 3.5 3 10.8l7 2.7 2.7 7z"/><path d="m10 13.5 4.5-4.5"/>'),
+  sliders: svgIco('<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/>'),
+  dots: svgIco('<circle cx="5.5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18.5" cy="12" r="1.3"/>'),
+  user: svgIco('<circle cx="12" cy="8.5" r="4"/><path d="M4 20.5c0-4.2 3.6-7 8-7s8 2.8 8 7"/>'),
+  bell: svgIco('<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
+  db: svgIco('<ellipse cx="12" cy="6" rx="7" ry="2.8"/><path d="M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6"/>'),
+  pie: svgIco('<path d="M11 4a8.5 8.5 0 1 0 9 9h-9z"/><path d="M14.5 3.3a8.5 8.5 0 0 1 6.2 6.2h-6.2z"/>'),
+  check: svgIco('<circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.5 5-5.3"/>'),
+  bars: svgIco('<path d="M6 20v-8M12 20V5M18 20v-10"/>'),
   wand: svgIco('<path d="M4.5 19.5 14 10"/><path d="m12.5 8.5 3 3"/><path d="M18.5 3v4M16.5 5h4M20 11.5v2.5M18.75 12.75h2.5M9.5 3.5v2.5M8.25 4.75h2.5"/>'),
   cloud: svgIco('<path d="M7.5 18.5h9.75a4.25 4.25 0 0 0 .55-8.46A6.25 6.25 0 0 0 5.7 9.3a4.6 4.6 0 0 0 1.8 9.2z"/>'),
 };
@@ -1450,7 +1534,7 @@ const roleColor = r => (ROLES[r] || { c: 'blue' }).c;
 const tint = (c, pct) => `color-mix(in srgb, var(--${c}) ${pct}%, var(--bg-elev))`;
 function chipStyle(r) {
   const c = roleColor(r);
-  return `background:${tint(c, 14)};color:var(--${c});box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--${c}) 30%, transparent)`;
+  return `background:color-mix(in srgb, var(--${c}) 34%, var(--bg-elev));color:color-mix(in srgb, var(--${c}) 45%, var(--label))`;
 }
 
 /* ---------------- 地区制度 ----------------
@@ -2374,6 +2458,8 @@ const Motion = {
       .forEach(el => el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 200, easing: EASE.out }));
     const tt = !REDUCED && kind === 'tab' && document.querySelector('#topbar .tb-title');
     tt && tt.animate([{ transform: 'translateY(12px)' }, { transform: 'none' }], { duration: 560, easing: EASE.spring });
+    if (!REDUCED && kind === 'tab') document.querySelectorAll('#topbar .spark path, #page .today-t .spark path').forEach((el, i) =>
+      el.animate([{ transform: 'scale(0)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: EASE.spring, delay: 160 + i * 70, fill: 'backwards' }));
   },
 
   /* 每个页面本次打开 app 后第一次出现：数字从 0 滚上来、柱子长出来、班次按天依次冒出来 */
@@ -2709,6 +2795,7 @@ const Mascot = (() => {
 
   function play(m, name) {
     const st = S[name]; if (!st) return;
+    if (name === 'idle') m.ambGap = 7 + Math.random() * 8;
     m.from = { ...m.P }; m.blend = 0; m.cur = name; m.tS = 0; m.coinClock = 0; m.zClock = 0.3;
     m.eyes.forEach(e => { e.style.display = e.dataset.e === st.eyes ? '' : 'none'; });
     m.mouths.forEach(e => { e.style.display = e.dataset.mo === st.mouth ? '' : 'none'; });
@@ -2766,6 +2853,7 @@ const Mascot = (() => {
     const st = S[m.cur];
     if (st.dur && m.tS > st.dur) play(m, 'idle');
     if (m.cur === 'idle' && now - lastTouch > SLEEP_AFTER) play(m, 'sleep');
+    else if (m.ambient && m.cur === 'idle' && m.tS > m.ambGap) play(m, 'wave');      // 侧边栏那只隔一阵子打个招呼
     const s2 = S[m.cur];
     const lt = s2.lookAt || (m.cur === 'sleep' ? { x: 0, y: 0 } : m.lookT);
     const kL = 1 - exp(-dt * 10);
@@ -2829,7 +2917,7 @@ const Mascot = (() => {
     raf = requestAnimationFrame(loop);
   }
 
-  function mount(host) {
+  function mount(host, o = {}) {
     if (!host) return null;
     const had = list.find(m => m.host === host && host.contains(m.svg));
     if (had) return had;
@@ -2848,6 +2936,7 @@ const Mascot = (() => {
       play(m, m.cur === 'sleep' ? 'oops' : ['wave', 'cheer', 'payday'][m.tap++ % 3]);
       kick();
     });
+    m.ambient = !!o.ambient;
     list.push(m);
     play(m, 'idle'); m.blend = 1;
     draw(m);
@@ -2903,10 +2992,11 @@ const state = {
 };
 
 const BOSS_NAV = [
-  { g: 'nav.ops', items: [['dash', 'nav.dash', '◎'], ['sched', 'nav.sched', '▦'], ['time', 'nav.time', '◷'], ['pay', 'nav.pay', '＄']] },
-  { g: 'nav.admin', items: [['staff', 'nav.staff', '☺'], ['leave', 'nav.leave', '✈'], ['set', 'nav.set', '⚙']] },
+  { g: 'nav.ops', items: [['dash', 'nav.dash', ICON.home], ['sched', 'nav.sched', ICON.cal], ['time', 'nav.time', ICON.clock], ['pay', 'nav.pay', ICON.cash]] },
+  { g: 'nav.admin', items: [['staff', 'nav.staff', ICON.users], ['leave', 'nav.leave', ICON.plane], ['set', 'nav.set', ICON.sliders]] },
 ];
-const EMP_NAV = [['my', 'emp.my', '▦'], ['ehours', 'emp.hours', '◷'], ['eleave', 'emp.leave', '✈'], ['eme', 'emp.me', '☺']];
+const EMP_NAV = [['my', 'emp.my', ICON.home], ['ehours', 'emp.hours', ICON.clock], ['eleave', 'emp.leave', ICON.plane], ['eme', 'emp.me', ICON.user]];
+const SPARK = '<svg class="spark" viewBox="0 0 30 30" aria-hidden="true"><path d="M5 17 2 26" fill="none"/><path d="M13 12 17 3" fill="none"/><path d="M19 19 28 15" fill="none"/></svg>';
 
 /* 结构没变就原地改 class 和内部内容，不替换元素本身 */
 function patchHTML(container, html) {
@@ -2953,7 +3043,7 @@ function renderNav() {
       `<div class="nav-sec">${t(g.g)}</div>` + g.items.map(([id, k, i]) =>
         `<button class="nav-item ${state.view === id ? 'on' : ''}" data-act="go" data-v="${id}">
           <span class="ni-ico">${i}</span><span>${t(k)}</span>${badgeSpan(by[id] || 0, 'nav-' + id)}</button>`).join('')).join(''));
-    const tabs = [['dash', 'nav.dash', '◎'], ['sched', 'nav.sched', '▦'], ['time', 'nav.time', '◷'], ['pay', 'nav.pay', '＄'], ['more', 'nav.more', '⋯']];
+    const tabs = [['dash', 'nav.dash', ICON.home], ['sched', 'nav.sched', ICON.cal], ['time', 'nav.time', ICON.clock], ['pay', 'nav.pay', ICON.cash], ['more', 'nav.more', ICON.dots]];
     patchTabbar(tabs.map(([id, k, i]) =>
       `<button class="tab ${state.view === id ? 'on' : ''}" data-act="${id === 'more' ? 'moreMenu' : 'go'}" data-v="${id}">
         <span class="tab-ico">${i}${badgeHTML(id === 'more' ? moreCount : (by[id] || 0), 'tab-' + id)}</span><span>${t(k)}</span></button>`).join(''));
@@ -2968,6 +3058,7 @@ function renderNav() {
     ? (Cloud.isStaff() ? '' : `<button class="btn sm" data-act="toBoss">↩ ${t('mode.toBoss')}</button>`)
     : `<button class="btn sm" data-act="toEmp">${t('mode.toEmp')} ›</button>`;
   $('#bizName').textContent = DB.settings.biz;
+  $('#mhBiz').textContent = DB.settings.biz;
   $('#bizTag').textContent = emp ? t('mode.emp') : t('app.tag');
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
   NavInd.sync();
@@ -3036,7 +3127,7 @@ const Pin = {
   /* 顶栏会换行（每个页面的按钮不一样多）、底栏只在手机上有：把它们的实际高度交给 CSS */
   updateChrome() {
     const st = document.documentElement.style, tb = $('#topbar'), tab = $('#tabbar');
-    st.setProperty('--tb-h', (tb ? tb.getBoundingClientRect().height : 0) + 'px');
+    st.setProperty('--tb-h', (tb && getComputedStyle(tb).position === 'sticky' ? tb.getBoundingClientRect().height : 0) + 'px');
     st.setProperty('--tab-h', (tab && getComputedStyle(tab).display !== 'none' ? tab.getBoundingClientRect().height : 0) + 'px');
   },
   watchChrome() {
@@ -3103,6 +3194,7 @@ function paint(kind, opts) {
   Pin.mount($('#page'));
   if (scroll) Motion.restoreScroll(scroll);         // 排班表内部的滚动位置不再每次操作都跳回顶部
   lastViewKey = viewKeyNow();
+  document.body.dataset.view = state.mode === 'emp' ? 'emp:' + state.eview : 'boss:' + state.view;
   Motion.mountSegs(snap);
   if (snap) Motion.play(snap, opts);
   if (ghost) Motion.pageTransition(kind, ghost);
@@ -3113,8 +3205,8 @@ function paint(kind, opts) {
 
 function topbarHTML(title, sub, right = '') {
   const un = unseenNotif();
-  const bell = `<button class="btn ico gho bell" data-act="notif" aria-label="${t('notif.title')}">🔔${badgeHTML(un, 'bell')}</button>`;
-  return `<div><div class="tb-title">${title}</div><div class="tb-sub">${sub}</div></div>
+  const bell = `<button class="btn ico gho bell" data-act="notif" aria-label="${t('notif.title')}">${ICON.bell}${badgeHTML(un, 'bell')}</button>`;
+  return `<div><div class="tb-kick">${t('app.tag')}</div><div class="tb-title"><span>${title}</span>${SPARK}</div><div class="tb-sub">${sub}</div></div>
     <div class="tb-right">${right}${bell}</div>`;
 }
 /* 当前显示的是哪一周：本周 / 上周 / 下周 / n 周前 / n 周后 */
@@ -3133,9 +3225,9 @@ function weekNav() {
     <button data-act="wk" data-d="1" aria-label="${t('c.nextWeek')}">›</button></div>
     <span class="tiny dim nowrap">${fmtMD(ws)} – ${fmtMD(we)}</span>`;
 }
-function statCard(label, value, sub, extra = '') {
-  return `<div class="card"><div class="stat">
-    <div class="stat-l">${label}</div><div class="stat-v" data-m="num" data-mk="stat-${esc(label)}">${value}</div><div class="stat-d">${sub}</div>${extra}
+function statCard(label, value, sub, extra = '', o = {}) {
+  return `<div class="card ${o.cls || ''}"><div class="stat">
+    <div class="stat-l">${o.icon || ''}<span>${label}</span>${o.badge ? `<span class="stat-b ${o.tone || ''}">${o.badge}</span>` : ''}</div><div class="stat-v" data-m="num" data-mk="stat-${esc(label)}">${value}</div><div class="stat-d">${sub}</div>${extra}
   </div></div>`;
 }
 const VIEWS = {}, EVIEWS = {};
@@ -3163,19 +3255,21 @@ VIEWS.dash = {
 
     return `
     <div class="grid-cards g4" style="margin-bottom:14px">
-      ${statCard(t('dash.cost'), money0(c.withTax),
-      `${delta >= 0 ? '<span class="up">▲' : '<span class="down">▼'} ${Math.abs(delta).toFixed(1)}%</span> ${t('dash.vsLast', { v: money0(prev.withTax) })}`)}
+      ${statCard(t('dash.cost'), money0(c.withTax), t('dash.vsLast', { v: money0(prev.withTax) }), '',
+      { icon: ICON.db, badge: `${delta > 0 ? '▲' : '▼'} ${Math.abs(delta).toFixed(1)}%`, tone: delta > 0 ? 'bad' : '' })}
       ${statCard(t('dash.pct'), pct.toFixed(1) + '%',
         t('dash.target', { p: target, v: money0(DB.settings.weeklyRevenue) }),
-        `<div class="meter" style="margin-top:9px"><i data-m="fillx" data-mk="meter-pct" style="width:${clamp(pct / Math.max(target * 1.6, 1) * 100, 2, 100)}%;background:${pct > target ? 'var(--red)' : 'var(--green)'}"></i></div>`)}
+        `<div class="meter" style="margin-top:9px"><i data-m="fillx" data-mk="meter-pct" style="width:${clamp(pct / Math.max(target * 1.6, 1) * 100, 2, 100)}%;background:${pct > target ? 'var(--red)' : 'var(--green)'}"></i></div>`,
+        { icon: ICON.pie, badge: `${pct > target ? '▲' : '▼'} ${Math.abs(pct - target).toFixed(1)}pp`, tone: pct > target ? 'bad' : '' })}
       ${statCard(t('dash.hours'), hh(c.minutes) + t('c.hoursShort'),
-          t('dash.shiftsStaff', { n: shiftCount, m: DB.staff.filter(s => s.active).length }))}
+          t('dash.shiftsStaff', { n: shiftCount, m: DB.staff.filter(s => s.active).length }), '',
+          { icon: ICON.clock, badge: `${c.minutes >= prev.minutes ? '▲' : '▼'} ${hh(Math.abs(c.minutes - prev.minutes))}${t('c.hoursShort')}`, tone: 'neu' })}
       ${statCard(t('dash.todo'), String(pend.length + gaps.length),
             t('dash.todoSub', { a: pend.length, b: gaps.length }),
             `<div style="display:flex;gap:6px;margin-top:9px">
             ${pend.length ? `<button class="btn sm" data-act="go" data-v="leave">${t('dash.goApprove')}</button>` : ''}
             ${gaps.length ? `<button class="btn sm" data-act="go" data-v="sched">${t('dash.goFill')}</button>` : ''}
-            ${!pend.length && !gaps.length ? `<span class="pill g">${t('dash.ready')}</span>` : ''}</div>`)}
+            ${!pend.length && !gaps.length ? `<span class="pill g">${t('dash.ready')}</span>` : ''}</div>`, { icon: ICON.check })}
     </div>
 
     <div class="grid-cards split" style="margin-bottom:14px">
@@ -4187,24 +4281,21 @@ EVIEWS.my = {
     const next = DB.shifts.filter(x => x.staffId === s.id && (x.date > TODAY || (x.date === TODAY && !sh)))
       .sort((a, b) => a.date < b.date ? -1 : 1)[0];
 
-    let clockBlock;
+    /* 今天的班（黄色大卡）+ 打卡键 */
+    let big, status = '', btn = '';
     if (!sh) {
-      clockBlock = `<div class="row" style="padding-left:0"><div class="row-m">
-          <div class="row-t">${t('emp.noToday')}</div>
-          ${next ? `<div class="row-s">${t('emp.nextShift')}: ${fmtDW(next.date)} ${next.start}–${next.end} · ${roleName(next.role)}</div>` : ''}
-        </div></div>`;
-    } else if (!p) {
-      clockBlock = `<div class="kv" style="border:0;padding-top:0"><span class="dim">${t('emp.todayShift')}</span>
-          <b class="mono">${sh.start}–${sh.end} · ${roleName(sh.role)}</b></div>
-        <button class="btn pri big-btn" data-act="clockIn">⏻ ${t('emp.clockIn')}</button>`;
-    } else if (!p.out) {
-      clockBlock = `<div class="kv" style="border:0;padding-top:0"><span class="dim">${t('emp.clockedIn', { t: p.in })}</span>
-          <b class="mono">${sh.start}–${sh.end}</b></div>
-        <button class="btn grn big-btn" data-act="clockOut">⏻ ${t('emp.clockOut')}</button>`;
+      big = `<div class="sc-v rest">${t('emp.noToday')}</div>`;
+      status = next ? `<div class="sc-s">${t('emp.nextShift')}: ${fmtDW(next.date)} ${next.start}–${next.end} · ${roleName(next.role)}</div>` : '';
     } else {
-      clockBlock = `<div class="kv" style="border:0;padding-top:0"><span class="dim">${p.in} – ${p.out}</span>
-          <b>${t('emp.done', { h: hh(workedMin(s.id, TODAY) || 0) })}</b></div>
-        <button class="btn big-btn" disabled>✓ ${t('emp.done', { h: hh(workedMin(s.id, TODAY) || 0) })}</button>`;
+      big = `<div class="sc-v">${sh.start}</div><span class="sc-pill">${roleName(sh.role)} · ${sh.start} – ${sh.end}</span>`;
+      if (!p) btn = `<button class="btn pri big-btn" data-act="clockIn">${ICON.clock}${t('emp.clockIn')}</button>`;
+      else if (!p.out) {
+        status = `<div class="sc-s">${t('emp.clockedIn', { t: p.in })}</div>`;
+        btn = `<button class="btn grn big-btn" data-act="clockOut">${ICON.clock}${t('emp.clockOut')}</button>`;
+      } else {
+        status = `<div class="sc-s">${p.in} – ${p.out}</div>`;
+        btn = `<button class="btn big-btn" disabled>✓ ${t('emp.done', { h: hh(workedMin(s.id, TODAY) || 0) })}</button>`;
+      }
     }
 
     const days = rangeDays(ws, 7).map(d => {
@@ -4227,25 +4318,32 @@ EVIEWS.my = {
       </div>`;
     }).join('');
 
+    const TODAY_W = { zh: '今天', en: 'Today', ms: 'Hari ini' }[LANG] || 'Today';
     return `
-    <div class="hero" style="margin-bottom:14px">
-      <div class="rowline" style="margin-bottom:12px">
-        ${avatarHTML(s, 'lg')}
-        <div><div class="hero-h">${t('emp.hello', { n: esc(s.n) })}</div>
-          <div class="row-s">${fmtDW(TODAY)}</div></div>
-        <div class="spacer"></div>
-        <div class="hero-mascot" data-mascot></div>
-        <div class="clock" id="nowClock">${nowHM()}</div>
-      </div>
-      ${clockBlock}
+    <div class="me-row">
+      ${avatarHTML(s, 'lg')}
+      <div style="min-width:0"><div class="me-n">${esc(s.n)}</div><span class="pill b">${s.roles.map(roleName).join(' / ')}</span></div>
+      <button class="chev" data-act="ego" data-v="eme" aria-label="${t('emp.me')}">›</button>
     </div>
+    <div class="today-h"><div class="today-t"><span>${TODAY_W}</span>${SPARK}</div><div class="today-d">${fmtDW(TODAY)}</div></div>
 
-    <div class="grid-cards g2" style="margin-bottom:14px">
-      ${statCard(t('emp.weekHours'), hh(wm) + H,
-      `${fmtMD(ws)} – ${fmtMD(addDays(ws, 6))}`,
-      `<div class="meter" style="margin-top:9px"><i data-m="fillx" data-mk="meter-emp" style="width:${clamp(wm / (s.maxH * 60) * 100, 0, 100)}%;
-          background:${wm > DB.settings.otWeekly * 60 ? 'var(--orange)' : 'var(--green)'}"></i></div>`)}
-      ${statCard(t('emp.weekPay'), pr ? money0(pr.gross) : money0(0), t('emp.payNote'))}
+    <div class="shift-card">
+      <div class="sc-l">${ICON.cal}${t('emp.todayShift')}</div>
+      ${big}${status}
+    </div>
+    ${btn}
+
+    <div class="emp-grid">
+      <div class="wk-card">
+        <div class="wk-h">${ICON.bars}${ws === weekStartOf(TODAY) ? t('emp.weekHours') : weekLabel(ws)}<span class="wk-d">${fmtMD(ws)} – ${fmtMD(addDays(ws, 6))}</span></div>
+        <div class="wk-v" data-m="num" data-mk="emp-wk">${hh(wm)}${H}</div>
+        <div class="meter"><i data-m="fillx" data-mk="meter-emp" style="width:${clamp(wm / (s.maxH * 60) * 100, 0, 100)}%;
+          background:${wm > DB.settings.otWeekly * 60 ? 'var(--orange)' : 'var(--tile-3)'}"></i></div>
+        <div class="wk-mascot" data-mascot></div>
+      </div>
+      <div class="grid-cards" style="grid-template-columns:1fr">
+        ${statCard(t('emp.weekPay'), pr ? money0(pr.gross) : money0(0), t('emp.payNote'), '', { icon: ICON.cash, cls: 't-red' })}
+      </div>
     </div>
 
     <div class="card pad0">
@@ -5816,7 +5914,8 @@ async function joinFromLink(p) {
   Motion.seen.add(lastViewKey);
   Motion.firstVisit();
   Motion.attachSwipe();
-  Mascot.mount($('#sideMascot'));
+  Mascot.mount($('#sideMascot'), { ambient: true });
+  Mascot.mount($('#mMascot'));
   addEventListener('resize', () => { NavInd.sync(true); syncTabInd(); });
   const joinLink = Cloud.takeHash();
   Cloud.start().then(() => { if (joinLink) joinFromLink(joinLink); });
