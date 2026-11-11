@@ -715,12 +715,153 @@ body{background:var(--brand)}
   .grid-cards>.card:has(>.stat):hover{transform:translateY(-4px) rotate(-.8deg)}
 }
 .scell.drop{background:color-mix(in srgb,var(--brand) 10%,transparent);box-shadow:inset 0 0 0 2px var(--brand)}
+
+/* ---------------------------------------------------------------------
+   v3：一比一对着「浮夸程度 1」—— 波浪分界、大号侧边栏、日期行、粉彩班块
+   --------------------------------------------------------------------- */
+@media (min-width:901px){
+  .app{grid-template-columns:300px 1fr;position:relative}
+  .main{margin:12px 12px 12px 0;border-radius:0 36px 36px 0}
+  .app .wave{position:absolute;top:0;bottom:0;left:240px;width:61px;height:100%;z-index:3;pointer-events:none;display:block}
+  .wave path{fill:var(--bg)}
+  .sidebar{padding:24px 66px 14px 20px}
+}
+.wave{display:none}
+.brand{padding:2px 4px 26px;gap:12px}
+.logo-head{width:64px}
+.brand-t{font-size:21px;letter-spacing:.02em}
+.brand-s{display:none}
+#nav{order:2}
+#modeSwitch{order:3;padding:12px 2px 0}
+#modeSwitch .btn{width:auto;background:transparent;box-shadow:inset 0 0 0 2px rgba(255,255,255,.45)}
+.side-foot{order:4;opacity:.9}
+.nav-item{font-size:19px;padding:13px 18px;border-radius:999px;margin-bottom:6px;gap:14px}
+.ni-ico .ico{width:25px;height:25px;stroke-width:2.4}
+.nav-ind{border-radius:999px;box-shadow:0 6px 16px rgba(120,10,10,.18)}
+.nav-item .ni-badge{min-width:28px;height:28px;border-radius:14px;font-size:14px;font-weight:900;font-family:var(--font-fun)}
+.side-mascot{left:-44px;bottom:-70px;width:300px}
+@media (min-width:901px){#modeSwitch,.side-foot{display:none}}   /* 电脑上这些收进右上角的头像按钮 */
+.prof{display:none}
+@media (min-width:901px){.tb-right .prof{display:grid;width:46px;border-radius:50%;padding:0}.prof .ico{width:22px;height:22px}}
+.side-blobs i:nth-child(3){width:300px;height:300px;left:-120px;bottom:-150px}
+.side-blobs i:nth-child(2){display:none}
+.side-spark{position:absolute;left:168px;bottom:214px;width:56px;z-index:-1;transform:rotate(4deg)}
+.side-spark .spark{width:100%;height:auto;margin:0}
+.side-spark .spark path{stroke-width:4.5}
+@media (max-height:780px){.side-mascot{width:230px;bottom:-54px}.side-spark{left:122px;bottom:166px;width:44px}}
+
+/* 顶部：深色小字标签、更大的标题、标题下面是日期行 */
+.topbar{padding:26px 34px 16px;align-items:flex-start}
+.tb-kick{color:var(--label);font-size:14px;letter-spacing:.16em;opacity:.9}
+.tb-title{font-size:54px}
+.spark{width:.7em;height:.7em;margin-top:-.08em}
+.tb-kick{margin-bottom:8px}
+.tb-wk{margin-top:10px}
+.tb-sub{font-size:13px;font-weight:650;color:var(--label-2);opacity:1;margin-top:6px}
+.tb-wk + .tb-sub{margin-top:4px}
+.wkn{display:flex;align-items:center;gap:4px}
+.wk-a{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:900;line-height:1;
+  transition:transform 420ms var(--ease-spring),background-color 150ms ease}
+.wk-a:active{transform:scale(.85);transition-duration:90ms}
+.wk-m{display:inline-flex;align-items:center;gap:10px;padding:4px 8px;border-radius:14px;font-size:20px;font-family:var(--font-fun);
+  transition:transform 420ms var(--ease-spring)}
+.wk-m:active{transform:scale(.96);transition-duration:90ms}
+.wk-m .ico{width:24px;height:24px;stroke-width:2.2}
+.wk-m b{font-weight:900}
+.wk-m .pill{height:28px;font-size:13.5px;padding:0 12px}
+.tb-right{margin-top:4px}
+.tb-right .btn:not(.pri):not(.grn){background:var(--bg-elev);box-shadow:inset 0 0 0 2px var(--ring)}
+.tb-right .btn{height:46px;padding:0 20px;font-size:15px}
+.tb-right .bell{width:46px;border-radius:50%;padding:0}
+.page{padding:6px 34px 96px}
+@media (hover:hover) and (pointer:fine){.wk-a:hover{background:var(--fill)}}
+
+/* 数字色块：标签一行、数字更大 */
+.card:has(>.stat) .stat-l{font-size:16.5px}
+.card:has(>.stat) .stat-l>span:not(.stat-b){white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.card:has(>.stat) .stat-l .ico{width:26px;height:26px}
+.stat-b{font-size:13px;padding:3px 9px}
+.stat-v{font-size:62px}
+.card:has(>.stat) .stat-d{font-size:12.5px;opacity:.8}
+.grid-cards>.card:has(>.stat){border-radius:28px;padding:20px 22px 18px}
+@media (max-width:1250px){.stat-v{font-size:46px}}
+
+/* 排班表：粉彩班块、深蓝字、只显示时间 */
+.sched-wrap{border-radius:28px}
+.sh{padding:12px 10px}
+.sh-d{font-size:19px}
+.sh-n{font-size:14px;font-weight:650}
+.snamecell{padding:12px 12px;gap:12px}
+.snamecell .avatar{width:48px;height:48px;font-size:15px}
+.snc-n{font-size:17.5px;font-weight:900}
+.snc-s{font-size:13px}
+.scell{padding:7px 5px;min-height:74px}
+.chip{border-radius:13px;padding:14px 4px;display:grid;place-items:center}
+.chip .ct{font-size:15.5px;color:inherit}
+.chip .cr{display:none}
+.scell:not(.off):not(:has(.chip)):not(:has(.offtag))::before{height:48px;border-radius:13px;font-size:18px}
+
+/* 员工首页：锅、星星、绿色光线 */
+.today-h{position:relative}
+.pan{position:absolute;right:4px;bottom:-34px;width:118px;z-index:2;pointer-events:none}
+.pan svg{width:100%;height:auto;overflow:visible}
+.steam path{fill:none;stroke-width:4.5;stroke-linecap:round;animation:steam 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.steam path:nth-child(2){animation-delay:.5s}.steam path:nth-child(3){animation-delay:1s}
+@keyframes steam{0%{opacity:0;transform:translateY(8px) scaleY(.6)}35%{opacity:1}100%{opacity:0;transform:translateY(-10px) scaleY(1.1)}}
+.pan-food{animation:sizzle 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes sizzle{50%{transform:translateY(-1.5px) scale(1.03)}}
+.sc-row{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:900;font-family:var(--font-fun)}
+.sc-pill{font-size:17px;padding:4px 14px}
+.btn-spark{position:absolute;right:-6px;top:-22px;width:52px;pointer-events:none}
+.btn-spark .spark{width:100%;height:auto;margin:0}
+.wk-spark{position:absolute;right:104px;bottom:26px;width:40px;transform:rotate(-30deg);pointer-events:none}
+.wk-spark .spark{width:100%;height:auto;margin:0}
+.wk-spark .spark path{stroke:var(--tile-4)}
+.mh-bell{display:none}
+@media (min-width:901px){body[data-view="emp:my"] .page{max-width:860px}}
+
+@media (max-width:900px){
+  .topbar{padding:16px 16px 8px}
+  .tb-title{font-size:34px}
+  .tb-kick{font-size:11px}
+  .wk-m{font-size:16px;gap:7px}
+  .wk-m .ico{width:20px;height:20px}
+  .wk-m .pill{height:24px;font-size:12px}
+  .tb-right .btn{height:40px;padding:0 15px;font-size:14px}
+  .topbar .bell{display:none}
+  .mh-bell{display:grid;place-items:center;margin-left:auto;width:42px;height:42px;color:#fff;position:relative}
+  .mh-bell svg{width:28px;height:28px}
+  .mh-bell i{position:absolute;top:6px;right:6px;width:11px;height:11px;border-radius:50%;background:var(--tile-2);
+    box-shadow:0 0 0 2px var(--brand);transform:scale(0);transition:transform 420ms var(--ease-spring)}
+  .mh-bell.has i{transform:none}
+  body[data-view="emp:my"] .topbar>div:first-child{display:block}
+  body[data-view="emp:my"] .tb-kick,body[data-view="emp:my"] .tb-title,body[data-view="emp:my"] .tb-sub{display:none}
+  body[data-view="emp:my"] .tb-wk{margin-top:0}
+  body[data-view="emp:my"] .topbar>div:first-child{padding-right:0}
+  .tabbar{border-radius:26px 26px 0 0;box-shadow:0 -4px 24px rgba(70,20,10,.10);padding-top:10px}
+  .tab{font-size:12.5px;gap:4px}
+  .tab-ico .ico{width:27px;height:27px}
+  .tab-ind{display:none}
+  .page{padding:6px 16px 120px}
+  .pan{width:96px;bottom:-30px}
+  .sc-row{font-size:17px}
+  .topbar>div:first-child{padding-right:0}
+  .tb-kick,.tb-title{margin-right:76px}
+  .m-mascot{width:72px;top:8px}
+  .wk-m b{white-space:nowrap}
+}
+@media (max-width:640px){
+  .stat-v{font-size:36px}
+  .card:has(>.stat) .stat-l{font-size:14.5px}
+  .card:has(>.stat) .stat-l .ico{width:22px;height:22px}
+  .grid-cards>.card:has(>.stat){padding:14px 14px 16px;border-radius:24px}
+}
 </style>
 </head>
 <body>
 <div id="stage">
 <div class="app">
-  <header class="mhead"><svg class="logo-head" viewBox="104 14 192 236" aria-hidden="true"><ellipse cx="200" cy="168" rx="80" ry="48" fill="#3a2418" stroke="#1a1a1a" stroke-width="7"/><circle cx="126" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><circle cx="274" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="200" cy="190" rx="72" ry="52" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="152" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="248" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="174" cy="182" rx="9" ry="12" fill="#1a1a1a"/><ellipse cx="226" cy="182" rx="9" ry="12" fill="#1a1a1a"/><circle cx="171" cy="177" r="3.4" fill="#fff"/><circle cx="223" cy="177" r="3.4" fill="#fff"/><path d="M184,205 Q200,228 216,205 Z" fill="#3a1a1a" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round"/><g fill="#1a1a1a"><circle cx="160" cy="82" r="38"/><circle cx="240" cy="82" r="38"/><circle cx="200" cy="58" r="42"/><rect x="144" y="80" width="112" height="65" rx="8"/></g><g fill="#fff"><circle cx="160" cy="82" r="31"/><circle cx="240" cy="82" r="31"/><circle cx="200" cy="58" r="35"/><rect x="151" y="86" width="98" height="52" rx="4"/></g><g stroke="#b5b5b5" stroke-width="5" stroke-linecap="round"><path d="M178,104 L180,126"/><path d="M200,102 L200,126"/><path d="M222,104 L220,126"/></g></svg><span class="mh-t" id="mhBiz">拾山 SHISHAN</span></header>
+  <header class="mhead"><svg class="logo-head" viewBox="104 14 192 236" aria-hidden="true"><ellipse cx="200" cy="168" rx="80" ry="48" fill="#3a2418" stroke="#1a1a1a" stroke-width="7"/><circle cx="126" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><circle cx="274" cy="194" r="14" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="200" cy="190" rx="72" ry="52" fill="#FCD3A6" stroke="#1a1a1a" stroke-width="7"/><ellipse cx="152" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="248" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".75"/><ellipse cx="174" cy="182" rx="9" ry="12" fill="#1a1a1a"/><ellipse cx="226" cy="182" rx="9" ry="12" fill="#1a1a1a"/><circle cx="171" cy="177" r="3.4" fill="#fff"/><circle cx="223" cy="177" r="3.4" fill="#fff"/><path d="M184,205 Q200,228 216,205 Z" fill="#3a1a1a" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round"/><g fill="#1a1a1a"><circle cx="160" cy="82" r="38"/><circle cx="240" cy="82" r="38"/><circle cx="200" cy="58" r="42"/><rect x="144" y="80" width="112" height="65" rx="8"/></g><g fill="#fff"><circle cx="160" cy="82" r="31"/><circle cx="240" cy="82" r="31"/><circle cx="200" cy="58" r="35"/><rect x="151" y="86" width="98" height="52" rx="4"/></g><g stroke="#b5b5b5" stroke-width="5" stroke-linecap="round"><path d="M178,104 L180,126"/><path d="M200,102 L200,126"/><path d="M222,104 L220,126"/></g></svg><span class="mh-t" id="mhBiz">拾山 SHISHAN</span><button class="mh-bell" id="mhBell" data-act="notif" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><i></i></button></header>
   <aside class="sidebar">
     <div class="side-blobs" aria-hidden="true"><i></i><i></i><i></i></div>
     <span class="nav-ind" id="navInd" aria-hidden="true"></span>
@@ -734,8 +875,10 @@ body{background:var(--brand)}
     <div id="modeSwitch"></div>
     <nav id="nav"></nav>
     <div class="side-foot" id="sideFoot"></div>
+    <div class="side-spark" aria-hidden="true"><svg class="spark" viewBox="0 0 30 30"><path d="M5 17 2 26" fill="none"/><path d="M13 12 17 3" fill="none"/><path d="M19 19 28 15" fill="none"/></svg></div>
     <div class="side-mascot" id="sideMascot"></div>
   </aside>
+  <svg class="wave" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true"><path d="M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z"><animate attributeName="d" dur="10s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" values="M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z;M60,14 L60,986 L24,986 C9,986 3,976 3,960 C3,902 8,860 11,802 C17,708 31,642 27,562 C22,466 10,388 13,286 C16,194 25,132 26,88 C28,40 40,14 60,14 Z;M60,14 L60,986 L24,986 C9,986 2,976 2,960 C2,900 9,858 13,800 C19,705 27,640 23,560 C19,462 12,384 15,282 C18,190 23,130 25,86 C27,40 40,14 60,14 Z"/></path></svg>
   <main class="main" id="main">
     <div class="m-mascot" id="mMascot"></div>
     <div class="topbar" id="topbar"></div>
@@ -1539,7 +1682,9 @@ const leaveName = k => t('lt.' + k) !== 'lt.' + k ? t('lt.' + k) : k;
 const tplName = x => x && x.k ? t(x.k) : (x ? x.n : '');
 const roleColor = r => (ROLES[r] || { c: 'blue' }).c;
 const tint = (c, pct) => `color-mix(in srgb, var(--${c}) ${pct}%, var(--bg-elev))`;
+const PASTEL = { mgr: '#BDF5D2', chef: '#FFE47A', prep: '#FFF0A6', server: '#B3D2FF', bar: '#D9CCFF', cashier: '#FFC4E3', dish: '#BDEFF5' };
 function chipStyle(r) {
+  if (PASTEL[r]) return `background:${PASTEL[r]};color:#1B2440`;
   const c = roleColor(r);
   return `background:color-mix(in srgb, var(--${c}) 34%, var(--bg-elev));color:color-mix(in srgb, var(--${c}) 45%, var(--label))`;
 }
@@ -3066,6 +3211,8 @@ function renderNav() {
     : `<button class="btn sm" data-act="toEmp">${t('mode.toEmp')} ›</button>`;
   $('#bizName').textContent = DB.settings.biz;
   $('#mhBiz').textContent = DB.settings.biz;
+  $('#mhBell').classList.toggle('has', unseenNotif() > 0);
+  $('#mhBell').setAttribute('aria-label', t('notif.title'));
   $('#bizTag').textContent = emp ? t('mode.emp') : t('app.tag');
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
   NavInd.sync();
@@ -3213,8 +3360,11 @@ function paint(kind, opts) {
 function topbarHTML(title, sub, right = '') {
   const un = unseenNotif();
   const bell = `<button class="btn ico gho bell" data-act="notif" aria-label="${t('notif.title')}">${ICON.bell}${badgeHTML(un, 'bell')}</button>`;
-  return `<div><div class="tb-kick">${t('app.tag')}</div><div class="tb-title"><span>${title}</span>${SPARK}</div><div class="tb-sub">${sub}</div></div>
-    <div class="tb-right">${right}${bell}</div>`;
+  let wk = '';
+  right = right.replace(/<div class="wkn">[\s\S]*?<\/div>/, m => { wk = m; return ''; });   // 周切换放到标题下面
+  const prof = `<button class="btn ico prof" data-act="deskMenu" aria-label="${t('c.appearance')}">${ICON.user}</button>`;
+  return `<div><div class="tb-kick">${t('app.tag')}</div><div class="tb-title"><span>${title}</span>${SPARK}</div>${wk ? `<div class="tb-wk">${wk}</div>` : ''}<div class="tb-sub">${sub}</div></div>
+    <div class="tb-right">${right}${prof}${bell}</div>`;
 }
 /* 当前显示的是哪一周：本周 / 上周 / 下周 / n 周前 / n 周后 */
 function weekLabel(ws) {
@@ -3227,10 +3377,9 @@ function weekLabel(ws) {
 function weekNav() {
   const ws = state.week, we = addDays(ws, 6);
   // 中间显示正在看的那一周；不是本周时点它回到本周
-  return `<div class="seg"><button data-act="wk" data-d="-1" aria-label="${t('c.lastWeek')}">‹</button>
-    <button data-act="wk" data-d="0" class="on wk-l" title="${t('c.thisWeek')}">${weekLabel(ws)}</button>
-    <button data-act="wk" data-d="1" aria-label="${t('c.nextWeek')}">›</button></div>
-    <span class="tiny dim nowrap">${fmtMD(ws)} – ${fmtMD(we)}</span>`;
+  return `<div class="wkn"><button class="wk-a" data-act="wk" data-d="-1" aria-label="${t('c.lastWeek')}">‹</button>
+    <button class="wk-m" data-act="wk" data-d="0" title="${t('c.thisWeek')}">${ICON.cal}<b>${fmtMD(ws)} – ${fmtMD(we)}</b><span class="pill b">${weekLabel(ws)}</span></button>
+    <button class="wk-a" data-act="wk" data-d="1" aria-label="${t('c.nextWeek')}">›</button></div>`;
 }
 function statCard(label, value, sub, extra = '', o = {}) {
   return `<div class="card ${o.cls || ''}"><div class="stat">
@@ -3247,6 +3396,9 @@ VIEWS.dash = {
     `${weekNav()}<button class="btn pri" data-act="autoWeek">${ICON.wand}${t('sched.auto')}</button>`),
   body() {
     const ws = state.week, we = addDays(ws, 6);
+    const SL = ({ zh: { cost: '人工成本', pct: '人工占比', hours: '总工时', todo: '待处理' },
+      en: { cost: 'Labor', pct: 'Labor %', hours: 'Total Hours', todo: 'To do' },
+      ms: { cost: 'Kos buruh', pct: '% buruh', hours: 'Jumlah jam', todo: 'Tindakan' } })[LANG] || {};
     const c = weekCost(ws), prev = weekCost(addDays(ws, -7));
     const delta = prev.total ? (c.total - prev.total) / prev.total * 100 : 0;
     const pct = DB.settings.weeklyRevenue ? c.withTax / DB.settings.weeklyRevenue * 100 : 0;
@@ -3262,16 +3414,16 @@ VIEWS.dash = {
 
     return `
     <div class="grid-cards g4" style="margin-bottom:14px">
-      ${statCard(t('dash.cost'), money0(c.withTax), t('dash.vsLast', { v: money0(prev.withTax) }), '',
+      ${statCard(SL.cost || t('dash.cost'), money0(c.withTax), t('dash.vsLast', { v: money0(prev.withTax) }), '',
       { icon: ICON.db, badge: `${delta > 0 ? '▲' : '▼'} ${Math.abs(delta).toFixed(1)}%`, tone: delta > 0 ? 'bad' : '' })}
-      ${statCard(t('dash.pct'), pct.toFixed(1) + '%',
+      ${statCard(SL.pct || t('dash.pct'), pct.toFixed(1) + '%',
         t('dash.target', { p: target, v: money0(DB.settings.weeklyRevenue) }),
         `<div class="meter" style="margin-top:9px"><i data-m="fillx" data-mk="meter-pct" style="width:${clamp(pct / Math.max(target * 1.6, 1) * 100, 2, 100)}%;background:${pct > target ? 'var(--red)' : 'var(--green)'}"></i></div>`,
         { icon: ICON.pie, badge: `${pct > target ? '▲' : '▼'} ${Math.abs(pct - target).toFixed(1)}pp`, tone: pct > target ? 'bad' : '' })}
-      ${statCard(t('dash.hours'), hh(c.minutes) + t('c.hoursShort'),
+      ${statCard(SL.hours || t('dash.hours'), hh(c.minutes) + t('c.hoursShort'),
           t('dash.shiftsStaff', { n: shiftCount, m: DB.staff.filter(s => s.active).length }), '',
           { icon: ICON.clock, badge: `${c.minutes >= prev.minutes ? '▲' : '▼'} ${hh(Math.abs(c.minutes - prev.minutes))}${t('c.hoursShort')}`, tone: 'neu' })}
-      ${statCard(t('dash.todo'), String(pend.length + gaps.length),
+      ${statCard(SL.todo || t('dash.todo'), String(pend.length + gaps.length),
             t('dash.todoSub', { a: pend.length, b: gaps.length }),
             `<div style="display:flex;gap:6px;margin-top:9px">
             ${pend.length ? `<button class="btn sm" data-act="go" data-v="leave">${t('dash.goApprove')}</button>` : ''}
@@ -3363,7 +3515,7 @@ VIEWS.sched = {
     const ws = state.week;
     const days = rangeDays(ws, 7);
     const c = weekCost(ws), gaps = weekGaps(ws);
-    const nc = innerWidth <= 900 ? 118 : 158;
+    const nc = innerWidth <= 900 ? 132 : 226;
     const staff = DB.staff.filter(s => s.active);
     const maxDay = Math.max(...days.map(d => c.per[d] || 0), 1);
     const pct = c.withTax / Math.max(DB.settings.weeklyRevenue, 1) * 100;
@@ -4294,8 +4446,8 @@ EVIEWS.my = {
       big = `<div class="sc-v rest">${t('emp.noToday')}</div>`;
       status = next ? `<div class="sc-s">${t('emp.nextShift')}: ${fmtDW(next.date)} ${next.start}–${next.end} · ${roleName(next.role)}</div>` : '';
     } else {
-      big = `<div class="sc-v">${sh.start}</div><span class="sc-pill">${roleName(sh.role)} · ${sh.start} – ${sh.end}</span>`;
-      if (!p) btn = `<button class="btn pri big-btn" data-act="clockIn">${ICON.clock}${t('emp.clockIn')}</button>`;
+      big = `<div class="sc-v">${sh.start}</div><div class="sc-row">${roleName(sh.role)} · <span class="sc-pill">${sh.start} – ${sh.end}</span></div>`;
+      if (!p) btn = `<button class="btn pri big-btn" data-act="clockIn">${ICON.clock}${t('emp.clockIn')}<span class="btn-spark" aria-hidden="true">${SPARK}</span></button>`;
       else if (!p.out) {
         status = `<div class="sc-s">${t('emp.clockedIn', { t: p.in })}</div>`;
         btn = `<button class="btn grn big-btn" data-act="clockOut">${ICON.clock}${t('emp.clockOut')}</button>`;
@@ -4332,7 +4484,7 @@ EVIEWS.my = {
       <div style="min-width:0"><div class="me-n">${esc(s.n)}</div><span class="pill b">${s.roles.map(roleName).join(' / ')}</span></div>
       <button class="chev" data-act="ego" data-v="eme" aria-label="${t('emp.me')}">›</button>
     </div>
-    <div class="today-h"><div class="today-t"><span>${TODAY_W}</span>${SPARK}</div><div class="today-d">${fmtDW(TODAY)}</div></div>
+    <div class="today-h"><div class="today-t"><span>${TODAY_W}</span>${SPARK}</div><div class="today-d">${fmtDW(TODAY)}</div><div class="pan" aria-hidden="true"><svg viewBox="0 0 120 100"><g class="steam"><path d="M46 30 q-6 -8 0 -15 q6 -7 0 -14" stroke="#FF8A1F"/><path d="M60 26 q-6 -8 0 -15 q6 -7 0 -14" stroke="#E8232A"/><path d="M74 30 q-6 -8 0 -15 q6 -7 0 -14" stroke="#FFC21A"/></g><path d="M92 52 L116 34" stroke="#1B2440" stroke-width="11" stroke-linecap="round"/><path d="M95 50 L114 36" stroke="#F08A24" stroke-width="6" stroke-linecap="round"/><ellipse cx="58" cy="62" rx="44" ry="24" fill="#1B2440"/><ellipse cx="58" cy="56" rx="38" ry="16" fill="#2E3A5C"/><g class="pan-food"><ellipse cx="58" cy="56" rx="30" ry="11" fill="#F28C28"/><circle cx="46" cy="53" r="5" fill="#FFB347"/><circle cx="62" cy="51" r="6" fill="#E8232A"/><circle cx="72" cy="57" r="4.5" fill="#FFB347"/><circle cx="54" cy="60" r="4" fill="#C9461B"/></g></svg></div></div>
 
     <div class="shift-card">
       <div class="sc-l">${ICON.cal}${t('emp.todayShift')}</div>
@@ -4346,6 +4498,7 @@ EVIEWS.my = {
         <div class="wk-v" data-m="num" data-mk="emp-wk">${hh(wm)}${H}</div>
         <div class="meter"><i data-m="fillx" data-mk="meter-emp" style="width:${clamp(wm / (s.maxH * 60) * 100, 0, 100)}%;
           background:${wm > DB.settings.otWeekly * 60 ? 'var(--orange)' : 'var(--tile-3)'}"></i></div>
+        <span class="wk-spark" aria-hidden="true">${SPARK}</span>
         <div class="wk-mascot" data-mascot></div>
       </div>
       <div class="grid-cards" style="grid-template-columns:1fr">
@@ -5197,6 +5350,21 @@ const ACT = {
   viewLeave: b => openLeaveEditor(b.dataset.id, true),
 
   /* ---- 管理端 ---- */
+  /* 电脑：右上角头像按钮 —— 切换管理端 / 员工端、语言、外观、同步状态（原来在侧边栏底部） */
+  deskMenu() {
+    const emp = state.mode === 'emp';
+    const rows = [];
+    if (!emp) rows.push(['toEmp', '👤', t('mode.toEmp')]);
+    else if (!Cloud.isStaff()) rows.push(['toBoss', '↩', t('mode.toBoss')]);
+    rows.push(['langMenu', '🌐', LANGS[LANG]], ['theme', '◐', t('c.appearance')]);
+    openSheet({
+      title: esc(DB.settings.biz), body: `<div class="list">
+        ${rows.map(([a, i, l]) => `<div class="row tap" data-act="deskDo" data-v="${a}"><span style="width:22px">${i}</span>
+          <div class="row-m"><div class="row-t">${l}</div></div><span class="chev">›</span></div>`).join('')}
+        </div><div class="hint" data-sync-status>${Cloud.statusText()}</div>`
+    });
+  },
+  deskDo: b => { const v = b.dataset.v; closeSheet(); setTimeout(() => ACT[v] && ACT[v](b), 60); },
   moreMenu() {
     const by = notifByView();
     const sub = { staff: '', leave: t('leave.pending'), set: '' };
