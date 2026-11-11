@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>波浪动画方案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap">
+<style>
+:root{--red:#E8232A;--red-d:#B9141B;--yellow:#FFD12E;--blue:#1F4FFF;--green:#16A94F;--ink:#1E1414;--bg:#FFF4EE}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 60px}
+h1{margin:0 0 6px;font-size:28px;font-weight:900}
+.sub{margin:0 0 20px;color:#7a625a;font-size:14.5px;line-height:1.55;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:22px}
+.opt{display:flex;flex-direction:column;gap:10px}
+.opt-h{display:flex;align-items:baseline;gap:10px}
+.opt-k{font-size:30px;font-weight:900;color:var(--red);line-height:1}
+.opt-t{font-size:18px;font-weight:900}
+.opt-d{font-size:13.5px;color:#6b5953;font-weight:700;line-height:1.5;min-height:40px}
+.now{font-size:12px;font-weight:900;background:var(--yellow);padding:2px 8px;border-radius:999px;margin-left:auto}
+.mock{position:relative;width:340px;max-width:100%;height:440px;margin:0 auto;background:var(--red);border-radius:26px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(120,20,10,.18);touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.mock svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.panel{position:absolute;left:150px;right:8px;top:8px;bottom:8px;background:#fff;border-radius:0 22px 22px 0;padding:18px 14px 14px 12px;z-index:1;overflow:hidden}
+.p-k{width:62%;height:7px;border-radius:4px;background:#e9dcd7;margin-bottom:8px}
+.p-t{font-size:23px;font-weight:900;margin-bottom:12px;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.tile{height:58px;border-radius:13px;padding:7px 8px;color:#fff;font-weight:900;font-size:17px}
+.tile:nth-child(1){background:var(--red)}.tile:nth-child(2){background:var(--yellow);color:var(--ink)}
+.tile:nth-child(3){background:var(--blue)}.tile:nth-child(4){background:var(--green)}
+.line{height:34px;border-radius:10px;background:#F4EEEB;margin-bottom:7px}
+.nav{position:absolute;left:0;top:0;width:150px;z-index:3}
+.logo{position:absolute;left:14px;top:18px;color:#fff;font-weight:900;font-size:16px}
+.it{position:absolute;left:10px;width:112px;height:38px;border-radius:999px;display:flex;align-items:center;padding-left:14px;
+  color:#fff;font-weight:900;font-size:15px;cursor:pointer;transition:color .2s;z-index:3}
+.it.on{color:var(--ink)}
+.pill{position:absolute;top:0;left:10px;width:112px;height:38px;border-radius:999px;background:#fff;z-index:2;will-change:transform;
+  box-shadow:0 5px 14px rgba(120,10,10,.18)}
+.hint{text-align:center;font-size:12.5px;color:#8a7670;font-weight:700}
+@media (max-width:400px){.mock{transform-origin:top center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>左边红色波浪 · 动画方案</h1>
+  <p class="sub">每个都会自己切换栏目给你看，也可以直接点左边的栏目试。选好告诉我字母就行，也可以混搭（例如「A 的流动 + E 的果冻」）。</p>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+(() => {
+const TAU = Math.PI * 2, { sin, cos, exp, abs, min, max, random } = Math;
+const OPTS = [
+  { k: 'A', t: '水面流动', now: true, d: '现在用的。边缘像水面一样一直起伏，选中项旁边鼓一个包，切换时包滑过去晃一下。' },
+  { k: 'B', t: '拉丝软糖', d: '鼓包更大，移动时像软糖被拉长，后面拖着一条尾巴慢慢跟上来。' },
+  { k: 'C', t: '水波涟漪', d: '平时只是慢慢呼吸；切换时从选中项那里荡出一圈涟漪，沿着边缘往上下传开。' },
+  { k: 'D', t: '海浪翻滚', d: '浪更大、一直往下翻滚，像海浪；切换时浪会突然加速一下再慢下来。' },
+  { k: 'E', t: '果冻弹弹', d: '平时几乎不动；切换时整条边像果冻一样抖动，鼓包也弹得很夸张。' },
+  { k: 'F', t: '冒泡泡', d: '边缘轻轻流动，不停有白色小泡泡从边上冒出来飘进红色里；切换时冒出一串泡泡。' },
+];
+const NAV = ['总览', '排班', '工时', '薪资', '员工', '请假'];
+const TITLES = ['总览', '排班表', '工时', '薪资', '员工', '请假'];
+const SW = 150, BOX = 46, NAV_TOP = 78, NAV_GAP = 50, PH = 38;
+const NS = 'http://www.w3.org/2000/svg';
+
+const grid = document.getElementById('grid');
+const mocks = OPTS.map((o, idx) => {
+  const box = document.createElement('div');
+  box.className = 'opt';
+  box.innerHTML = `<div class="opt-h"><span class="opt-k">${o.k}</span><span class="opt-t">${o.t}</span>${o.now ? '<span class="now">现在用的</span>' : ''}</div>
+    <div class="opt-d">${o.d}</div>
+    <div class="mock">
+      <div class="panel"><div class="p-k"></div><div class="p-t">${TITLES[0]}</div>
+        <div class="tiles"><div class="tile">$6,268</div><div class="tile">28.5%</div><div class="tile">311h</div><div class="tile">3</div></div>
+        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+      <svg><path fill="#fff"/><g class="bub"></g></svg>
+      <div class="nav"><div class="logo">SHISHAN</div><div class="pill"></div>
+        ${NAV.map((n, i) => `<div class="it ${i ? '' : 'on'}" data-i="${i}" style="top:${NAV_TOP + i * NAV_GAP}px">${n}</div>`).join('')}</div>
+    </div>
+    <div class="hint">点左边的栏目试试</div>`;
+  grid.appendChild(box);
+  const mock = box.querySelector('.mock');
+  const m = {
+    k: o.k, mock, path: mock.querySelector('path'), bub: mock.querySelector('.bub'), pill: mock.querySelector('.pill'),
+    items: [...mock.querySelectorAll('.it')], title: mock.querySelector('.p-t'), panel: mock.querySelector('.panel'),
+    sel: 0, py: NAV_TOP, pv: 0, amp: 0, av: 0, lag: NAV_TOP + PH / 2, hitAt: -99, ripples: [], bubbles: [], bubT: 0,
+    speed: 1, sv: 0, phase: 0, lastUser: -1e9, dir: 1, t: random() * 10,
+  };
+  m.items.forEach(it => it.addEventListener('click', () => { m.lastUser = performance.now(); select(m, +it.dataset.i); }));
+  return m;
+});
+
+function select(m, i) {
+  if (i === m.sel) return;
+  m.dir = i > m.sel ? 1 : -1;
+  m.items[m.sel].classList.remove('on'); m.items[i].classList.add('on');
+  m.sel = i; m.hitAt = m.t;
+  m.title.textContent = TITLES[i];
+  m.panel.animate([{ opacity: 0, transform: `translateY(${m.dir * 22}px)` }, { opacity: 1, transform: 'none' }],
+    { duration: 600, easing: 'cubic-bezier(.16,1,.3,1)' });
+  if (m.k === 'A') m.av += 220;
+  if (m.k === 'B') m.av += 300;
+  if (m.k === 'C') m.ripples.push({ y: NAV_TOP + i * NAV_GAP + PH / 2, t: m.t });
+  if (m.k === 'D') m.sv += 14;
+  if (m.k === 'E') m.av += 420;
+  if (m.k === 'F') { m.av += 200; for (let b = 0; b < 7; b++) spawnBubble(m, NAV_TOP + i * NAV_GAP + PH / 2 + (random() - .5) * 30, true); }
+}
+
+function spawnBubble(m, y, burst) {
+  const c = document.createElementNS(NS, 'circle');
+  c.setAttribute('fill', '#fff');
+  m.bub.appendChild(c);
+  m.bubbles.push({ el: c, x: SW - 12, y, vx: -(burst ? 40 + random() * 60 : 14 + random() * 22), vy: -(burst ? 10 + random() * 40 : 12 + random() * 18),
+    r: burst ? 3 + random() * 5 : 2 + random() * 4, life: 0, max: burst ? 1.6 + random() * .8 : 2.6 + random() * 1.4, wob: random() * 6 });
+}
+
+/* 每个方案：边缘离白色面板左边多远（越小 = 白色越往红色里鼓） */
+const RULES = {
+  A: (m, y) => {
+    const t = m.t, f = 3 * sin(y / 300 * TAU + t * .9) + 2 * sin(y / 160 * TAU - t * 1.35) + 1 * sin(y / 70 * TAU + t * 2.2);
+    const g = (y - m.cy) / 30;
+    return 26 + f - m.amp * exp(-g * g);
+  },
+  B: (m, y) => {
+    const t = m.t, f = 1.6 * sin(y / 260 * TAU + t * .8);
+    const g1 = (y - m.cy) / 34, g2 = (y - m.lag) / 40;
+    return 30 + f - m.amp * exp(-g1 * g1) - m.amp * .7 * exp(-g2 * g2) - 6 * exp(-(((y - (m.cy + m.lag) / 2) / max(20, abs(m.cy - m.lag) / 2 + 10)) ** 2)) * min(1, abs(m.cy - m.lag) / 40);
+  },
+  C: (m, y) => {
+    const t = m.t; let x = 26 + 2.2 * sin(t * 1.1) + 1.2 * sin(y / 200 * TAU + t * .6);
+    const g = (y - m.cy) / 28; x -= 10 * exp(-g * g);
+    m.ripples.forEach(r => {
+      const age = t - r.t, dist = abs(y - r.y), front = age * 230;
+      if (dist < front + 30) x -= 11 * exp(-age * 1.5) * sin((dist - front) / 22) * exp(-max(0, dist - front) / 18);
+    });
+    return x;
+  },
+  D: (m, y) => {
+    const p = m.phase;
+    return 26 + 6 * sin(y / 130 * TAU - p * 3) + 3 * sin(y / 64 * TAU - p * 4.4) + 1.5 * sin(y / 37 * TAU - p * 6);
+  },
+  E: (m, y, H) => {
+    const age = m.t - m.hitAt, j = age < 3 ? 9 * sin(y / H * TAU) * cos(age * 15) * exp(-age * 2.6) + 5 * sin(y / H * TAU * 2.5) * sin(age * 19) * exp(-age * 3) : 0;
+    const g = (y - m.cy) / 30;
+    return 26 + 1.2 * sin(m.t * .7 + y / 300) + j - m.amp * exp(-g * g);
+  },
+  F: (m, y) => {
+    const t = m.t, f = 2.4 * sin(y / 280 * TAU + t * .9) + 1.6 * sin(y / 140 * TAU - t * 1.2);
+    const g = (y - m.cy) / 30;
+    return 26 + f - m.amp * exp(-g * g);
+  },
+};
+const REST = { A: 13, B: 18, C: 0, D: 0, E: 12, F: 11 };
+const AMP_K = { A: [95, 8.5], B: [60, 6], C: [95, 9], D: [95, 9], E: [160, 4.2], F: [95, 8.5] };
+
+function step(m, dt, now) {
+  m.t += dt;
+  /* 白色胶囊：弹簧 */
+  const ty = NAV_TOP + m.sel * NAV_GAP;
+  m.pv += (-(m.py - ty) * 224 - m.pv * 20) * dt; m.py += m.pv * dt;
+  const s = min(abs(m.pv) / 2400, .22);
+  m.pill.style.transform = `translateY(${m.py.toFixed(1)}px) scale(${(1 - s * .25).toFixed(3)},${(1 + s).toFixed(3)})`;
+  m.cy = m.py + PH / 2;
+  m.lag += (m.cy - m.lag) * (1 - exp(-dt * 3.2));
+  /* 鼓包大小：弹簧 */
+  const [k, c] = AMP_K[m.k];
+  m.av += (-(m.amp - REST[m.k]) * k - m.av * c) * dt; m.amp += m.av * dt;
+  /* 海浪速度 */
+  m.sv += (-(m.speed - 1) * 30 - m.sv * 7) * dt; m.speed += m.sv * dt; m.phase += dt * m.speed;
+  m.ripples = m.ripples.filter(r => m.t - r.t < 3);
+  /* 画边缘 */
+  const H = m.mock.clientHeight, TOP = 8, BOT = H - 8, R = 28;
+  let d = `M${SW + 1},${TOP}`;
+  for (let y = TOP; y <= BOT + .1; y += 6) {
+    let x = RULES[m.k](m, y, H);
+    const e = min(y - TOP, BOT - y);
+    if (e < R) { const u = 1 - e / R; x = BOX - (BOX - x) * Math.sqrt(max(0, 1 - u * u)); }
+    d += `L${(SW - BOX + x).toFixed(1)},${y}`;
+  }
+  m.path.setAttribute('d', d + `L${SW + 1},${BOT}Z`);
+  /* 泡泡 */
+  if (m.k === 'F') {
+    m.bubT -= dt;
+    if (m.bubT <= 0) { spawnBubble(m, 30 + random() * (H - 60), false); m.bubT = .35 + random() * .5; }
+    m.bubbles = m.bubbles.filter(b => {
+      b.life += dt;
+      if (b.life > b.max) { b.el.remove(); return false; }
+      b.x += b.vx * dt; b.y += b.vy * dt; b.vx *= 1 - .6 * dt; b.wob += dt * 5;
+      const a = b.life / b.max, r = b.r * min(1, b.life * 5) * (1 - a * .4);
+      b.el.setAttribute('cx', (b.x + 3 * sin(b.wob)).toFixed(1)); b.el.setAttribute('cy', b.y.toFixed(1));
+      b.el.setAttribute('r', r.toFixed(2)); b.el.setAttribute('opacity', (1 - a * a).toFixed(2));
+      return true;
+    });
+  }
+  /* 没人点的时候自己切换：往下走到底再往上 */
+  if (now - m.lastUser > 6000 && m.t - m.hitAt > 2.6) {
+    let n = m.sel + m.dir;
+    if (n < 0 || n >= NAV.length) { m.dir = -m.dir; n = m.sel + m.dir; }
+    if (random() < .35) n = Math.floor(random() * NAV.length);
+    if (n === m.sel) n = (m.sel + 1) % NAV.length;
+    select(m, n);
+  }
+}
+
+mocks.forEach((m, i) => { m.amp = REST[m.k]; m.hitAt = -i * 0.45; m.cy = NAV_TOP + PH / 2; m.pill.style.transform = `translateY(${NAV_TOP}px)`; });
+let last = performance.now();
+const vis = new Set(mocks);
+if ('IntersectionObserver' in window) {
+  vis.clear();
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const m = mocks.find(x => x.mock === e.target);
+    if (e.isIntersecting) vis.add(m); else vis.delete(m);
+  }), { rootMargin: '100px' });
+  mocks.forEach(m => io.observe(m.mock));
+}
+function loop(now) {
+  const dt = min(.05, (now - last) / 1000); last = now;
+  vis.forEach(m => step(m, dt, now));
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
