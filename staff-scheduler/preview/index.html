@@ -2581,37 +2581,54 @@ const Motion = {
     return { box };
   },
 
+  /* 切换栏目：旧页面往反方向淡出，新页面的标题、卡片一块接一块顺着同一个方向滑进来。
+     电脑上沿侧边栏方向上下走，手机上沿底栏方向左右走；只动 transform / opacity */
+  navDir: 1,
   pageTransition(kind, g) {
     const page = $('#page'), box = g.box;
+    this._tr = true;                                   // 这次已经有入场动画，firstVisit 不再叠一层色块弹出
     let gone = false;
     const kill = () => { if (!gone) { gone = true; box.remove(); } };
-    let out, inn = null, outDur = 180, inDur = 280;
-    if (REDUCED || kind === 'tab') {
-      out = [{ opacity: 1 }, { opacity: 0 }]; outDur = REDUCED ? 150 : 160;
-      if (!REDUCED) inn = 'rise';
+    const SMOOTH = 'cubic-bezier(0.16, 1, 0.3, 1)', SOFT = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    const items = () => {
+      const list = [];
+      [...page.children].forEach(c => {
+        if (c.classList.contains('grid-cards') || c.classList.contains('emp-grid')) list.push(...c.children); else list.push(c);
+      });
+      return list.filter(el => el.getBoundingClientRect().top < innerHeight + 40).slice(0, 12);
+    };
+    let out, outDur = 200;
+    if (REDUCED) {
+      out = [{ opacity: 1 }, { opacity: 0 }]; outDur = 150;
+    } else if (kind === 'tab') {
+      const d = this.navDir || 1, ax = innerWidth <= 900 ? 'X' : 'Y';
+      const tr = v => `translate${ax}(${v}px)`;
+      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `${tr(-d * 26)} scale(0.985)` }]; outDur = 230;
+      items().forEach((el, i) => el.animate(
+        [{ opacity: 0, transform: `${tr(d * 46)} scale(0.97)` }, { opacity: 1, transform: 'none' }],
+        { duration: 680, easing: SMOOTH, delay: 70 + Math.min(i, 8) * 55, fill: 'backwards' }));
+      /* 顶部：小字、标题、日期行、右边按钮依次落位 */
+      ['#topbar .tb-kick', '#topbar .tb-title', '#topbar .tb-wk', '#topbar .tb-sub', '#topbar .tb-right'].forEach((sel, i) => {
+        const el = document.querySelector(sel);
+        el && el.animate([{ opacity: 0, transform: `translateY(${i === 1 ? 18 : 10}px)` }, { opacity: 1, transform: 'none' }],
+          { duration: 640, easing: SMOOTH, delay: i * 45, fill: 'backwards' });
+      });
+      document.querySelectorAll('#topbar .spark path, #page .today-t .spark path').forEach((el, i) =>
+        el.animate([{ transform: 'scale(0)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: EASE.spring, delay: 260 + i * 70, fill: 'backwards' }));
     } else if (kind === 'fwd' || kind === 'back') {
       const d = kind === 'fwd' ? -1 : 1;                 // 下一周：旧的往左走，新的从右边来
-      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${d * 48}px)` }]; outDur = 200;
-      inn = [{ opacity: 0, transform: `translateX(${-d * 36}px)` }, { opacity: 1, transform: 'none' }];
+      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${d * 48}px)` }]; outDur = 220;
+      items().forEach((el, i) => el.animate([{ opacity: 0, transform: `translateX(${-d * 40}px)` }, { opacity: 1, transform: 'none' }],
+        { duration: 560, easing: SMOOTH, delay: 40 + Math.min(i, 6) * 35, fill: 'backwards' }));
     } else {                                              // zoom：管理端 ↔ 员工端
-      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(0.97)' }]; outDur = 200;
-      inn = [{ opacity: 0, transform: 'scale(1.02)' }, { opacity: 1, transform: 'none' }];
+      out = [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(0.96)' }]; outDur = 240;
+      items().forEach((el, i) => el.animate([{ opacity: 0, transform: 'scale(1.04)' }, { opacity: 1, transform: 'none' }],
+        { duration: 620, easing: SMOOTH, delay: 60 + Math.min(i, 8) * 45, fill: 'backwards' }));
     }
-    const a = box.animate(out, { duration: outDur, easing: EASE.out, fill: 'forwards' });
+    const a = box.animate(out, { duration: outDur, easing: SOFT, fill: 'forwards' });
     a.finished.then(kill, kill);
     setTimeout(kill, outDur + 500);
-    if (inn === 'rise') {
-      const items = [];
-      [...page.children].forEach(c => { if (c.classList.contains('grid-cards')) items.push(...c.children); else items.push(c); });
-      items.slice(0, 10).forEach((el, i) => el.animate([{ transform: 'translateY(10px)' }, { transform: 'none' }],
-        { duration: inDur, easing: EASE.out, delay: Math.min(i, 5) * 28, fill: 'backwards' }));
-    } else if (inn) page.animate(inn, { duration: inDur, easing: EASE.out });
-    if (!REDUCED) document.querySelectorAll('#topbar .tb-title, #topbar .tb-sub, #topbar .tb-right .tiny')
-      .forEach(el => el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 200, easing: EASE.out }));
-    const tt = !REDUCED && kind === 'tab' && document.querySelector('#topbar .tb-title');
-    tt && tt.animate([{ transform: 'translateY(12px)' }, { transform: 'none' }], { duration: 560, easing: EASE.spring });
-    if (!REDUCED && kind === 'tab') document.querySelectorAll('#topbar .spark path, #page .today-t .spark path').forEach((el, i) =>
-      el.animate([{ transform: 'scale(0)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: EASE.spring, delay: 160 + i * 70, fill: 'backwards' }));
+    if (REDUCED) page.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 });
   },
 
   /* 每个页面本次打开 app 后第一次出现：数字从 0 滚上来、柱子长出来、班次按天依次冒出来 */
@@ -2635,8 +2652,9 @@ const Motion = {
       c.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'none' }],
         { duration: 240, easing: EASE.out, delay: 60 + di * 30, fill: 'backwards' });
     });
-    /* 数字色块：一块接一块弹出来 */
-    document.querySelectorAll('#page .grid-cards > .card').forEach((c, i) => {
+    /* 数字色块：一块接一块弹出来（只在打开 app 时；切栏目时由切换动画负责） */
+    const tr = this._tr; this._tr = false;
+    if (!tr) document.querySelectorAll('#page .grid-cards > .card').forEach((c, i) => {
       if (!c.querySelector(':scope > .stat')) return;
       c.animate([{ opacity: 0, transform: 'translateY(18px) scale(0.9)' }, { opacity: 1, transform: 'none' }],
         { duration: 620, easing: EASE.spring, delay: 40 + Math.min(i, 7) * 70, fill: 'backwards' });
@@ -3294,14 +3312,18 @@ const Pin = {
   },
 };
 
+const NAV_ORDER = { boss: ['dash', 'sched', 'time', 'pay', 'staff', 'leave', 'set'], emp: ['my', 'ehours', 'eleave', 'eme'] };
+const navDirTo = (mode, from, to) => Math.sign(NAV_ORDER[mode].indexOf(to) - NAV_ORDER[mode].indexOf(from)) || 1;
 function go(v) {
   const same = state.mode === 'boss' && state.view === v;
+  Motion.navDir = navDirTo('boss', state.view, v);
   state.view = v; state.mode = 'boss'; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }   // 再点一次当前页：回到顶部
   else { render('tab'); Mascot.react(v === 'pay' ? 'payday' : 'hop'); }
 }
 function ego(v) {
   const same = state.eview === v;
+  Motion.navDir = navDirTo('emp', state.eview, v);
   state.eview = v; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }
   else { render('tab'); Mascot.react('hop'); }
