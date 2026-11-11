@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>扁平人物 · 动画效果</title>
+<style>
+  :root{--bg:#F4F5FA;--ink:#2A2F4F;--green:#1FD18B}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#2E3150;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+  h1{font-size:20px;margin:22px 16px 4px}
+  p.sub{margin:0 16px 14px;opacity:.75;font-size:14px;text-align:center}
+  .phone{width:min(360px,calc(100vw - 32px));background:#fff;border-radius:28px;padding:18px 14px 20px;box-shadow:0 20px 50px rgba(0,0,0,.35);color:var(--ink)}
+  svg{width:100%;height:auto;display:block}
+  .cap{text-align:center;font-weight:800;font-size:16px;margin:4px 0 2px}
+  .cap2{text-align:center;font-size:13px;opacity:.6;min-height:18px}
+  .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:16px 16px 6px;max-width:560px}
+  button{font:inherit;font-weight:800;border:0;border-radius:999px;padding:10px 16px;background:#fff;color:var(--ink);cursor:pointer}
+  button.on{background:var(--green);color:#fff}
+  label{display:flex;gap:6px;align-items:center;font-size:14px;opacity:.85;padding:6px 0 26px}
+</style>
+</head>
+<body>
+<h1>扁平插画人物 · 动画效果试看</h1>
+<p class="sub">手肘、膝盖会弯；马尾会甩；每个动作都顺着上一个接过去。</p>
+<div class="phone">
+  <svg id="s" viewBox="0 0 400 560" aria-label="动画人物">
+    <ellipse cx="200" cy="528" rx="150" ry="10" fill="#EEF0F6"/>
+    <g id="floor"></g>
+    <ellipse id="shadow" cx="200" cy="524" rx="58" ry="7" fill="#2A2F4F" opacity=".12"/>
+    <g id="me"></g>
+  </svg>
+  <div class="cap" id="cap">Hello, there</div>
+  <div class="cap2" id="cap2">待机：呼吸、换重心、眨眼</div>
+</div>
+<div class="row">
+  <button data-a="auto" class="on">自动演示</button>
+  <button data-a="idle">待机</button>
+  <button data-a="wave">挥手</button>
+  <button data-a="walk">走路</button>
+  <button data-a="cheer">欢呼跳</button>
+</div>
+<label><input type="checkbox" id="slow"> 慢动作（看细节）</label>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const C = { skin: '#F6C1A4', skinD: '#E9A587', green: '#1FD18B', greenD: '#14B577', navy: '#2A2F4F', hair: '#23263F', shoe: '#1B1E33', white: '#fff' };
+const me = document.getElementById('me');
+const mk = (tag, a = {}, p = me) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+
+/* ---------- 画面零件（每帧只改 d / transform） ---------- */
+const P = {
+  legB: mk('path', { fill: 'none', stroke: C.navy, 'stroke-width': 25, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+  shoeB: mk('path', { fill: C.shoe }),
+  armB: mk('path', { fill: 'none', stroke: C.skinD, 'stroke-width': 14, 'stroke-linecap': 'round' }),
+  sleeveB: mk('path', { fill: 'none', stroke: C.greenD, 'stroke-width': 23, 'stroke-linecap': 'round' }),
+  handB: mk('circle', { r: 8.5, fill: C.skinD }),
+  pony: mk('path', { fill: 'none', stroke: C.hair, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': 20 }),
+  legF: mk('path', { fill: 'none', stroke: C.navy, 'stroke-width': 25, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+  shoeF: mk('path', { fill: C.shoe }),
+  hips: mk('path', { fill: C.navy }),
+  torso: mk('path', { fill: C.green }),
+  neck: mk('path', { fill: 'none', stroke: C.skin, 'stroke-width': 15, 'stroke-linecap': 'round' }),
+  head: mk('g'),
+  armF: mk('path', { fill: 'none', stroke: C.skin, 'stroke-width': 14, 'stroke-linecap': 'round' }),
+  sleeveF: mk('path', { fill: 'none', stroke: C.green, 'stroke-width': 23, 'stroke-linecap': 'round' }),
+  handF: mk('circle', { r: 8.5, fill: C.skin }),
+};
+const H = P.head;
+mk('circle', { cx: 0, cy: 0, r: 29, fill: C.skin }, H);
+mk('path', { d: 'M-30,4 C-34,-30 -8,-42 10,-36 C26,-31 33,-18 30,-4 C22,-16 8,-22 -6,-20 C-16,-18 -24,-8 -30,4 Z', fill: C.hair }, H);
+const bun = mk('circle', { cx: -22, cy: -30, r: 13, fill: C.hair }, H);
+const eyes = mk('g', {}, H);
+mk('ellipse', { cx: 2, cy: 2, rx: 2.6, ry: 3.4, fill: C.navy }, eyes);
+mk('ellipse', { cx: 17, cy: 2, rx: 2.6, ry: 3.4, fill: C.navy }, eyes);
+const mouth = mk('path', { d: 'M4,13 Q10,18 16,13', fill: 'none', stroke: C.navy, 'stroke-width': 2.4, 'stroke-linecap': 'round' }, H);
+mk('ellipse', { cx: -2, cy: 10, rx: 4.5, ry: 3, fill: '#F49C8C', opacity: .55 }, H);
+mk('ellipse', { cx: 24, cy: 10, rx: 4.5, ry: 3, fill: '#F49C8C', opacity: .55 }, H);
+
+/* ---------- 弹簧：所有目标值都经过它，动作之间自然衔接、有跟随 ---------- */
+const sp = {};
+function spring(name, target, dt, k = 120, c = 16) {
+  let s = sp[name]; if (!s) s = sp[name] = { x: target, v: 0 };
+  s.v += (k * (target - s.x) - c * s.v) * dt; s.x += s.v * dt; return s.x;
+}
+const springV = (n, p, dt, k, c) => ({ x: spring(n + 'x', p.x, dt, k, c), y: spring(n + 'y', p.y, dt, k, c) });
+
+/* 两节骨头的 IK：给肩/髋和手/脚的位置，算出手肘/膝盖 */
+function ik(root, tgt, a, b, bend) {
+  let dx = tgt.x - root.x, dy = tgt.y - root.y, d = Math.hypot(dx, dy);
+  const dd = Math.max(Math.abs(a - b) + 1, Math.min(a + b - 0.5, d));
+  const base = Math.atan2(dy, dx), al = Math.acos((a * a + dd * dd - b * b) / (2 * a * dd));
+  const ang = base + bend * al;
+  const j = { x: root.x + a * Math.cos(ang), y: root.y + a * Math.sin(ang) };
+  const e = { x: root.x + dd * Math.cos(base), y: root.y + dd * Math.sin(base) };
+  return { j, e };
+}
+/* 经过关节的平滑曲线（像橡皮管一样弯） */
+const curve = (r, j, e) => `M${r.x.toFixed(1)},${r.y.toFixed(1)} Q${(2 * j.x - (r.x + e.x) / 2).toFixed(1)},${(2 * j.y - (r.y + e.y) / 2).toFixed(1)} ${e.x.toFixed(1)},${e.y.toFixed(1)}`;
+function partial(r, j, e, t1) {           // 曲线前段（袖子）
+  const cx = 2 * j.x - (r.x + e.x) / 2, cy = 2 * j.y - (r.y + e.y) / 2;
+  const q = t => ({ x: (1 - t) ** 2 * r.x + 2 * (1 - t) * t * cx + t * t * e.x, y: (1 - t) ** 2 * r.y + 2 * (1 - t) * t * cy + t * t * e.y });
+  let d = `M${r.x.toFixed(1)},${r.y.toFixed(1)}`;
+  for (let i = 1; i <= 6; i++) { const p = q(t1 * i / 6); d += `L${p.x.toFixed(1)},${p.y.toFixed(1)}`; }
+  return d;
+}
+const rot = (p, o, a) => { const c = Math.cos(a), s = Math.sin(a); return { x: o.x + (p.x - o.x) * c - (p.y - o.y) * s, y: o.y + (p.x - o.x) * s + (p.y - o.y) * c }; };
+const shoe = (f, dir, tilt) => { const a = tilt, c = Math.cos(a), s = Math.sin(a);
+  const pts = [[-8, -6], [20, -6], [27, 4], [20, 8], [-10, 8], [-12, 0]].map(([x, y]) => [f.x + (x * dir) * c - y * s, f.y + (x * dir) * s + y * c]);
+  return 'M' + pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('L') + 'Z'; };
+
+/* ---------- 各个动作：只给「想去哪里」，怎么过去交给弹簧 ---------- */
+const GROUND = 520;
+function pose(name, t) {
+  const o = { hip: { x: 200, y: 349 }, lean: 0, headTilt: 0, headLook: 0, footB: { x: 186, y: GROUND }, footF: { x: 220, y: GROUND },
+    handB: null, handF: null, mouth: 'smile', k: 120, c: 16, footLift: [0, 0] };
+  if (name === 'idle') {
+    const sh = Math.sin(t * 0.7);
+    o.hip = { x: 200 + 7 * sh, y: 349 + 1.6 * Math.sin(t * 2.1) };
+    o.lean = -1.2 * sh; o.headTilt = 3 * Math.sin(t * 0.55 + 1) + 1.5 * sh; o.headLook = 2 * Math.sin(t * 0.4);
+  } else if (name === 'wave') {
+    const on = Math.min(1, t / 0.35);
+    o.hip = { x: 192, y: 350 }; o.lean = 3.5; o.headTilt = -7 + 2 * Math.sin(t * 6.5); o.headLook = 4;
+    const sw = Math.sin(t * 7.2), el = { x: 268, y: 214 };        // 手肘大概停在这里，前臂左右摆
+    const ang = -0.15 + 0.5 * sw;
+    o.handF = { x: el.x + 54 * Math.sin(ang), y: el.y - 54 * Math.cos(ang) + 6 * Math.abs(sw) };
+    o.handF = { x: 236 + (o.handF.x - 236) * on, y: 400 + (o.handF.y - 400) * on };
+    o.mouth = 'open'; o.k = 190; o.c = 17;
+  } else if (name === 'walk') {
+    const T = 1.05, ph = t / T * Math.PI * 2;
+    const foot = p => ({ x: 203 + 36 * Math.cos(p), y: GROUND - Math.max(0, 22 * Math.sin(p)) });
+    o.footB = foot(ph); o.footF = foot(ph + Math.PI);
+    o.footLift = [Math.max(0, Math.sin(ph)), Math.max(0, Math.sin(ph + Math.PI))];
+    o.hip = { x: 203, y: 347 + 5 * Math.cos(2 * ph) };
+    o.lean = 4; o.headTilt = 1.5 * Math.sin(2 * ph); o.headLook = 3;
+    o.handB = { x: 196 - 30 * Math.cos(ph + Math.PI), y: 352 - 6 * Math.abs(Math.sin(ph)) };
+    o.handF = { x: 238 - 30 * Math.cos(ph), y: 350 - 6 * Math.abs(Math.sin(ph)) };
+    o.k = 260; o.c = 22;
+  } else if (name === 'cheer') {
+    // 下蹲蓄力 → 起跳双手举高 → 落地缓冲 → 举手晃
+    let y = 352, up = 0;
+    if (t < 0.28) { y = 352 + 26 * Math.sin(t / 0.28 * Math.PI / 2); }
+    else if (t < 0.72) { const u = (t - 0.28) / 0.44; y = 378 - 120 * Math.sin(u * Math.PI); up = 1; }
+    else if (t < 0.95) { y = 352 + 18 * Math.sin((t - 0.72) / 0.23 * Math.PI); up = 1; }
+    else up = 1;
+    o.hip = { x: 200, y };
+    const lift = Math.max(0, 352 + 26 - y - 26);
+    o.footB = { x: 186, y: Math.min(GROUND, GROUND - Math.max(0, 352 - y) * 0.85) };
+    o.footF = { x: 220, y: Math.min(GROUND, GROUND - Math.max(0, 352 - y) * 0.85) };
+    if (up) {
+      const w = t > 0.95 ? Math.sin(t * 9) * 10 : 0;
+      o.handB = { x: 150 + w, y: 178 + (y - 352) };
+      o.handF = { x: 252 - w, y: 172 + (y - 352) };
+    } else { o.handB = { x: 172, y: 400 }; o.handF = { x: 230, y: 402 }; }
+    o.lean = t < 0.28 ? 6 : 0; o.headTilt = t > 0.95 ? 4 * Math.sin(t * 9) : 0; o.headLook = 2;
+    o.mouth = 'open'; o.k = 210; o.c = 17;
+  }
+  return o;
+}
+
+/* ---------- 马尾：几节小链子，跟着头甩 ---------- */
+const pony = [];
+function stepPony(anchor, dt) {
+  if (!pony.length) for (let i = 0; i < 5; i++) pony.push({ x: anchor.x - i * 9, y: anchor.y + i * 9, px: anchor.x - i * 9, py: anchor.y + i * 9 });
+  pony[0].x = anchor.x; pony[0].y = anchor.y; pony[0].px = anchor.x; pony[0].py = anchor.y;
+  for (let i = 1; i < pony.length; i++) {
+    const p = pony[i], vx = (p.x - p.px) * 0.94, vy = (p.y - p.py) * 0.94;
+    p.px = p.x; p.py = p.y; p.x += vx - 30 * dt * dt * 60; p.y += vy + 900 * dt * dt;
+  }
+  for (let k = 0; k < 4; k++) for (let i = 1; i < pony.length; i++) {
+    const a = pony[i - 1], b = pony[i], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, L = 10;
+    const f = (d - L) / d; b.x -= dx * f; b.y -= dy * f;
+  }
+  let d = `M${pony[0].x.toFixed(1)},${pony[0].y.toFixed(1)}`;
+  for (let i = 1; i < pony.length - 1; i++) {
+    const mx = (pony[i].x + pony[i + 1].x) / 2, my = (pony[i].y + pony[i + 1].y) / 2;
+    d += ` Q${pony[i].x.toFixed(1)},${pony[i].y.toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`;
+  }
+  P.pony.setAttribute('d', d);
+}
+
+/* ---------- 每一帧 ---------- */
+let cur = 'idle', tS = 0, auto = true, autoI = 0, last = performance.now(), blinkIn = 2, blinkT = -1;
+const SEQ = [['idle', 2.6], ['wave', 3.2], ['idle', 1.6], ['walk', 4.2], ['cheer', 2.6]];
+const INFO = { idle: ['Hello, there', '待机：呼吸、换重心、眨眼'], wave: ['Hi 👋', '挥手：手肘自然弯、身体和头一起配合'],
+  walk: ['On my way', '走路：膝盖弯曲、手脚交替、马尾跟着甩'], cheer: ['Yay!', '欢呼：先下蹲蓄力，再跳，落地缓冲'] };
+function setAct(n) { cur = n; tS = 0; document.getElementById('cap').textContent = INFO[n][0]; document.getElementById('cap2').textContent = INFO[n][1]; }
+const floor = document.getElementById('floor'), dots = [];
+for (let i = 0; i < 6; i++) dots.push(mk('rect', { y: 530, width: 22, height: 3, rx: 1.5, fill: '#D9DCE8' }, floor));
+let floorX = 0;
+
+function frame(now) {
+  let dt = Math.max(0, Math.min(0.033, (now - last) / 1000)); last = now;
+  if (document.getElementById('slow').checked) dt *= 0.3;
+  tS += dt;
+  if (auto && tS > SEQ[autoI][1]) { autoI = (autoI + 1) % SEQ.length; setAct(SEQ[autoI][0]); }
+  if (!auto && (cur === 'wave' && tS > 3.2 || cur === 'cheer' && tS > 2.6)) setAct('idle');
+  const g = pose(cur, tS), K = g.k, Cc = g.c;
+  // 身体主干用稍慢的弹簧，手脚用快一点的：主次分明，有跟随
+  const hip = springV('hip', g.hip, dt, 150, 17);
+  const lean = spring('lean', g.lean, dt, 70, 11) * Math.PI / 180;
+  const neck = rot({ x: hip.x, y: hip.y - 118 }, hip, lean);
+  const tilt = spring('tilt', g.headTilt, dt, 90, 10) * Math.PI / 180;
+  const headC = rot({ x: neck.x + 2 + spring('look', g.headLook, dt, 60, 10), y: neck.y - 36 }, neck, tilt * 1.4);
+  const shB = rot({ x: hip.x - 24, y: hip.y - 104 }, hip, lean), shF = rot({ x: hip.x + 26, y: hip.y - 106 }, hip, lean);
+  const restB = { x: shB.x - 10, y: shB.y + 112 + 2 * Math.sin(tS * 2.1) }, restF = { x: shF.x + 8, y: shF.y + 112 + 2 * Math.sin(tS * 2.1 + 0.5) };
+  const hB = springV('hB', g.handB || restB, dt, K, Cc), hF = springV('hF', g.handF || restF, dt, K, Cc);
+  const fB = springV('fB', g.footB, dt, 320, 26), fF = springV('fF', g.footF, dt, 320, 26);
+  const hipB = { x: hip.x - 12, y: hip.y + 4 }, hipF = { x: hip.x + 13, y: hip.y + 4 };
+
+  const lb = ik(hipB, fB, 84, 84, -1), lf = ik(hipF, fF, 84, 84, -1);   // 膝盖都朝前弯
+  P.legB.setAttribute('d', curve(hipB, lb.j, lb.e)); P.legF.setAttribute('d', curve(hipF, lf.j, lf.e));
+  P.shoeB.setAttribute('d', shoe(lb.e, 1, -0.25 * (g.footLift[0] || 0))); P.shoeF.setAttribute('d', shoe(lf.e, 1, -0.25 * (g.footLift[1] || 0)));
+
+  const ab = ik(shB, hB, 60, 58, -1), af = ik(shF, hF, 60, 58, 1);
+  P.armB.setAttribute('d', curve(shB, ab.j, ab.e)); P.sleeveB.setAttribute('d', partial(shB, ab.j, ab.e, 0.42));
+  P.armF.setAttribute('d', curve(shF, af.j, af.e)); P.sleeveF.setAttribute('d', partial(shF, af.j, af.e, 0.42));
+  P.handB.setAttribute('cx', ab.e.x.toFixed(1)); P.handB.setAttribute('cy', ab.e.y.toFixed(1));
+  P.handF.setAttribute('cx', af.e.x.toFixed(1)); P.handF.setAttribute('cy', af.e.y.toFixed(1));
+
+  // 上衣：肩到腰，稍微有点弧度
+  const wB = rot({ x: hip.x - 22, y: hip.y - 6 }, hip, lean), wF = rot({ x: hip.x + 23, y: hip.y - 6 }, hip, lean);
+  const breathe = 1.5 * Math.sin(tS * 2.1);
+  P.torso.setAttribute('d', `M${shB.x - 6},${shB.y + 4} Q${neck.x},${neck.y - 6 - breathe} ${shF.x + 6},${shF.y + 4} Q${shF.x + 10},${(shF.y + wF.y) / 2} ${wF.x + 3},${wF.y + 6} L${wB.x - 3},${wB.y + 6} Q${shB.x - 10},${(shB.y + wB.y) / 2} ${shB.x - 6},${shB.y + 4} Z`);
+  P.hips.setAttribute('d', `M${wB.x - 3},${wB.y + 2} L${wF.x + 3},${wF.y + 2} L${hipF.x + 13},${hipF.y + 8} L${hipB.x - 13},${hipB.y + 8} Z`);
+  P.neck.setAttribute('d', `M${neck.x},${neck.y + 6} L${headC.x - 2},${headC.y + 22}`);
+
+  // 头
+  blinkIn -= dt;
+  if (blinkIn <= 0 && blinkT < 0) { blinkT = 0; blinkIn = 2.4 + Math.random() * 2.6; }
+  let bs = 1; if (blinkT >= 0) { blinkT += dt; bs = 1 - Math.sin(Math.min(1, blinkT / 0.15) * Math.PI) * 0.9; if (blinkT > 0.15) blinkT = -1; }
+  eyes.setAttribute('transform', `translate(0 2) scale(1 ${bs.toFixed(3)}) translate(0 -2)`);
+  mouth.setAttribute('d', g.mouth === 'open' ? 'M3,12 Q10,22 17,12 Z' : 'M4,13 Q10,18 16,13');
+  mouth.setAttribute('fill', g.mouth === 'open' ? C.navy : 'none');
+  H.setAttribute('transform', `translate(${headC.x.toFixed(1)} ${headC.y.toFixed(1)}) rotate(${(tilt * 180 / Math.PI).toFixed(2)})`);
+  const anchor = rot({ x: headC.x - 30, y: headC.y - 26 }, headC, tilt);
+  stepPony(anchor, dt);
+
+  // 走路时地面往后流
+  if (cur === 'walk') floorX = (floorX - dt * 140) % 400;
+  dots.forEach((d, i) => d.setAttribute('x', (((i * 70 + floorX) % 420 + 420) % 420 - 10).toFixed(1)));
+  floor.style.opacity = cur === 'walk' ? 1 : 0; floor.style.transition = 'opacity .4s';
+  const air = Math.max(0, 352 - hip.y);
+  const sh = document.getElementById('shadow'); sh.setAttribute('rx', (58 - air * 0.25).toFixed(1)); sh.setAttribute('opacity', (0.12 - air * 0.0006).toFixed(3));
+  requestAnimationFrame(frame);
+}
+document.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-a]').forEach(x => x.classList.toggle('on', x === b));
+  auto = b.dataset.a === 'auto';
+  if (auto) { autoI = 0; setAct('idle'); } else setAct(b.dataset.a);
+});
+setAct('idle');
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
