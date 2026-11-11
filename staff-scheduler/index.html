@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>班表 · 餐饮排班与薪资系统</title>
 <meta name="description" content="餐饮业排班、工时、薪资一体化自动系统">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap">
 <style>
 /* ============ Tokens ============ */
 :root{
@@ -465,12 +468,186 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
   .tglchip:not(.on):hover{background:var(--fill-2)}
   .pickcard:hover:not(:active){transform:translateY(-2px);box-shadow:var(--shadow-2)}
 }
+
+/* =====================================================================
+   改版：大色块 · 红色 · 活泼（2026-11）
+   颜色都在下面这组变量里，想换配色只改这里
+   ===================================================================== */
+:root{
+  --brand:#E8232A; --brand-d:#B9141B; --brand-tint:#FFE1DC;
+  --tile-1:#E8232A; --tile-1-ink:#FFFFFF; --tile-1-d:#B9141B;
+  --tile-2:#FFC928; --tile-2-ink:#2A1A00; --tile-2-d:#D9A400;
+  --tile-3:#2457FF; --tile-3-ink:#FFFFFF; --tile-3-d:#1638B8;
+  --tile-4:#17A957; --tile-4-ink:#FFFFFF; --tile-4-d:#0E7F3F;
+  --ink:#1E1414;
+  --bg:#FFF4EE; --chrome:rgba(255,244,238,.84);
+  --r-s:12px; --r-m:18px; --r-l:24px; --r-xl:30px;
+  --shadow-1:0 1px 0 rgba(70,20,10,.04),0 3px 10px rgba(70,20,10,.06);
+  --shadow-2:0 10px 26px rgba(70,20,10,.12),0 2px 4px rgba(70,20,10,.05);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --font-fun:"Nunito","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+:root[data-theme="dark"]{--brand-tint:#4A1C1E;--chrome:rgba(18,14,16,.84);--bg:#120E10;--bg-elev:#1F1A1C}
+@media (prefers-color-scheme:dark){:root[data-theme="auto"]{--brand-tint:#4A1C1E;--chrome:rgba(18,14,16,.84);--bg:#120E10;--bg-elev:#1F1A1C}}
+
+.tb-title,.stat-v,.card-t,.brand-t,.hero-h,.clock,.sheet-t,.sh-n,.big-btn,.mono{font-family:var(--font-fun)}
+.tb-title{font-size:27px;font-weight:900;letter-spacing:-.01em}
+.tb-sub{font-weight:600}
+.card-t{font-size:17px;font-weight:850;letter-spacing:0}
+.sheet-t{font-weight:900}
+
+/* ---- 红色侧边栏：背后的圆块慢慢飘 ---- */
+.sidebar{background:var(--brand);color:#fff;border-right:0;-webkit-backdrop-filter:none;backdrop-filter:none;
+  position:relative;isolation:isolate;padding:18px 14px 12px;overflow-x:hidden}
+.side-blobs{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.side-blobs i{position:absolute;border-radius:50%;background:var(--brand-d);opacity:.5;will-change:transform}
+.side-blobs i:nth-child(1){width:230px;height:230px;right:-110px;top:-90px;animation:blob1 13s ease-in-out infinite alternate}
+.side-blobs i:nth-child(2){width:150px;height:150px;left:-80px;top:40%;background:#FF4B3E;opacity:.55;animation:blob2 17s ease-in-out infinite alternate}
+.side-blobs i:nth-child(3){width:280px;height:280px;left:-30px;bottom:-170px;opacity:.45;animation:blob3 15s ease-in-out infinite alternate}
+@keyframes blob1{to{transform:translate(-34px,46px) scale(1.14)}}
+@keyframes blob2{to{transform:translate(56px,-36px) scale(.86)}}
+@keyframes blob3{to{transform:translate(46px,-26px) scale(1.1)}}
+.brand-mark{background:#fff;color:var(--brand);width:40px;height:40px;border-radius:13px;font-size:19px;font-weight:900;
+  font-family:var(--font-fun);box-shadow:0 3px 0 var(--brand-d)}
+.brand-t{color:#fff;font-size:18px;font-weight:900}
+.brand-s{color:rgba(255,255,255,.8);font-weight:650}
+.nav-sec{color:rgba(255,255,255,.66);font-weight:850}
+.nav-item{color:#fff;font-size:15px;font-weight:750;padding:10px 12px;border-radius:14px;position:relative;z-index:1;
+  transition:color 200ms ease,background-color 150ms ease,transform 420ms var(--ease-spring)}
+.nav-item:active{transform:scale(.95);transition-duration:200ms,150ms,90ms}
+.nav-item.on{background:transparent;color:var(--brand);box-shadow:none}
+.sidebar:not(.has-ind) .nav-item.on{background:#fff}
+.nav-item .ni-badge{background:var(--tile-2);color:var(--tile-2-ink)}
+.nav-item.on .ni-badge{background:var(--brand);color:#fff}
+.nav-ind{position:absolute;left:0;top:0;height:40px;border-radius:14px;background:#fff;box-shadow:0 4px 0 var(--brand-d);
+  z-index:0;pointer-events:none;opacity:0;transform-origin:50% 50%;will-change:transform}
+#modeSwitch .btn{background:rgba(255,255,255,.18);color:#fff}
+.side-foot{margin-top:0}
+.side-foot .btn.gho{color:#fff}
+.side-foot .tiny.dim{color:rgba(255,255,255,.8)}
+.side-mascot{margin-top:auto;display:flex;justify-content:center;padding-top:10px;min-height:0}
+.side-mascot .mascot-svg{width:150px}
+@media (max-height:760px){.side-mascot .mascot-svg{width:108px}}
+.mascot-svg{display:block;height:auto;overflow:visible;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+
+/* ---- 数字大色块 ---- */
+.grid-cards>.card:has(>.stat){--t:var(--tile-1);--ti:var(--tile-1-ink);--td:var(--tile-1-d);
+  background:var(--t);color:var(--ti);box-shadow:0 5px 0 var(--td);overflow:hidden;
+  transition:transform 460ms var(--ease-spring),box-shadow 200ms ease}
+.grid-cards>.card:has(>.stat):nth-child(4n+2){--t:var(--tile-2);--ti:var(--tile-2-ink);--td:var(--tile-2-d)}
+.grid-cards>.card:has(>.stat):nth-child(4n+3){--t:var(--tile-3);--ti:var(--tile-3-ink);--td:var(--tile-3-d)}
+.grid-cards>.card:has(>.stat):nth-child(4n+4){--t:var(--tile-4);--ti:var(--tile-4-ink);--td:var(--tile-4-d)}
+.grid-cards.g2>.card:has(>.stat):nth-child(2){--t:var(--tile-3);--ti:var(--tile-3-ink);--td:var(--tile-3-d)}  /* 员工首页上面已经是黄卡 */
+.card:has(>.stat)::after{content:"";position:absolute;right:-30px;top:-34px;width:104px;height:104px;border-radius:50%;
+  background:rgba(255,255,255,.16);pointer-events:none}
+.card:has(>.stat) .stat{position:relative;z-index:1}
+.card:has(>.stat) .stat-l{color:inherit;opacity:.92;font-weight:850;font-size:13.5px}
+.card:has(>.stat) .stat-d{color:inherit;opacity:.85;font-weight:650}
+.stat-v{font-weight:900;font-size:36px;letter-spacing:-.01em}
+.card:has(>.stat) .up,.card:has(>.stat) .down{color:inherit;background:rgba(255,255,255,.24);padding:1px 7px;border-radius:999px;font-weight:850}
+.card:has(>.stat) .meter{background:rgba(0,0,0,.15)}
+.card:has(>.stat) .meter i{background:currentColor !important}
+.card:has(>.stat) .btn,.card:has(>.stat) .pill{background:rgba(255,255,255,.94);color:var(--ink)}
+
+/* ---- 按钮：按下去压扁，松手弹回 ---- */
+.btn{height:38px;padding:0 16px;font-weight:750;
+  transition:transform 440ms var(--ease-spring),background-color 150ms ease,box-shadow 150ms ease,opacity 150ms ease,filter 150ms ease}
+.btn:active{transform:scale(.93);transition-duration:90ms,150ms,90ms,150ms,150ms}
+.btn.sm{height:30px}
+.btn.ico{width:38px}
+.btn.pri{background:var(--brand);box-shadow:0 3px 0 var(--brand-d)}
+.btn.grn{background:var(--tile-4);box-shadow:0 3px 0 var(--tile-4-d)}
+.btn.pri:active,.btn.grn:active{box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.gho{color:var(--brand)}
+.seg{border-radius:13px}
+.seg button{border-radius:11px;font-weight:750;transition:background-color 150ms ease,transform 420ms var(--ease-spring)}
+.seg button:active{transform:scale(.92);transition-duration:150ms,90ms}
+.seg-ind i{border-radius:11px}
+.pill{height:24px;padding:0 10px;font-weight:800;white-space:nowrap}
+.tglchip{font-weight:750;transition:transform 420ms var(--ease-spring),background-color 150ms ease,color 150ms ease}
+.tglchip.on{background:var(--brand)}
+.inp:focus{border-color:var(--brand);box-shadow:0 0 0 3.5px color-mix(in srgb,var(--brand) 20%,transparent)}
+.reddot{background:var(--brand)}
+.row.unread{background:color-mix(in srgb,var(--brand) 6%,var(--bg-elev))}
+
+/* ---- 排班表 / 图表 ---- */
+.chip{border-radius:10px;font-weight:750}
+.sh.today{background:color-mix(in srgb,var(--brand) 9%,var(--bg-elev))}
+.sh.today .sh-n{background:var(--brand)}
+.bars .b i{background:linear-gradient(180deg,var(--brand),#FF6A5E);border-radius:9px 9px 4px 4px}
+.bars .b.wk i{background:linear-gradient(180deg,var(--tile-3),#6B8BFF)}
+.cb-t i{background:var(--brand)}
+
+/* ---- 员工首页：黄色大卡 + 绿色大打卡键 ---- */
+.hero{background:var(--tile-2);color:var(--tile-2-ink);box-shadow:0 5px 0 var(--tile-2-d)}
+.hero::before{background:radial-gradient(circle at 96% 0%,rgba(255,255,255,.5) 0 90px,transparent 91px)}
+.hero .row-s,.hero .dim{color:inherit;opacity:.8}
+.hero-h{font-weight:900}
+.hero .clock{font-size:40px;font-weight:900}
+.hero-mascot{width:84px;margin:-18px 8px -14px 0;flex:none}
+.hero-mascot .mascot-svg{width:100%}
+.big-btn{height:62px;border-radius:20px;font-size:20px;font-weight:900;margin-top:14px;position:relative}
+.big-btn.pri{background:var(--tile-4);box-shadow:0 5px 0 var(--tile-4-d)}
+.big-btn.grn{background:var(--brand);box-shadow:0 5px 0 var(--brand-d)}
+.big-btn:active{transform:translateY(3px) scale(.985);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.big-btn[disabled]{background:rgba(0,0,0,.1);color:inherit;box-shadow:none;opacity:1}
+.big-btn.pri:not([disabled])::after{content:"";position:absolute;inset:-5px;border-radius:25px;border:3px solid var(--tile-4);
+  pointer-events:none;opacity:0;animation:invite 2.4s ease-out infinite}
+@keyframes invite{0%{opacity:.75;transform:scale(.97)}70%,100%{opacity:0;transform:scale(1.07)}}
+.pickcard{transition:transform 460ms var(--ease-spring),box-shadow 200ms ease}
+
+/* ---- 手机底栏：选中项背后的小胶囊会滑过去 ---- */
+.tab-ind{opacity:0}
+@media (max-width:900px){
+  .tabbar{background:var(--bg-elev);border-top:0;box-shadow:0 -6px 22px rgba(70,20,10,.08);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .tab{font-weight:800;position:relative;z-index:1;transition:color 200ms ease,transform 420ms var(--ease-spring)}
+  .tab:active{transform:scale(.9);transition-duration:200ms,90ms}
+  .tab.on{color:var(--brand)}
+  .tab-ind{position:absolute;top:5px;left:0;height:30px;display:flex;justify-content:center;pointer-events:none;z-index:0;
+    transition:transform 560ms var(--ease-spring),width 300ms ease,opacity 200ms ease}
+  .tab-ind i{display:block;width:56px;height:30px;border-radius:999px;background:var(--brand-tint)}
+  .hero .clock{font-size:32px}
+  .hero-mascot{width:70px}
+}
+
+/* 手机上数字色块两两一排，不要一块占一整屏 */
+@media (max-width:640px){
+  .grid-cards.g4:has(>.card>.stat),.grid-cards.g2:has(>.card>.stat){grid-template-columns:1fr 1fr;gap:12px}
+  .grid-cards>.card:has(>.stat){padding:14px}
+  .card:has(>.stat) .stat-v{font-size:27px}
+  .card:has(>.stat) .stat-l{font-size:12.5px}
+  .card:has(>.stat) .stat-d{font-size:11.5px}
+}
+@media (max-width:520px){
+  .hero .rowline>div:nth-child(2){min-width:0}
+  .hero-h{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hero-mascot{width:54px;margin:-10px 2px -8px 0}
+  .hero .clock{font-size:26px}
+}
+/* ---- 提示条：弹一下出来 ---- */
+.toast{transition:transform 460ms var(--ease-spring),opacity 260ms var(--ease-out);font-weight:750}
+.toast.is-hidden{transform:translateY(-16px) scale(.9)}
+
+.scell.drop{background:color-mix(in srgb,var(--brand) 10%,transparent);box-shadow:inset 0 0 0 2px var(--brand)}
+@media (hover:hover) and (pointer:fine){
+  .scell:not(.drop):not(.off):hover{background:color-mix(in srgb,var(--brand) 5%,var(--bg-elev))}
+  .scell.wknd:not(.drop):not(.off):hover{background:color-mix(in srgb,var(--brand) 5%,var(--fill))}
+  .addcell:hover{color:var(--brand);border-color:var(--brand)}
+  .btn.gho:hover{background:color-mix(in srgb,var(--brand) 9%,transparent)}
+  .side-foot .btn.gho:hover,#modeSwitch .btn:hover{background:rgba(255,255,255,.22)}
+  .nav-item:not(.on):hover{background:rgba(255,255,255,.14)}
+  .grid-cards>.card:has(>.stat):hover{transform:translateY(-3px) rotate(-.6deg)}
+}
+/* ---- 打卡彩纸 ---- */
+.cf{position:fixed;left:0;top:0;width:9px;height:13px;border-radius:2px;will-change:transform;pointer-events:none}
 </style>
 </head>
 <body>
 <div id="stage">
 <div class="app">
   <aside class="sidebar">
+    <div class="side-blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+    <span class="nav-ind" id="navInd" aria-hidden="true"></span>
     <div class="brand">
       <div class="brand-mark">班</div>
       <div>
@@ -480,6 +657,7 @@ html[data-vt="fade"]::view-transition-old(root),html[data-vt="fade"]::view-trans
     </div>
     <div id="modeSwitch"></div>
     <nav id="nav"></nav>
+    <div class="side-mascot" id="sideMascot"></div>
     <div class="side-foot" id="sideFoot"></div>
   </aside>
   <main class="main" id="main">
@@ -1912,6 +2090,7 @@ const rubber = (over, dim, c = 0.55) => (over * dim * c) / (dim + c * Math.abs(o
 /* ---------------- Toast ---------------- */
 const CHECK_SVG = '<svg class="ti-check" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.6 6.4l2.2 2.1 4.6-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function toast(msg, kind = 'ok') {
+  if (kind === 'err') Mascot.react('oops');
   const map = { ok: ['var(--green)', '✓'], warn: ['var(--orange)', '!'], err: ['var(--red)', '✕'], info: ['var(--blue)', 'i'] };
   const [col, ico] = map[kind] || map.ok;
   const el = document.createElement('div');
@@ -1951,6 +2130,7 @@ const EASE = {
   out: 'cubic-bezier(0.23, 1, 0.32, 1)',        // 进入 / 退出
   inOut: 'cubic-bezier(0.77, 0, 0.175, 1)',     // 屏幕内移动
   drawer: 'cubic-bezier(0.32, 0.72, 0, 1)',     // 抽屉
+  spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',   // 带一点回弹
 };
 const HAS_VT = typeof document.startViewTransition === 'function';
 const PAGE_KINDS = new Set(['tab', 'fwd', 'back', 'zoom']);
@@ -2192,6 +2372,8 @@ const Motion = {
     } else if (inn) page.animate(inn, { duration: inDur, easing: EASE.out });
     if (!REDUCED) document.querySelectorAll('#topbar .tb-title, #topbar .tb-sub, #topbar .tb-right .tiny')
       .forEach(el => el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 200, easing: EASE.out }));
+    const tt = !REDUCED && kind === 'tab' && document.querySelector('#topbar .tb-title');
+    tt && tt.animate([{ transform: 'translateY(12px)' }, { transform: 'none' }], { duration: 560, easing: EASE.spring });
   },
 
   /* 每个页面本次打开 app 后第一次出现：数字从 0 滚上来、柱子长出来、班次按天依次冒出来 */
@@ -2214,6 +2396,12 @@ const Motion = {
       const di = days.indexOf(cell.dataset.cell.split('|')[0]);
       c.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'none' }],
         { duration: 240, easing: EASE.out, delay: 60 + di * 30, fill: 'backwards' });
+    });
+    /* 数字色块：一块接一块弹出来 */
+    document.querySelectorAll('#page .grid-cards > .card').forEach((c, i) => {
+      if (!c.querySelector(':scope > .stat')) return;
+      c.animate([{ opacity: 0, transform: 'translateY(18px) scale(0.9)' }, { opacity: 1, transform: 'none' }],
+        { duration: 620, easing: EASE.spring, delay: 40 + Math.min(i, 7) * 70, fill: 'backwards' });
     });
   },
 
@@ -2306,7 +2494,7 @@ const Motion = {
       if (!on || !sr.width) { seg.classList.remove('has-ind'); pill.style.opacity = '0'; return; }
       const br = on.getBoundingClientRect();
       const px = v => Math.max(0, Math.round(v * 10) / 10) + 'px';
-      const clip = `inset(${px(br.top - sr.top - 2)} ${px(sr.right - 2 - br.right)} ${px(sr.bottom - 2 - br.bottom)} ${px(br.left - sr.left - 2)} round 7px)`;
+      const clip = `inset(${px(br.top - sr.top - 2)} ${px(sr.right - 2 - br.right)} ${px(sr.bottom - 2 - br.bottom)} ${px(br.left - sr.left - 2)} round 11px)`;
       const prev = snap && snap.segs.get(key);
       seg.classList.add('has-ind');
       pill.style.opacity = '1';
@@ -2338,6 +2526,368 @@ const Motion = {
   },
 };
 
+
+
+/* =========================================================================
+   界面动效（改版）：侧边栏滑块、底栏胶囊、打卡彩纸
+   ========================================================================= */
+/* 侧边栏选中项背后的白色滑块：用弹簧滑过去，滑的时候稍微拉长 */
+const NavInd = {
+  y: null, sp: null,
+  sync(snap) {
+    const sb = $('.sidebar'), ind = $('#navInd'), on = $('#nav .nav-item.on');
+    if (!sb || !ind) return;
+    if (!on || !sb.offsetParent || !on.offsetHeight) { ind.style.opacity = '0'; sb.classList.remove('has-ind'); this.y = null; return; }
+    const y = on.offsetTop, set = (v, vel = 0) => {
+      const s = REDUCED ? 0 : Math.min(Math.abs(vel) / 2600, 0.22);
+      ind.style.transform = `translateY(${v}px) scale(${1 - s * 0.25}, ${1 + s})`;
+    };
+    Object.assign(ind.style, { left: on.offsetLeft + 'px', width: on.offsetWidth + 'px', height: on.offsetHeight + 'px', opacity: '1' });
+    sb.classList.add('has-ind');
+    if (snap || this.y == null || REDUCED) { this.sp && this.sp.stop(); this.sp = null; this.y = y; set(y); return; }
+    if (Math.abs(this.y - y) < 0.5) return;
+    const v0 = this.sp ? this.sp.velocity : 0;
+    this.sp && this.sp.stop();
+    const me = this.sp = spring({
+      from: this.y, to: y, velocity: v0, damping: 0.68, response: 0.42,
+      onUpdate: v => { this.y = v; set(v, me ? me.velocity : 0); },
+      onDone: () => { if (this.sp === me) this.sp = null; set(y); },
+    });
+  },
+};
+/* 手机底栏：选中项背后的小胶囊（位置交给 CSS 弹性过渡） */
+function syncTabInd() {
+  const bar = $('#tabbar'), ind = bar && bar.querySelector('.tab-ind'), on = bar && bar.querySelector('.tab.on');
+  if (!ind) return;
+  if (!on || !on.offsetWidth) { ind.style.opacity = '0'; delete ind.dataset.ready; return; }
+  ind.style.opacity = '1';
+  ind.style.width = on.offsetWidth + 'px';
+  const tr = `translateX(${on.offsetLeft}px)`;
+  if (!ind.dataset.ready) {
+    ind.style.transition = 'none'; ind.style.transform = tr; void ind.offsetWidth; ind.style.transition = '';
+    ind.dataset.ready = '1';
+  } else ind.style.transform = tr;
+}
+
+/* 彩纸：从按钮里往上喷，受重力落下 */
+const Fx = {
+  burst(el, n = 36) {
+    const layer = document.getElementById('motionLayer');
+    if (!el || !layer || REDUCED || document.hidden) return;
+    const r = el.getBoundingClientRect();
+    const cols = ['#E8232A', '#FFC928', '#2457FF', '#17A957', '#FF7BD5', '#FF8A1F'];
+    const ps = [];
+    for (let i = 0; i < n; i++) {
+      const d = document.createElement('i');
+      d.className = 'cf';
+      d.style.background = cols[i % cols.length];
+      if (i % 3 === 0) { d.style.borderRadius = '50%'; d.style.height = '9px'; }
+      layer.appendChild(d);
+      const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.15, sp = 420 + Math.random() * 480;
+      ps.push({ d, x: r.left + r.width * (0.2 + Math.random() * 0.6), y: r.top + r.height * 0.35,
+        vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, rot: Math.random() * 360, vr: (Math.random() - 0.5) * 900, ph: Math.random() * 6 });
+    }
+    const t0 = performance.now(); let lt = t0, gone = false;
+    const kill = () => { if (!gone) { gone = true; ps.forEach(p => p.d.remove()); } };
+    const tick = now => {
+      if (gone) return;
+      const dt = Math.min(0.04, (now - lt) / 1000), age = (now - t0) / 1000; lt = now;
+      ps.forEach(p => {
+        p.vy += 1700 * dt; p.vx *= 1 - 1.6 * dt; p.vy *= 1 - 1.2 * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt; p.ph += dt * 11;
+        p.d.style.transform = `translate(${p.x.toFixed(1)}px,${p.y.toFixed(1)}px) rotate(${p.rot.toFixed(0)}deg) scaleX(${Math.cos(p.ph).toFixed(2)})`;
+        if (age > 1.1) p.d.style.opacity = String(Math.max(0, 1 - (age - 1.1) / 0.45));
+      });
+      if (age < 1.6) requestAnimationFrame(tick); else kill();
+    };
+    requestAnimationFrame(tick);
+    setTimeout(kill, 2600);
+  },
+};
+
+/* =========================================================================
+   吉祥物 A2 小厨师（代码版，之后换成 Rive）
+   Mascot.mount(容器) 放一只；Mascot.react('cheer') 让所有看得见的一起做动作。
+   动作名：idle wave cheer hop tired sleep think oops payday
+   换成 Rive 时：状态机的触发输入用同样的名字，外面的调用不用改。
+   ========================================================================= */
+const Mascot = (() => {
+  const O = '#1a1a1a', SKIN = '#FCD3A6';
+  const ARM = `<path d="M138,254 C112,262 98,282 96,300 L125,304 C127,290 133,278 146,270 Z" fill="#fff" stroke="${O}" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M96,298 L125,302" stroke="${O}" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="110" cy="314" r="15" fill="${SKIN}" stroke="${O}" stroke-width="6"/>`;
+  const SVG = `<svg class="mascot-svg" viewBox="0 -40 400 460" role="img" aria-label="A2">
+    <ellipse data-p="shadow" cx="200" cy="398" rx="96" ry="11" fill="rgba(0,0,0,.2)"/>
+    <g data-p="rig">
+      <ellipse cx="168" cy="380" rx="29" ry="15" fill="#2b2b2b" stroke="${O}" stroke-width="6"/>
+      <ellipse cx="232" cy="380" rx="29" ry="15" fill="#2b2b2b" stroke="${O}" stroke-width="6"/>
+      <path d="M138,250 C112,258 100,290 100,322 C100,354 120,374 200,374 C280,374 300,354 300,322 C300,290 288,258 262,250 Q200,236 138,250 Z" fill="#fff" stroke="${O}" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M120,300 C140,340 150,356 168,366" fill="none" stroke="#e6e6e6" stroke-width="8" stroke-linecap="round"/>
+      <path d="M146,302 L254,302 L257,350 C238,366 162,366 143,350 Z" fill="#f4f4f4" stroke="${O}" stroke-width="5" stroke-linejoin="round"/>
+      <g fill="${O}"><circle cx="178" cy="273" r="5"/><circle cx="222" cy="273" r="5"/><circle cx="178" cy="292" r="5"/><circle cx="222" cy="292" r="5"/></g>
+      <g data-p="armL">${ARM}</g>
+      <g transform="translate(400 0) scale(-1 1)"><g data-p="armR">${ARM}</g></g>
+      <g data-p="head">
+        <ellipse cx="200" cy="168" rx="80" ry="48" fill="#3a2418" stroke="${O}" stroke-width="6"/>
+        <circle cx="126" cy="194" r="14" fill="${SKIN}" stroke="${O}" stroke-width="6"/>
+        <circle cx="274" cy="194" r="14" fill="${SKIN}" stroke="${O}" stroke-width="6"/>
+        <ellipse cx="200" cy="190" rx="72" ry="52" fill="${SKIN}" stroke="${O}" stroke-width="6"/>
+        <g data-p="cheeks"><ellipse cx="152" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".7"/><ellipse cx="248" cy="205" rx="17" ry="11" fill="#FF9E9E" opacity=".7"/><circle cx="147" cy="202" r="3" fill="#fff" opacity=".8"/><circle cx="243" cy="202" r="3" fill="#fff" opacity=".8"/></g>
+        <path data-p="browL" d="M163,160 Q174,151 185,160" fill="none" stroke="${O}" stroke-width="5" stroke-linecap="round"/>
+        <path data-p="browR" d="M215,160 Q226,151 237,160" fill="none" stroke="${O}" stroke-width="5" stroke-linecap="round"/>
+        <g data-e="N"><g data-p="look">
+          <g data-p="eyeL"><ellipse cx="174" cy="180" rx="9" ry="12" fill="${O}"/><circle cx="171" cy="175" r="3.4" fill="#fff"/></g>
+          <g data-p="eyeR"><ellipse cx="226" cy="180" rx="9" ry="12" fill="${O}"/><circle cx="223" cy="175" r="3.4" fill="#fff"/></g>
+        </g></g>
+        <g data-e="happy" fill="none" stroke="${O}" stroke-width="5.5" stroke-linecap="round"><path d="M163,184 Q174,168 185,184"/><path d="M215,184 Q226,168 237,184"/></g>
+        <g data-e="closed" fill="none" stroke="${O}" stroke-width="5" stroke-linecap="round"><path d="M164,180 Q174,189 184,180"/><path d="M216,180 Q226,189 236,180"/></g>
+        <g data-e="shock"><circle cx="174" cy="180" r="13" fill="#fff" stroke="${O}" stroke-width="4.5"/><circle cx="174" cy="181" r="4.5" fill="${O}"/><circle cx="226" cy="180" r="13" fill="#fff" stroke="${O}" stroke-width="4.5"/><circle cx="226" cy="181" r="4.5" fill="${O}"/></g>
+        <g data-e="half" fill="${O}" stroke="${O}" stroke-width="4" stroke-linejoin="round"><path d="M164,180 L184,180 Q174,192 164,180Z"/><path d="M216,180 L236,180 Q226,192 216,180Z"/></g>
+        <path d="M195,193 Q200,189 205,193" fill="none" stroke="#E5534B" stroke-width="3" stroke-linecap="round"/>
+        <g data-mo="smile"><path d="M184,205 Q200,228 216,205 Z" fill="#3a1a1a" stroke="${O}" stroke-width="4" stroke-linejoin="round"/><path d="M192,216 Q200,210 208,216 Q200,223 192,216Z" fill="#FF7B7B"/></g>
+        <g data-mo="big"><path d="M179,202 Q200,240 221,202 Z" fill="#3a1a1a" stroke="${O}" stroke-width="4" stroke-linejoin="round"/><path d="M189,220 Q200,211 211,220 Q200,230 189,220Z" fill="#FF7B7B"/></g>
+        <path data-mo="closed" d="M189,208 Q200,216 211,208" fill="none" stroke="${O}" stroke-width="4.5" stroke-linecap="round"/>
+        <ellipse data-mo="o" cx="200" cy="212" rx="7" ry="9" fill="#3a1a1a" stroke="${O}" stroke-width="3"/>
+        <path data-mo="wavy" d="M187,212 Q193,207 200,212 Q207,217 213,212" fill="none" stroke="${O}" stroke-width="4.5" stroke-linecap="round"/>
+        <ellipse data-mo="sleep" cx="200" cy="211" rx="4.5" ry="3.5" fill="#3a1a1a"/>
+        <g data-p="hat">
+          <g fill="${O}"><circle cx="160" cy="82" r="37"/><circle cx="240" cy="82" r="37"/><circle cx="200" cy="58" r="41"/><rect x="145" y="80" width="110" height="64" rx="8"/></g>
+          <g fill="#fff"><circle cx="160" cy="82" r="31"/><circle cx="240" cy="82" r="31"/><circle cx="200" cy="58" r="35"/><rect x="151" y="86" width="98" height="52" rx="4"/></g>
+          <path d="M140,92 Q150,108 170,104" fill="none" stroke="#e8e8e8" stroke-width="7" stroke-linecap="round"/>
+          <g stroke="#b5b5b5" stroke-width="4" stroke-linecap="round"><path d="M178,104 L180,126"/><path d="M200,102 L200,126"/><path d="M222,104 L220,126"/></g>
+        </g>
+        <path data-p="sweat" d="M268,132 Q279,152 268,160 Q257,152 268,132Z" fill="#8FD3FF" stroke="${O}" stroke-width="3.5" stroke-linejoin="round"/>
+      </g>
+      <g stroke="${O}" stroke-width="5" stroke-linejoin="round" fill="#E8232A">
+        <path d="M200,246 L158,236 L176,270 Z"/><path d="M200,246 L242,236 L224,270 Z"/><circle cx="200" cy="247" r="10"/>
+      </g>
+    </g>
+    <g data-p="dots" fill="#fff" stroke="${O}" stroke-width="3.5"><circle cx="300" cy="120" r="6"/><circle cx="322" cy="100" r="8"/><circle cx="348" cy="76" r="10"/></g>
+    <g data-p="fx"></g>
+  </svg>`;
+
+  const { sin, abs, exp, PI } = Math;
+  const BASE = { x: 0, y: 0, sx: 1, sy: 1, lean: 0, headR: 0, headY: 0, aL: 6, aR: 6, browY: 0, browR: 0, sweat: 0, dots: 0, cheek: 0.7 };
+  const S = {
+    idle: { eyes: 'N', mouth: 'smile', f: (t, m) => ({
+      sy: 1 + 0.018 * sin(t * 2.4), sx: 1 - 0.01 * sin(t * 2.4), headR: 2.5 * sin(t * 1.2) + m.lookC.x * 0.5, headY: 1.2 * sin(t * 2.4 + 0.6),
+      aL: 6 + 3 * sin(t * 2.4), aR: 6 + 3 * sin(t * 2.4 + 0.4) }) },
+    hop: { dur: 0.75, eyes: 'happy', mouth: 'smile', f: t => {
+      const p = t < 0.6 ? sin(t / 0.6 * PI) : 0, pre = t < 0.1 ? sin(t / 0.1 * PI) : 0;
+      return { y: -24 * p, sy: 1 + 0.06 * p - 0.07 * pre, sx: 1 - 0.03 * p + 0.05 * pre, aL: 6 + 26 * p, aR: 6 + 26 * p, headR: 3 * sin(t * 12), cheek: 0.95 };
+    } },
+    wave: { dur: 2.6, eyes: 'happy', mouth: 'smile', f: t => ({
+      headR: -6 + 2.5 * sin(t * 10), lean: -2.5, aR: 142 + 22 * sin(t * 10), aL: 8, sy: 1 + 0.02 * sin(t * 5), browY: -3, cheek: 0.95 }) },
+    cheer: { dur: 2.6, eyes: 'happy', mouth: 'big', burst: true, f: t => {
+      const p = abs(sin(t * 5.2)), land = Math.pow(1 - p, 6);
+      return { y: -48 * p, sy: 1 + 0.07 * p - 0.14 * land, sx: 1 - 0.035 * p + 0.12 * land, headR: 4 * sin(t * 5.2),
+        aL: 132 + 12 * sin(t * 10.4), aR: 132 + 12 * sin(t * 10.4 + 0.8), browY: -5, cheek: 1 };
+    } },
+    tired: { dur: 5, eyes: 'half', mouth: 'wavy', f: t => ({
+      sy: 0.95 + 0.012 * sin(t * 1.4), sx: 1.035, headR: 9 + 1.5 * sin(t * 1.4), headY: 7, lean: 2, aL: -3, aR: -3,
+      browR: 14, browY: 3, sweat: 1, cheek: 0.3 }) },
+    sleep: { eyes: 'closed', mouth: 'sleep', zzz: true, f: t => ({
+      sy: 1 + 0.035 * sin(t * 1.6), sx: 1 - 0.02 * sin(t * 1.6), headR: 13 + 2 * sin(t * 1.6), headY: 8, lean: 2, aL: 2, aR: 2, browY: 2, cheek: 0.9 }) },
+    think: { eyes: 'N', mouth: 'closed', lookAt: { x: 4, y: -5 }, f: t => ({
+      headR: -9 + 1.5 * sin(t * 2), headY: -2, aL: 8, aR: 38 + 4 * sin(t * 2), browR: -8, browY: -2, dots: 1, sy: 1 + 0.012 * sin(t * 2) }) },
+    oops: { dur: 2.1, eyes: 'shock', mouth: 'o', f: t => {
+      const k = exp(-t * 2.2);
+      return { x: 5 * sin(t * 44) * k, y: -16 * exp(-t * 7) * (1 - exp(-t * 30)), sy: 1 + 0.06 * exp(-t * 5), sx: 1 - 0.03 * exp(-t * 5),
+        aL: 72 + 6 * sin(t * 30) * k, aR: 72 + 6 * sin(t * 30 + 1) * k, browY: -7, browR: 10, sweat: 1, headR: -3 * sin(t * 20) * k };
+    } },
+    payday: { dur: 3.2, eyes: 'happy', mouth: 'big', coins: true, f: t => {
+      const p = abs(sin(t * 7));
+      return { y: -14 * p, sy: 1 + 0.03 * p - 0.06 * Math.pow(1 - p, 6), headR: 5 * sin(t * 7),
+        aL: 122 + 20 * sin(t * 14), aR: 122 + 20 * sin(t * 14 + PI), browY: -4, cheek: 1 };
+    } },
+  };
+  const SLEEP_AFTER = 45000;
+  const NS = 'http://www.w3.org/2000/svg';
+  const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+  const list = [];
+  let raf = 0, last = 0, lastTouch = performance.now();
+
+  function play(m, name) {
+    const st = S[name]; if (!st) return;
+    m.from = { ...m.P }; m.blend = 0; m.cur = name; m.tS = 0; m.coinClock = 0; m.zClock = 0.3;
+    m.eyes.forEach(e => { e.style.display = e.dataset.e === st.eyes ? '' : 'none'; });
+    m.mouths.forEach(e => { e.style.display = e.dataset.mo === st.mouth ? '' : 'none'; });
+    if (st.burst && !REDUCED) confetti(m);
+    if (REDUCED) { m.blend = 1; Object.assign(m.P, BASE, st.f(0.3, m)); draw(m, 0); }
+  }
+
+  /* ---- 小特效（都在吉祥物自己的 SVG 里） ---- */
+  function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+  function confetti(m) {
+    const cols = ['#FFC21A', '#18B04A', '#2B8CFF', '#fff', '#FF7BD5', '#FF8A1F'];
+    for (let i = 0; i < 30; i++) {
+      const g = el('g', {}, m.el.fx);
+      el('rect', { x: -5, y: -8, width: 10, height: 16, rx: 2, fill: cols[i % cols.length], stroke: '#1a1a1a', 'stroke-width': 2 }, g);
+      m.parts.push({ el: g, x: 200 + (Math.random() - 0.5) * 60, y: 110, vx: (Math.random() - 0.5) * 520, vy: -260 - Math.random() * 360,
+        r: Math.random() * 360, vr: (Math.random() - 0.5) * 720, g: 760, life: 2.2, max: 2.2, spin: Math.random() * 10 });
+    }
+  }
+  function coin(m) {
+    const g = el('g', {}, m.el.fx);
+    el('circle', { r: 13, fill: '#FFC21A', stroke: '#1a1a1a', 'stroke-width': 3 }, g);
+    el('circle', { r: 7, fill: 'none', stroke: '#C98A00', 'stroke-width': 2.5 }, g);
+    m.parts.push({ el: g, x: 70 + Math.random() * 260, y: -60, vx: (Math.random() - 0.5) * 40, vy: 60 + Math.random() * 80,
+      r: 0, vr: 0, g: 620, life: 1.6, max: 1.6, spin: Math.random() * 6, coin: true });
+  }
+  function zzz(m) {
+    const t = el('text', { 'font-size': 26, 'font-weight': 900, fill: '#fff', stroke: '#1a1a1a', 'stroke-width': 2.5, 'paint-order': 'stroke',
+      'font-family': 'system-ui,sans-serif', 'text-anchor': 'middle' }, m.el.fx);
+    t.textContent = 'Z';
+    m.parts.push({ el: t, x: 278, y: 118, vx: 28, vy: -42, r: -10, vr: 10, g: 0, life: 2.6, max: 2.6, z: true, ph: Math.random() * 6 });
+  }
+  function stepParts(m, dt) {
+    m.parts = m.parts.filter(p => {
+      p.life -= dt;
+      if (p.life <= 0) { p.el.remove(); return false; }
+      p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt; p.spin += dt * 9;
+      if (p.coin && p.y > 360) { p.y = 360; p.vy *= -0.35; p.vx *= 0.6; }
+      const age = 1 - p.life / p.max;
+      let tr;
+      if (p.z) {
+        tr = `translate(${(p.x + 8 * sin(age * 8 + p.ph)).toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.r.toFixed(1)}) scale(${(0.6 + age * 0.9).toFixed(2)})`;
+        p.el.setAttribute('opacity', (age < 0.15 ? age / 0.15 : Math.min(1, p.life / p.max * 1.2)).toFixed(2));
+      } else {
+        tr = `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.r.toFixed(1)}) scale(${Math.cos(p.spin).toFixed(2)} 1)`;
+        if (p.life < 0.4) p.el.setAttribute('opacity', (p.life / 0.4).toFixed(2));
+      }
+      p.el.setAttribute('transform', tr);
+      return true;
+    });
+  }
+
+  /* ---- 每帧：算姿势、眨眼、帽子跟随，再写到 SVG 上 ---- */
+  function step(m, dt, now) {
+    m.tS += dt; m.blend += dt;
+    const st = S[m.cur];
+    if (st.dur && m.tS > st.dur) play(m, 'idle');
+    if (m.cur === 'idle' && now - lastTouch > SLEEP_AFTER) play(m, 'sleep');
+    const s2 = S[m.cur];
+    const lt = s2.lookAt || (m.cur === 'sleep' ? { x: 0, y: 0 } : m.lookT);
+    const kL = 1 - exp(-dt * 10);
+    m.lookC.x += (lt.x - m.lookC.x) * kL; m.lookC.y += (lt.y - m.lookC.y) * kL;
+    const T = Object.assign({}, BASE, s2.f(m.tS, m));
+    const k = Math.min(1, m.blend / 0.4), e = 1 - Math.pow(1 - k, 3);
+    for (const key in BASE) m.P[key] = m.from[key] + (T[key] - m.from[key]) * e;
+    m.bs = 1;
+    if (s2.eyes === 'N') {
+      m.blinkIn -= dt;
+      if (m.blinkIn <= 0 && m.blinkT < 0) { m.blinkT = 0; m.blinkIn = 2 + Math.random() * 3.5; if (Math.random() < 0.2) m.blinkIn = 0.28; }
+      if (m.blinkT >= 0) { m.blinkT += dt; m.bs = 1 - sin(Math.min(1, m.blinkT / 0.16) * PI) * 0.92; if (m.blinkT > 0.16) m.blinkT = -1; }
+    }
+    const P = m.P, w = (P.headR - m.prevHeadR) / Math.max(dt, 0.001), vy = (P.y - m.prevY) / Math.max(dt, 0.001);
+    m.prevHeadR = P.headR; m.prevY = P.y;
+    const hatT = clampN(-w * 0.09 + P.x * 0.6, -14, 14);
+    m.hatV += ((hatT - m.hatA) * 240 - m.hatV * 13) * dt; m.hatA += m.hatV * dt;
+    m.hatSy = 1 + clampN(vy * 0.00035, -0.07, 0.07);
+    if (s2.coins && m.tS < 2.6) { m.coinClock -= dt; if (m.coinClock <= 0) { coin(m); m.coinClock = 0.09; } }
+    if (s2.zzz) { m.zClock -= dt; if (m.zClock <= 0) { zzz(m); m.zClock = 1.1; } }
+    stepParts(m, dt);
+    draw(m);
+  }
+  function draw(m) {
+    const P = m.P, E = m.el, f = (v, n = 2) => v.toFixed(n);
+    E.rig.setAttribute('transform', `translate(${f(200 + P.x)} ${f(392 + P.y)}) rotate(${f(P.lean)}) scale(${f(P.sx, 4)} ${f(P.sy, 4)}) translate(-200 -392)`);
+    const ss = clampN(1 + P.y / 140, 0.5, 1.1);
+    E.shadow.setAttribute('transform', `translate(200 398) scale(${f(ss, 3)} 1) translate(-200 -398)`);
+    E.shadow.setAttribute('opacity', f(0.4 + 0.6 * ss));
+    E.head.setAttribute('transform', `translate(0 ${f(P.headY)}) rotate(${f(P.headR)} 200 240)`);
+    E.hat.setAttribute('transform', `translate(200 138) rotate(${f(m.hatA)}) scale(1 ${f(m.hatSy || 1, 3)}) translate(-200 -138)`);
+    const arm = a => `translate(130 262) rotate(${f(a)}) scale(${f(1 + clampN((a - 50) / 90, 0, 1) * 0.28, 3)}) translate(-130 -262)`;
+    E.armL.setAttribute('transform', arm(P.aL));
+    E.armR.setAttribute('transform', arm(P.aR));
+    E.look.setAttribute('transform', `translate(${f(m.lookC.x)} ${f(m.lookC.y)})`);
+    const bs = f(m.bs == null ? 1 : m.bs, 3);
+    E.eyeL.setAttribute('transform', `translate(174 180) scale(1 ${bs}) translate(-174 -180)`);
+    E.eyeR.setAttribute('transform', `translate(226 180) scale(1 ${bs}) translate(-226 -180)`);
+    E.browL.setAttribute('transform', `translate(0 ${f(P.browY)}) rotate(${f(-P.browR)} 174 156)`);
+    E.browR.setAttribute('transform', `translate(0 ${f(P.browY)}) rotate(${f(P.browR)} 226 156)`);
+    E.cheeks.setAttribute('opacity', f(P.cheek));
+    E.sweat.setAttribute('opacity', f(P.sweat));
+    E.sweat.setAttribute('transform', `translate(0 ${f((m.tS * 14) % 14, 1)})`);
+    E.dots.setAttribute('opacity', f(P.dots));
+    [...E.dots.children].forEach((c, i) => c.setAttribute('transform', `translate(0 ${f(-4 * Math.max(0, sin(m.tS * 5 - i * 0.9)))})`));
+  }
+
+  /* ---- 共用一个 rAF；没有看得见的吉祥物就停下来省电 ---- */
+  function loop(now) {
+    raf = 0;
+    for (let i = list.length - 1; i >= 0; i--) if (!list[i].host.isConnected || !list[i].host.contains(list[i].svg)) list.splice(i, 1);
+    const vis = list.filter(m => m.host.offsetParent !== null);
+    if (!vis.length || document.hidden || REDUCED) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    vis.forEach(m => step(m, dt, now));
+    raf = requestAnimationFrame(loop);
+  }
+  function kick() {
+    if (raf || REDUCED || document.hidden) return;
+    last = performance.now();
+    raf = requestAnimationFrame(loop);
+  }
+
+  function mount(host) {
+    if (!host) return null;
+    const had = list.find(m => m.host === host && host.contains(m.svg));
+    if (had) return had;
+    host.innerHTML = SVG;
+    const svg = host.firstElementChild, P = n => svg.querySelector(`[data-p="${n}"]`);
+    const m = {
+      host, svg,
+      el: { rig: P('rig'), head: P('head'), hat: P('hat'), armL: P('armL'), armR: P('armR'), look: P('look'), eyeL: P('eyeL'), eyeR: P('eyeR'),
+        browL: P('browL'), browR: P('browR'), shadow: P('shadow'), cheeks: P('cheeks'), sweat: P('sweat'), dots: P('dots'), fx: P('fx') },
+      eyes: [...svg.querySelectorAll('[data-e]')], mouths: [...svg.querySelectorAll('[data-mo]')],
+      cur: 'idle', tS: 0, blend: 1, from: { ...BASE }, P: { ...BASE }, lookT: { x: 0, y: 0 }, lookC: { x: 0, y: 0 },
+      blinkIn: 1 + Math.random() * 2, blinkT: -1, hatA: 0, hatV: 0, hatSy: 1, prevHeadR: 0, prevY: 0, parts: [], coinClock: 0, zClock: 0, tap: 0,
+    };
+    svg.addEventListener('click', () => {
+      lastTouch = performance.now();
+      play(m, m.cur === 'sleep' ? 'oops' : ['wave', 'cheer', 'payday'][m.tap++ % 3]);
+      kick();
+    });
+    list.push(m);
+    play(m, 'idle'); m.blend = 1;
+    draw(m);
+    kick();
+    return m;
+  }
+
+  /* 点哪里都算「有人在用」：睡着的醒过来（点到吉祥物本身的交给它自己的点击处理） */
+  addEventListener('pointerdown', e => {
+    lastTouch = performance.now();
+    const hit = e.target && e.target.closest ? e.target.closest('.mascot-svg') : null;
+    list.forEach(m => { if (m.cur === 'sleep' && m.svg !== hit) play(m, 'idle'); });
+    kick();
+  }, true);
+  addEventListener('keydown', () => { lastTouch = performance.now(); list.forEach(m => { if (m.cur === 'sleep') play(m, 'idle'); }); kick(); });
+  addEventListener('pointermove', e => {
+    list.forEach(m => {
+      const r = m.svg.getBoundingClientRect(); if (!r.width) return;
+      m.lookT.x = clampN((e.clientX - (r.left + r.width / 2)) / r.width * 14, -5, 5);
+      m.lookT.y = clampN((e.clientY - (r.top + r.height * 0.38)) / r.height * 12, -3.5, 3.5);
+    });
+  }, { passive: true });
+  document.addEventListener('visibilitychange', kick);
+  addEventListener('resize', kick);
+
+  return {
+    mount,
+    /* 让看得见的吉祥物做一个动作；hop 只在它闲着的时候做，不打断别的动作 */
+    react(name) {
+      if (!S[name]) return;
+      lastTouch = performance.now();
+      list.forEach(m => {
+        if (!m.host.isConnected || m.host.offsetParent === null) return;
+        if (name === 'hop' && m.cur !== 'idle') return;
+        play(m, name);
+      });
+      kick();
+    },
+  };
+})();
 
 
 /* =========================================================================
@@ -2375,14 +2925,16 @@ function patchHTML(container, html) {
 /* 底栏：换了选中项时，新选中的图标轻轻弹一下 */
 function patchTabbar(html) {
   const bar = $('#tabbar');
+  html = '<span class="tab-ind" aria-hidden="true"><i></i></span>' + html;
   const before = bar.querySelector('.tab.on');
   const beforeV = before && before.dataset.v;
   const inPlace = patchHTML(bar, html);
   const after = bar.querySelector('.tab.on');
   if (inPlace && after && after.dataset.v !== beforeV && !REDUCED) {
     const ico = after.querySelector('.tab-ico');
-    ico && ico.animate([{ transform: 'scale(0.86)' }, { transform: 'none' }], { duration: 240, easing: EASE.out });
+    ico && ico.animate([{ transform: 'scale(0.7) translateY(3px)' }, { transform: 'none' }], { duration: 520, easing: EASE.spring });
   }
+  syncTabInd();
 }
 function renderNav() {
   const emp = state.mode === 'emp';
@@ -2418,6 +2970,7 @@ function renderNav() {
   $('#bizName').textContent = DB.settings.biz;
   $('#bizTag').textContent = emp ? t('mode.emp') : t('app.tag');
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : LANG;
+  NavInd.sync();
 }
 
 /* ---------------- 吸顶表头 ----------------
@@ -2500,13 +3053,13 @@ function go(v) {
   const same = state.mode === 'boss' && state.view === v;
   state.view = v; state.mode = 'boss'; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }   // 再点一次当前页：回到顶部
-  else render('tab');
+  else { render('tab'); Mascot.react(v === 'pay' ? 'payday' : 'hop'); }
 }
 function ego(v) {
   const same = state.eview === v;
   state.eview = v; dropNotifCache(); markViewSeen(v);
   if (same) { $('#main').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); render(); }
-  else render('tab');
+  else { render('tab'); Mascot.react('hop'); }
 }
 function scrollTop() { $('#main').scrollTop = 0; }
 
@@ -2636,7 +3189,7 @@ VIEWS.dash = {
       const wk = [0, 6].includes(dowOf(d));
       return `<div class="b ${wk ? 'wk' : ''}"><em>${v ? money0(v).replace(DB.settings.cur, '') : '–'}</em>
               <i data-m="filly" data-mk="bar-${d}" style="height:${clamp(v / (maxCost * 1.18) * 100, 2, 100)}%"></i>
-              <span style="${d === TODAY ? 'color:var(--blue);font-weight:700' : ''}">${DOW_S(dowOf(d))}</span></div>`;
+              <span style="${d === TODAY ? 'color:var(--brand);font-weight:800' : ''}">${DOW_S(dowOf(d))}</span></div>`;
     }).join('')}
         </div>
       </div>
@@ -3658,10 +4211,10 @@ EVIEWS.my = {
       const list = shiftsOf(d, s.id).sort((a, b) => t2m(a.start) - t2m(b.start));
       const lv = leaveOn(s.id, d), pl = pendingLeaveOn(s.id, d);
       const isToday = d === TODAY;
-      return `<div class="row" data-m="item" data-mk="ed-${d}" style="${isToday ? 'background:color-mix(in srgb,var(--blue) 7%,var(--bg-elev))' : ''}">
+      return `<div class="row" data-m="item" data-mk="ed-${d}" style="${isToday ? 'background:color-mix(in srgb,var(--brand) 7%,var(--bg-elev))' : ''}">
         <div style="width:64px;flex:none;text-align:center">
           <div class="row-s">${DOW_M(dowOf(d))}</div>
-          <div class="row-t" style="font-size:17px;${isToday ? 'color:var(--blue)' : ''}">${parseISO(d).getDate()}</div></div>
+          <div class="row-t" style="font-size:17px;${isToday ? 'color:var(--brand)' : ''}">${parseISO(d).getDate()}</div></div>
         <div class="row-m">
           ${list.length ? list.map(x => `<div class="row-t">${x.start}–${x.end}
               <span class="pill" style="${chipStyle(x.role)};height:19px">${roleName(x.role)}</span></div>
@@ -3681,6 +4234,7 @@ EVIEWS.my = {
         <div><div class="hero-h">${t('emp.hello', { n: esc(s.n) })}</div>
           <div class="row-s">${fmtDW(TODAY)}</div></div>
         <div class="spacer"></div>
+        <div class="hero-mascot" data-mascot></div>
         <div class="clock" id="nowClock">${nowHM()}</div>
       </div>
       ${clockBlock}
@@ -3703,6 +4257,7 @@ EVIEWS.my = {
     </div>`;
   },
   after() {
+    Mascot.mount(document.querySelector('#page [data-mascot]'));
     clearInterval(empTimer);
     empTimer = setInterval(() => { const el = $('#nowClock'); if (el) el.textContent = nowHM(); else clearInterval(empTimer); }, 20000);
   }
@@ -4356,7 +4911,7 @@ const ACT = {
     openSheet({
       title: t('c.language'), body: `<div class="list">${Object.keys(LANGS).map(l =>
         `<div class="row tap" data-act="pickLang" data-l="${l}"><div class="row-m"><div class="row-t">${LANGS[l]}</div></div>
-           ${LANG === l ? '<span style="color:var(--blue);font-weight:700">✓</span>' : '<span class="chev">›</span>'}</div>`).join('')}</div>`
+           ${LANG === l ? '<span style="color:var(--brand);font-weight:700">✓</span>' : '<span class="chev">›</span>'}</div>`).join('')}</div>`
     });
   },
   pickLang: b => { const l = b.dataset.l; closeSheet(); setTimeout(() => setLang(l), 80); },
@@ -4509,6 +5064,8 @@ const ACT = {
       render();
       if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
       Motion.pulse(document.querySelector('#page .big-btn'));
+      Fx.burst(document.querySelector('#page .big-btn'));
+      Mascot.react('cheer');
       const late = t2m(now) - t2m(sh.start) > DB.settings.lateGrace;
       toast(t('emp.clockInOK', { t: now }) + (late ? ' · ' + t('time.late') : ''), late ? 'warn' : 'ok');
     });
@@ -4527,6 +5084,7 @@ const ACT = {
       render();
       if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(10);
       Motion.pulse(document.querySelector('#page .big-btn'));
+      Mascot.react('tired');
       toast(t('emp.clockOutOK', { t: out, h: hh(workedMin(s.id, TODAY) || 0) }));
     });
   },
@@ -5258,6 +5816,8 @@ async function joinFromLink(p) {
   Motion.seen.add(lastViewKey);
   Motion.firstVisit();
   Motion.attachSwipe();
+  Mascot.mount($('#sideMascot'));
+  addEventListener('resize', () => { NavInd.sync(true); syncTabInd(); });
   const joinLink = Cloud.takeHash();
   Cloud.start().then(() => { if (joinLink) joinFromLink(joinLink); });
   /* 顶栏只在有内容滚到它下面时才显出分隔线 */
@@ -5267,7 +5827,7 @@ async function joinFromLink(p) {
     requestAnimationFrame(() => { ticking = false; Motion.syncScrollEdge(); });
   }, { passive: true });
   Pin.watchChrome();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Motion.mountSegs(null); Pin.measureAll(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Motion.mountSegs(null); Pin.measureAll(); NavInd.sync(true); syncTabInd(); });
 })();
 </script>
 </body>
