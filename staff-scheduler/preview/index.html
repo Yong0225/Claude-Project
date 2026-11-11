@@ -722,8 +722,11 @@ body{background:var(--brand)}
 @media (min-width:901px){
   .app{grid-template-columns:300px 1fr;position:relative}
   .main{margin:12px 12px 12px 0;border-radius:0 36px 36px 0}
-  .app .wave{position:absolute;top:0;bottom:0;left:220px;width:81px;height:100%;z-index:3;pointer-events:none;display:block}
-  .wave path{fill:var(--bg)}
+  .app .wave{position:absolute;top:0;bottom:0;left:0;width:330px;height:100%;z-index:0;pointer-events:none;display:block}
+  .sidebar{z-index:1}
+  .sidebar .nav-ind{opacity:0 !important}   /* 白色胶囊改由波浪那层画，和波浪融成一体 */
+  .side-blobs i:nth-child(1){right:auto;left:-140px}
+  .wave path,.wave rect{fill:var(--bg)}
   .sidebar{padding:24px 66px 14px 20px}
 }
 .wave{display:none}
@@ -878,7 +881,7 @@ body{background:var(--brand)}
     <div class="side-spark" aria-hidden="true"><svg class="spark" viewBox="0 0 30 30"><path d="M5 17 2 26" fill="none"/><path d="M13 12 17 3" fill="none"/><path d="M19 19 28 15" fill="none"/></svg></div>
     <div class="side-mascot" id="sideMascot"></div>
   </aside>
-  <svg class="wave" aria-hidden="true"><path/></svg>
+  <svg class="wave" aria-hidden="true"><defs><filter id="goo" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="4000" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="7"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11"/></filter></defs><g filter="url(#goo)"><path/><rect/></g></svg>
   <main class="main" id="main">
     <div class="m-mascot" id="mMascot"></div>
     <div class="topbar" id="topbar"></div>
@@ -2794,8 +2797,10 @@ const NavInd = {
     const sb = $('.sidebar'), ind = $('#navInd'), on = $('#nav .nav-item.on');
     if (!sb || !ind) return;
     if (!on || !sb.offsetParent || !on.offsetHeight) { ind.style.opacity = '0'; sb.classList.remove('has-ind'); this.y = null; return; }
+    this.box = { x: on.offsetLeft, w: on.offsetWidth, h: on.offsetHeight };
     const y = on.offsetTop, set = (v, vel = 0) => {
       const s = REDUCED ? 0 : Math.min(Math.abs(vel) / 2600, 0.22);
+      this.s = s;
       ind.style.transform = `translateY(${v}px) scale(${1 - s * 0.25}, ${1 + s})`;
     };
     Object.assign(ind.style, { left: on.offsetLeft + 'px', width: on.offsetWidth + 'px', height: on.offsetHeight + 'px', opacity: '1' });
@@ -2811,18 +2816,19 @@ const NavInd = {
     });
   },
 };
-/* 左边红白交界的波浪：一直缓缓流动；白色在选中项旁边鼓出一个包，
-   跟着侧边栏的白色滑块走，切换栏目时晃一下 */
+/* 左边红白交界的波浪（方案 B 拉丝软糖）：白色胶囊和波浪画在同一层，用 goo 滤镜融成一体。
+   鼓包紧贴选中项；切换时胶囊先走，后面拖着一条尾巴慢慢跟上，像软糖被拉长 */
 const Wave = {
-  el: null, path: null, raf: 0, last: 0, t: 0, amp: 22, vel: 0, cy: null,
+  el: null, path: null, rect: null, raf: 0, last: 0, t: 0, amp: 20, vel: 0, lag: null,
+  BX: 220, BW: 81,                                               // 波浪所在的那一条：x 从 220 到 301
   mount() {
     this.el = $('.wave'); if (!this.el) return;
-    this.path = this.el.querySelector('path');
+    this.path = this.el.querySelector('path'); this.rect = this.el.querySelector('rect');
     addEventListener('resize', () => this.kick());
     document.addEventListener('visibilitychange', () => this.kick());
     this.kick();
   },
-  hit() { this.vel += 300; this.kick(); },
+  hit() { this.vel += 320; this.kick(); },
   kick() {
     if (this.raf || !this.el || document.hidden) return;
     this.last = performance.now();
@@ -2834,26 +2840,33 @@ const Wave = {
     if (!r.width || document.hidden) return;                     // 手机上没有侧边栏：停下
     const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
     if (!REDUCED) this.t += dt;
-    /* 鼓包的大小：弹簧回到 22px，切换时被推一下会冲到快碰到白色胶囊再晃回来 */
-    this.vel += (-(this.amp - 22) * 95 - this.vel * 8.5) * dt; this.amp += this.vel * dt;
-    const on = $('#nav .nav-item.on');
-    const target = on ? (NavInd.y != null ? NavInd.y : on.offsetTop) + on.offsetHeight / 2 : -999;
-    this.cy = this.cy == null ? target : this.cy + (target - this.cy) * (1 - Math.exp(-dt * 18));
-    this.draw(r.width, r.height);
+    this.vel += (-(this.amp - 20) * 60 - this.vel * 6) * dt; this.amp += this.vel * dt;
+    const on = $('#nav .nav-item.on'), bx = NavInd.box;
+    const cy = on && bx ? (NavInd.y != null ? NavInd.y : on.offsetTop) + bx.h / 2 : -999;
+    this.lag = this.lag == null || REDUCED ? cy : this.lag + (cy - this.lag) * (1 - Math.exp(-dt * 3.2));
+    this.draw(r.height, cy);
+    if (on && bx && NavInd.y != null) {                          // 胶囊（拉伸跟着滑动速度）
+      const s = NavInd.s || 0, w = bx.w, h = bx.h, x = bx.x, y = NavInd.y;
+      this.rect.setAttribute('x', x); this.rect.setAttribute('y', y.toFixed(1));
+      this.rect.setAttribute('width', w); this.rect.setAttribute('height', h); this.rect.setAttribute('rx', h / 2);
+      this.rect.setAttribute('transform', `translate(${x + w / 2} ${(y + h / 2).toFixed(1)}) scale(${(1 - s * 0.25).toFixed(3)} ${(1 + s).toFixed(3)}) translate(${-(x + w / 2)} ${-(y + h / 2).toFixed(1)})`);
+      this.rect.style.display = '';
+    } else this.rect.style.display = 'none';
     if (!REDUCED) this.raf = requestAnimationFrame(n => this.frame(n));
   },
-  draw(W, H) {
-    const t = this.t, TOP = 12, BOT = H - 12, R = 46, TAU = Math.PI * 2;
-    let d = `M${W},${TOP}`;
-    for (let y = TOP; y <= BOT + 0.1; y += 8) {
-      const flow = 4.5 * Math.sin(y / 430 * TAU + t * 0.9) + 3 * Math.sin(y / 230 * TAU - t * 1.35) + 1.4 * Math.sin(y / 97 * TAU + t * 2.2);
-      const g = (y - this.cy) / 42;
-      let x = 44 + flow - this.amp * Math.exp(-g * g);
+  draw(H, cy) {
+    const t = this.t, TOP = 12, BOT = H - 12, R = 46, TAU = Math.PI * 2, BX = this.BX, BW = this.BW, lag = this.lag;
+    const gap = Math.abs(cy - lag), mid = (cy + lag) / 2, neckW = Math.max(20, gap / 2 + 12), neck = Math.min(1, gap / 40);
+    let d = `M${BX + BW + 28},${TOP}L${BX + BW},${TOP}`;
+    for (let y = TOP; y <= BOT + 0.1; y += 6) {
+      const g1 = (y - cy) / 40, g2 = (y - lag) / 46, g3 = (y - mid) / neckW;
+      let x = 44 + 2 * Math.sin(y / 260 * TAU + t * 0.8) + 1.2 * Math.sin(y / 130 * TAU - t * 1.3)
+        - this.amp * Math.exp(-g1 * g1) - this.amp * 0.7 * Math.exp(-g2 * g2) - 8 * Math.exp(-g3 * g3) * neck;
       const e = Math.min(y - TOP, BOT - y);                        // 上下两个圆角
-      if (e < R) { const u = 1 - e / R; x = W - (W - x) * Math.sqrt(Math.max(0, 1 - u * u)); }
-      d += `L${x.toFixed(1)},${y}`;
+      if (e < R) { const u = 1 - e / R; x = BW - (BW - x) * Math.sqrt(Math.max(0, 1 - u * u)); }
+      d += `L${(BX + x).toFixed(1)},${y}`;
     }
-    this.path.setAttribute('d', d + `L${W},${BOT}Z`);
+    this.path.setAttribute('d', d + `L${BX + BW},${BOT}L${BX + BW + 28},${BOT}Z`);
   },
 };
 
