@@ -1836,7 +1836,9 @@ class Spring {
   }
 }
 function frame(now) {
-  const dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+  // a frame's timestamp can be earlier than the performance.now() taken when a spring started during a long
+  // first render; a negative step runs the spring backwards and overshoots wildly (bars shooting out of the chart)
+  const dt = clamp((now - lastT) / 1000, 0, .05); lastT = Math.max(lastT, now);
   const n = Math.max(1, Math.ceil(dt / (1 / 240))), h = dt / n;
   for (const s of [...live]) {
     for (let i = 0; i < n; i++) s.step(h);
@@ -2015,7 +2017,7 @@ class Chart {
     if (!this.data) return;
     const { W, H, l, r, t: tp, b } = this.geom();
     const svg = this.q('svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    const p = this.p.x, I = this.intro.x;
+    const p = this.p.x, I = clamp(this.intro.x, 0, 1);
     const max = this.fromMax + (this.targetMax - this.fromMax) * p, min = this.fromMin + (this.targetMin - this.fromMin) * p;
     const vals = this.current(), n = vals.length, iw = W - l - r, ih = H - tp - b;
     const bar = this.data.kind === 'bar';
