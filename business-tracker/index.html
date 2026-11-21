@@ -589,9 +589,9 @@ const I18N = {
     'tv.empty.p':'Test different openers, subject lines or offers. Log numbers under each variant and Pulse compares open, reply and close rates side by side — and tells you when a difference is real.',
     'tv.noData':'Nothing logged for this test in this period yet. In Log, pick a variant, then tap +.',
     'tv.count':'{s}','tv.sig':'{v} wins · 95% confidence','tv.tie':'No clear winner yet','tv.small':'Too few to tell',
-    'tv.foot':'A winner is called with a two-proportion z-test (95% confidence) between the best and runner-up variant, and only once both have at least 30 in the base number.',
+    'tv.foot':'A winner is called with a two-proportion z-test (95% confidence) between the best and runner-up variant, and only once both have at least 30 in the base number. A/B test numbers are a sandbox: they never count in your funnel, totals or goals.',
     'tv.variant':'Test variant','tv.none':'No variant','tv.gone':'Deleted variant',
-    'log.qvHint':'Logged under this variant — and counted in your totals.',
+    'log.qvHint':'Logged under this variant only: A/B test numbers stay in the A/B test and never change your funnel or totals.',
 
     'sync.st.outdated':'Pulse was updated — refresh this page',
     'sync.askQ':'Does another device already sync?','sync.askF':'If it does, connect to it instead — otherwise you’ll end up with two separate copies that don’t sync with each other.',
@@ -815,9 +815,9 @@ const I18N = {
     'tv.empty.p':'测试不同的开场白、邮件标题或报价方案。在每个版本下记录数字，Pulse 会并排对比打开率、回复率、成交率，并告诉你差距是不是真的。',
     'tv.noData':'这段时间还没有这个测试的数据。去「记录」选择版本，再点 +。',
     'tv.count':'{s}','tv.sig':'{v} 胜出 · 95% 置信','tv.tie':'差距还不显著','tv.small':'样本太少',
-    'tv.foot':'胜出的判断用双比例 z 检验（95% 置信）比较最好和第二好的版本，并且两者的基数都至少 30 才会下结论。',
+    'tv.foot':'胜出的判断用双比例 z 检验（95% 置信）比较最好和第二好的版本，并且两者的基数都至少 30 才会下结论。A/B 测试的数据是独立的沙盒：不会算进漏斗、总数和目标。',
     'tv.variant':'测试版本','tv.none':'不分版本','tv.gone':'已删除的版本',
-    'log.qvHint':'记在这个版本下，同时计入总数。',
+    'log.qvHint':'只记在这个版本下：A/B 测试的数字只在 A/B 测试里比较，不会算进漏斗和总数。',
 
     'sync.st.outdated':'Pulse 已更新，请刷新页面',
     'sync.askQ':'另一台设备已经开过云同步了吗？','sync.askF':'如果开过，请连接那台设备的同步；否则会变成两份互不相通的数据。',
@@ -1026,8 +1026,14 @@ const addDays = (s, n) => { const d = parseD(s); d.setDate(d.getDate() + n); ret
 const today = () => ymd(new Date());
 const daysBetween = (a, b) => Math.round((parseD(b) - parseD(a)) / 864e5);
 const loc = () => LANG === 'zh' ? 'zh-CN' : 'en-US';
-const firstDate = () => DB.entries.length ? DB.entries[0].date : null;
-const lastDate = () => DB.entries.length ? DB.entries[DB.entries.length - 1].date : null;
+/* A/B test entries (tagged "t") are a sandbox: they only count in the A/B test view, never in totals */
+function mainEntries() {
+  let m = ctxCache.get('main');
+  if (!m) { m = DB.entries.filter(e => !e.t); ctxCache.set('main', m); }
+  return m;
+}
+const firstDate = () => { const m = mainEntries(); return m.length ? m[0].date : null; };
+const lastDate = () => { const m = mainEntries(); return m.length ? m[m.length - 1].date : null; };
 
 function fmtDay(s, opts = { month: 'short', day: 'numeric' }) { return parseD(s).toLocaleDateString(loc(), opts); }
 function fmtDayLong(s) {
@@ -1096,26 +1102,28 @@ function posStages() {
   const i = DB.stages.findIndex(s => s.id === 'replied');
   return i > 0 ? { a: DB.stages[i - 1].id, n: DB.stages[i + 1] ? DB.stages[i + 1].id : null } : null;
 }
-/* first day a reply was classified (positive, referral or negative); days before it were never split, so the split rates skip them */
-function posStart() {
-  if (ctxCache.has('posStart')) return ctxCache.get('posStart');
-  const e = DB.entries.find(x => SPLIT.some(k => x.v[k])), d = e ? e.date : null;
-  ctxCache.set('posStart', d);
+/* first day a reply was classified (positive, referral or negative); days before it were never split, so the split rates skip them.
+   Counted separately for the main data and for each A/B variant. */
+function posStart(variant) {
+  const ck = 'posStart|' + (variant || '');
+  if (ctxCache.has(ck)) return ctxCache.get(ck);
+  const e = DB.entries.find(x => (variant ? x.t === variant : !x.t) && SPLIT.some(k => x.v[k])), d = e ? e.date : null;
+  ctxCache.set(ck, d);
   return d;
 }
 
-/* totals include every entry; pass a variant id to sum only that A/B test variant.
+/* totals leave out A/B test entries; pass a variant id to sum only that A/B test variant.
    _pa/_pr/_pn: reply-rate base, replies and next stage counted only from posStart() on */
 function sumRange(from, to, variant) {
   const S = {};
   for (const k of inputKeys()) S[k] = 0;
   S._pa = S._pr = S._pn = 0;
-  const ps = posStages(), p0 = ps && posStart();
+  const ps = posStages(), p0 = ps && posStart(variant);
   let n = 0;
   for (const e of DB.entries) {
     if (e.date < from) continue;
     if (e.date > to) break;
-    if (variant && e.t !== variant) continue;
+    if (variant ? e.t !== variant : e.t) continue;
     n++;
     for (const k in e.v) if (k in S) S[k] += e.v[k];
     if (p0 && e.date >= p0) { S._pa += e.v[ps.a] || 0; S._pr += e.v.replied || 0; if (ps.n) S._pn += e.v[ps.n] || 0; }
@@ -1143,7 +1151,7 @@ function ctxFor(from, to, noUnit) {
   const { S, n } = sumRange(from, to);
   const won = wonStage();
   let startA = +DB.settings.startCust || 0;
-  for (const e of DB.entries) { if (e.date >= from) break; startA += (e.v[won] || 0) - (e.v.churned || 0); }
+  for (const e of mainEntries()) { if (e.date >= from) break; startA += (e.v[won] || 0) - (e.v.churned || 0); }
   const endA = startA + S[won] - S.churned;
   const td = today();
   const effTo = from <= td && to > td ? td : to;
@@ -1425,14 +1433,14 @@ const hzOn = () => DB.settings.hz !== false;
 function r100Stage() { const id = DB.settings.r100Stage; return id && stageById(id) ? id : stageById('contacted') ? 'contacted' : firstStage(); }
 const r100Target = () => clamp(Math.round(+DB.settings.r100 || 100), 1, 100000);
 const isWeekend = d => { const w = parseD(d).getDay(); return w === 0 || w === 6; };
-/* daily count of the action stage (all variants): today, current and best streak, the last 100 days,
+/* daily count of the action stage (A/B test entries excluded): today, current and best streak, the last 100 days,
    and the average of the last 14 days. A missed weekend day skips instead of breaking when allowed. */
 function r100State() {
   const td = today(), mk = 'r100|' + td, memo = ctxCache.get(mk);
   if (memo) return memo;
   const sid = r100Stage(), target = r100Target(), fd = firstDate(), skipW = DB.settings.r100Wknd !== false;
   const byDay = new Map();
-  for (const e of DB.entries) if (e.v[sid]) byDay.set(e.date, (byDay.get(e.date) || 0) + e.v[sid]);
+  for (const e of mainEntries()) if (e.v[sid]) byDay.set(e.date, (byDay.get(e.date) || 0) + e.v[sid]);
   const count = d => byDay.get(d) || 0;
   const skip = d => skipW && isWeekend(d) && count(d) < target;
   let streak = 0, best = 0, run = 0;
@@ -1485,7 +1493,7 @@ function testWinner() {
   const fd = firstDate();
   if (!fd) return null;
   for (const ts of DB.tests) {
-    const sums = ts.variants.map(v => sumRange(fd, today(), v.id).S);
+    const sums = ts.variants.map(v => sumRange('0000-01-01', '9999-12-31', v.id).S);
     for (let i = 1; i < DB.stages.length; i++) {
       const a = DB.stages[i - 1].id, b = DB.stages[i].id;
       const order = sums.map((S, j) => [S[a] ? S[b] / S[a] : null, j]).filter(x => x[0] != null).sort((p, q) => q[0] - p[0]);
@@ -1500,7 +1508,7 @@ function testWinner() {
 /* what the coach says first, by priority: losing money → not enough volume → a leaking step →
    near the ceiling → acquisition eating cash → ready for something new. phase: 0 More, 1 Better, 2 New */
 function coachState() {
-  if (!DB.entries.length) return { phase: 0, kind: 'noData', focus: t('hz.f.noData'), extras: [] };
+  if (!mainEntries().length) return { phase: 0, kind: 'noData', focus: t('hz.f.noData'), extras: [] };
   const td = today(), fd = firstDate(), f0 = addDays(td, -29);
   const c = ctxFor(f0 < fd ? fd : f0, td), R = r100State(), s = stageName(stageById(R.sid));
   const lc = MX.ltvCac.calc(c), maxC = MX.maxCust.calc(c), cash = MX.cash30.calc(c), leak = findLeak();
@@ -2511,8 +2519,8 @@ function replySplit(c, col) {
   return { bar, legend: `<div class="fn-split">${legend}</div>` };
 }
 function viewOverview() {
-  const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p>`;
-  if (!DB.entries.length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
+  const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(bizLine())}</p>`;
+  if (!mainEntries().length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const hist = historyRanges(UI.period, UI.offset, 8).map(h => ctxFor(h.from, h.to));
   const kpis = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltvCac'].map((k, i) => {
@@ -2672,9 +2680,8 @@ function viewLog() {
     </div>${hzOn() ? quoteCardHTML('log', 'vlk', { i: 2, style: 'margin-top:12px' }) : ''}</div>
     <div class="rise" style="--i:3">${DB.entries.length ? `<div class="h2" style="margin:0 0 -14px">${esc(t('log.history'))}</div>${hist}${more}` : `<div class="card hero-empty"><p style="margin:0">${esc(t('log.empty'))}</p></div>`}</div></div>`;
 }
-function setQuick(stageId, value, date = UI.quick) {
-  const qv = variantById(UI.qv) ? UI.qv : '';
-  const watch = hzOn() && date === today() && stageId === r100Stage();   // Rule of 100 milestones
+function setQuick(stageId, value, date = UI.quick, qv = variantById(UI.qv) ? UI.qv : '') {
+  const watch = hzOn() && !qv && date === today() && stageId === r100Stage();   // Rule of 100 milestones (A/B entries don't count)
   const before = watch ? r100State().today : 0;
   let e = findEntry(date, qv);
   if (!e) { e = { id: uid(), date, v: {}, note: '', ...(qv ? { t: qv } : {}) }; DB.entries.push(e); }
@@ -3592,8 +3599,8 @@ document.addEventListener('click', async e => {
     case 'hzphoto': pickPhoto(); break;
     case 'hzphotodel': delete DB.settings.hzPhoto; commit(); render(); break;
     case 'r100plus': {
-      const sid = r100Stage(), td = today(), e = findEntry(td, variantById(UI.qv) ? UI.qv : '');
-      setQuick(sid, (e && e.v[sid] || 0) + 1, td);
+      const sid = r100Stage(), td = today(), e = findEntry(td, '');   // the Rule of 100 counts real work, never an A/B variant
+      setQuick(sid, (e && e.v[sid] || 0) + 1, td, '');
       haptic(); paintR100(); scheduleLogRefresh();
       break;
     }
