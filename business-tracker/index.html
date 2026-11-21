@@ -508,7 +508,7 @@ const I18N = {
     'm.revenue':'Revenue','m.newCust':'New clients','m.convOverall':'Overall conversion','m.cpl':'Cost per lead','m.cpm':'Cost per meeting',
     'm.cac':'CAC','m.avgDeal':'Avg deal size','m.roas':'ROAS','m.mktRoi':'Acquisition ROI','m.grossProfit':'Gross profit',
     'm.grossMargin':'Gross margin','m.totalCost':'Total costs','m.netProfit':'Net profit','m.netMargin':'Net margin',
-    'm.active':'Active clients','m.arpa':'Revenue per client / mo','m.churnRate':'Monthly churn','m.ltv':'LTV','m.ltvCac':'LTV : CAC','m.payback':'CAC payback','m.life':'Client lifetime (1 ÷ churn)',
+    'm.active':'Active clients','m.arpa':'Revenue per client / mo','m.churnRate':'Monthly churn','m.ltv':'LTV','m.ltgp':'LTGP','m.ltvCac':'LTV : CAC','m.ltgpCac':'LTGP : CAC','m.payback':'CAC payback','m.life':'Client lifetime (1 ÷ churn)',
     'mf.revenue':'New-client revenue + Recurring revenue',
     'mf.newCust':'Count of the last funnel stage',
     'mf.convOverall':'{last} ÷ {first}',
@@ -527,8 +527,8 @@ const I18N = {
     'mf.active':'Clients before tracking + all Won − all Lost',
     'mf.arpa':'Revenue ÷ Avg active clients ÷ Months',
     'mf.churnRate':'Clients lost ÷ Clients at start ÷ Months',
-    'mf.ltv':'Revenue per client / mo × Gross margin × Lifetime','mf.ltvOnce':'Revenue ÷ New clients × Gross margin',
-    'mf.ltvCac':'LTV ÷ CAC',
+    'mf.ltv':'Revenue per client / mo × Lifetime','mf.ltvOnce':'Revenue ÷ New clients','mf.ltgp':'LTV × Gross margin',
+    'mf.ltvCac':'LTV ÷ CAC','mf.ltgpCac':'LTGP ÷ CAC',
     'mf.payback':'CAC ÷ (Revenue per client / mo × Gross margin)',
     'md.revenue':'Everything you collected in this period.',
     'md.newCust':'Deals closed. Your last funnel stage counts as a new client.',
@@ -554,9 +554,11 @@ const I18N = {
     'md.active':'Clients paying you at the end of this period.',
     'md.arpa':'Average monthly revenue from one client (ARPA).',
     'md.churnRate':'Share of clients lost per month. Under 5% is healthy for retainers.',
-    'md.ltv':'Lifetime value — gross profit you expect from one client. Lifetime = 1 ÷ churn, capped in Settings.',
-    'md.ltvOnce':'Lifetime value — gross profit one client brings. Clients pay once here, so it is what an average new client paid, after delivery costs.',
-    'md.ltvCac':'How much a client is worth vs. what they cost. 3× or more is healthy; under 1× loses money.',
+    'md.ltv':'Lifetime value — everything one client pays you over their lifetime. Lifetime = 1 ÷ churn, capped in Settings.',
+    'md.ltvOnce':'Lifetime value — what one client pays you. Clients pay once here, so it is what an average new client paid.',
+    'md.ltgp':'Lifetime gross profit (Hormozi) — what one client pays you over their lifetime, minus the cost of delivering. This is the money that can pay for getting the next client.',
+    'md.ltvCac':'How much revenue a client brings vs. what they cost to get. Judge health with LTGP : CAC, which takes delivery costs out.',
+    'md.ltgpCac':'Gross profit from a client vs. what they cost to get. Hormozi: 3× or more is healthy; under 1× every new client loses money.',
     'md.payback':'Months of gross profit needed to earn back the CAC. Under 12 months is good.',
     'better.up':'Higher is better','better.down':'Lower is better',
 
@@ -564,8 +566,8 @@ const I18N = {
     'ov.empty.h':'Track your business, for real','ov.empty.p':'Log leads, deals, revenue and costs. Conversion rate, CAC, LTV and profit are calculated for you.',
     'ov.empty.add':'Log first entry','ov.empty.sample':'Try sample data','ov.noGoals':'No goals yet. Set one to see your pace.','ov.addGoal':'Add goal',
     'ins.up':'{m} up {p} vs {prev}','ins.down':'{m} down {p} vs {prev}',
-    'ins.worst':'Biggest drop-off: {a} → {b} converts at only {p}','ins.ltv.good':'LTV : CAC is {r} — healthy (3× or more)',
-    'ins.ltv.bad':'LTV : CAC is {r} — below the 3× benchmark','ins.loss':'Costs exceed revenue by {v} this period',
+    'ins.worst':'Biggest drop-off: {a} → {b} converts at only {p}','ins.ltv.good':'LTGP : CAC is {r} — healthy (3× or more)',
+    'ins.ltv.bad':'LTGP : CAC is {r} — below the 3× benchmark','ins.loss':'Costs exceed revenue by {v} this period',
     'ins.profit':'Net margin {p} this period','ins.goals':'{n} of {t} goals on track','ins.none':'Log a few more entries to see highlights.',
 
     'log.title':'Log','log.quick':'Quick log','log.quickSub':'Tap + as things happen. Saves instantly.','log.full':'Full entry',
@@ -596,7 +598,7 @@ const I18N = {
     's.startF':'Active clients you already had before your first entry. Used for churn, revenue per client and LTV.',
     's.life':'Max client lifetime','s.lifeF':'LTV uses 1 ÷ churn for lifetime, capped at this many months so LTV stays sensible when churn is 0.',
     's.pay':'How clients pay','s.payAuto':'Auto','s.paySub':'Recurring','s.payOnce':'One-time',
-    's.payF':'One-time: LTV is what an average new client paid, after delivery costs. Recurring: monthly revenue per client × lifetime. Auto picks one-time until you log recurring revenue or churn.',
+    's.payF':'One-time: LTV is what an average new client paid. Recurring: monthly revenue per client × lifetime. LTGP is LTV minus delivery costs. Auto picks one-time until you log recurring revenue or churn.',
     'kp.edit':'Edit','kp.title':'Overview cards','kp.slot':'Card {n}','kp.reset':'Reset to default','kp.foot':'Pick any metric for each of the six cards, including your custom metrics. Each industry keeps its own cards.',
     's.months':'months','s.stages':'Funnel stages','s.stagesF':'Top to bottom. The last stage counts as new clients; conversion rates are calculated between neighbouring stages.',
     's.addStage':'Add stage','s.newStage':'New stage','s.minStages':'Keep at least 2 stages','s.custom':'Custom metrics',
@@ -684,7 +686,7 @@ const I18N = {
 
     'hz.f.noData':'Log your numbers first. Without data I can’t tell you what’s broken.',
     'hz.f.noActions':'You’re not logging {s} yet. The Rule of 100 is about daily action — tap + in Quick log every time you do one.',
-    'hz.f.losing':'You lose money on every client you win: LTV : CAC is only {r}. Don’t add volume — more volume just means bigger losses. Raise prices or make the offer worth more.',
+    'hz.f.losing':'You lose money on every client you win: LTGP : CAC is only {r}. Don’t add volume — more volume just means bigger losses. Raise prices or make the offer worth more.',
     'hz.f.more':'You don’t have a skill problem. You have a volume problem. You averaged {avg} a day ({s}) over the last 14 days; the target is {target}. Get the volume first, then optimise.',
     'hz.f.leak':'The one thing to fix right now: {name}. It’s at {cur}, and you’ve done {best} before. Fix it and the same volume brings {extra} more clients a month.',
     'hz.f.leakNoExtra':'The one thing to fix right now: {name}. It’s at {cur}, and you’ve done {best} before. Fix this step. Everything else can wait.',
@@ -696,7 +698,7 @@ const I18N = {
     'hz.x.streak':'{n} days in a row. {left} to go until 100.',
     'hz.x.ceiling':'At your current pace and churn, your ceiling is {max} clients and {rev} a month.',
     'hz.x.ceilingNoRev':'At your current pace and churn, your ceiling is {max} clients.',
-    'hz.x.ltvGood':'LTV : CAC is {r} — past the 3× line. You can afford to outspend competitors to get clients.',
+    'hz.x.ltvGood':'LTGP : CAC is {r} — past the 3× line. You can afford to outspend competitors to get clients.',
     'hz.x.cashGood':'New clients pay back {x} of their acquisition cost within 30 days. Clients are funding your growth — scale it.',
     'hz.x.winner':'Your test has a winner: “{v}” wins on {m}. Kill the loser and test the next thing.',
 
@@ -704,8 +706,9 @@ const I18N = {
     'hz.take.maxRev':'This is the most the business can make a month as it runs today. Don’t like it? Change acquisition, churn or price.',
     'hz.take.headroom':'Under 15% means you’re close to the top. Fix churn before adding volume.',
     'hz.take.cash30':'1× or more: clients pay for their own acquisition within 30 days. 2× or more: you can scale acquisition without running out of cash.',
-    'hz.take.ltvCac':'3× is the floor. Below it, more acquisition means more danger. Above it, you can outspend competitors to get clients.',
-    'hz.take.cac':'A lower CAC isn’t always better. As long as LTV supports it, whoever can spend the most to get a client wins.',
+    'hz.take.ltvCac':'Hormozi judges this on gross profit, not revenue: check LTGP : CAC. 3× there is the floor.',
+    'hz.take.ltgpCac':'3× is the floor. Below it, more acquisition means more danger. Above it, you can outspend competitors to get clients.',
+    'hz.take.cac':'A lower CAC isn’t always better. As long as LTGP supports it, whoever can spend the most to get a client wins.',
     'hz.take.churnRate':'Churn is a leaking bucket. Plug the holes before you pour in more.',
     'hz.take.conv':'Conversion dropped? Don’t switch channels yet. Test the opener or the offer — one variable at a time.',
     'hz.take.convOverall':'Double conversion on the same leads and you double clients without spending a cent more on acquisition.',
@@ -720,8 +723,8 @@ const I18N = {
 
     'hz.ins.up':'{m} is up {p} vs {prev}. Good. Don’t stop.','hz.ins.down':'{m} is down {p} vs {prev}. Find the cause, not an excuse.',
     'hz.ins.worst':'Money leaks at {a} → {b}: only {p}. That’s your bottleneck.',
-    'hz.ins.ltv.good':'LTV : CAC is {r}, past the 3× line. You can afford to spend more to get clients.',
-    'hz.ins.ltv.bad':'LTV : CAC is only {r}, under 3×. Scale this and you just lose money faster.',
+    'hz.ins.ltv.good':'LTGP : CAC is {r}, past the 3× line. You can afford to spend more to get clients.',
+    'hz.ins.ltv.bad':'LTGP : CAC is only {r}, under 3×. Scale this and you just lose money faster.',
     'hz.ins.loss':'You lost {v} this period. Stop the bleeding first.','hz.ins.profit':'Net margin {p}. Revenue is vanity; profit is what you keep.',
     'hz.ins.goals':'{n} of {t} goals on track.',
     'hz.g.behind':'{n} of your goals are behind pace. Goals don’t hit themselves — what can you do more of today?',
@@ -752,7 +755,7 @@ const I18N = {
     'm.revenue':'总收入','m.newCust':'新客户','m.convOverall':'总转化率','m.cpl':'单条线索成本','m.cpm':'单次会议成本',
     'm.cac':'获客成本 CAC','m.avgDeal':'平均客单价','m.roas':'广告回报 ROAS','m.mktRoi':'获客投资回报','m.grossProfit':'毛利',
     'm.grossMargin':'毛利率','m.totalCost':'总成本','m.netProfit':'净利润','m.netMargin':'净利率',
-    'm.active':'活跃客户','m.arpa':'每客户月均收入','m.churnRate':'月流失率','m.ltv':'客户终身价值 LTV','m.ltvCac':'LTV : CAC','m.payback':'CAC 回本周期','m.life':'客户生命周期（1 ÷ 流失率）',
+    'm.active':'活跃客户','m.arpa':'每客户月均收入','m.churnRate':'月流失率','m.ltv':'客户终身价值 LTV','m.ltgp':'客户终身毛利 LTGP','m.ltvCac':'LTV : CAC','m.ltgpCac':'LTGP : CAC','m.payback':'CAC 回本周期','m.life':'客户生命周期（1 ÷ 流失率）',
     'mf.revenue':'新客户收入 + 续费收入',
     'mf.newCust':'漏斗最后一个阶段的数量',
     'mf.convOverall':'{last} ÷ {first}',
@@ -771,8 +774,8 @@ const I18N = {
     'mf.active':'开始记录前已有客户 + 累计成交 − 累计流失',
     'mf.arpa':'总收入 ÷ 平均活跃客户 ÷ 月数',
     'mf.churnRate':'流失客户 ÷ 期初客户 ÷ 月数',
-    'mf.ltv':'每客户月均收入 × 毛利率 × 生命周期','mf.ltvOnce':'收入 ÷ 新客户 × 毛利率',
-    'mf.ltvCac':'LTV ÷ CAC',
+    'mf.ltv':'每客户月均收入 × 生命周期','mf.ltvOnce':'收入 ÷ 新客户','mf.ltgp':'LTV × 毛利率',
+    'mf.ltvCac':'LTV ÷ CAC','mf.ltgpCac':'LTGP ÷ CAC',
     'mf.payback':'CAC ÷（每客户月均收入 × 毛利率）',
     'md.revenue':'这段时间收到的全部收入。',
     'md.newCust':'成交数。漏斗最后一个阶段就算作新客户。',
@@ -798,9 +801,11 @@ const I18N = {
     'md.active':'这段时间结束时仍在付费的客户数。',
     'md.arpa':'单个客户平均每月带来的收入（ARPA）。',
     'md.churnRate':'每月流失客户的比例。月费型业务低于 5% 算健康。',
-    'md.ltv':'终身价值——一个客户预计带来的毛利。生命周期 = 1 ÷ 流失率，上限可在设置中调整。',
-    'md.ltvOnce':'终身价值——一个客户带来的毛利。这里客户只付一次，所以就是平均每个新客户付的钱，扣掉交付成本。',
-    'md.ltvCac':'客户价值是获客成本的几倍。3× 以上健康，低于 1× 就是在亏钱。',
+    'md.ltv':'终身价值——一个客户在整个合作期间付你的钱。生命周期 = 1 ÷ 流失率，上限可在设置中调整。',
+    'md.ltvOnce':'终身价值——一个客户付你的钱。这里客户只付一次，所以就是平均每个新客户付的钱。',
+    'md.ltgp':'终身毛利（Hormozi 的 LTGP）——一个客户付你的钱，扣掉交付成本之后剩下的。这才是能拿去支付下一个客户获客成本的钱。',
+    'md.ltvCac':'一个客户带来的收入是获客成本的几倍。判断健不健康请看 LTGP : CAC，它扣掉了交付成本。',
+    'md.ltgpCac':'一个客户带来的毛利是获客成本的几倍。Hormozi：3× 以上健康，低于 1× 就是每拉一个客户都在亏钱。',
     'md.payback':'需要几个月的毛利才能赚回 CAC。12 个月以内算好。',
     'better.up':'越高越好','better.down':'越低越好',
 
@@ -808,8 +813,8 @@ const I18N = {
     'ov.empty.h':'认真追踪你的生意','ov.empty.p':'记录线索、成交、收入和成本，转化率、CAC、LTV、利润全部自动算好。',
     'ov.empty.add':'记录第一笔数据','ov.empty.sample':'载入示例数据','ov.noGoals':'还没有目标，设一个就能看到进度。','ov.addGoal':'添加目标',
     'ins.up':'{m} 比{prev}提升 {p}','ins.down':'{m} 比{prev}下降 {p}',
-    'ins.worst':'流失最多的环节：{a} → {b}，转化率只有 {p}','ins.ltv.good':'LTV : CAC 为 {r}，很健康（≥ 3×）',
-    'ins.ltv.bad':'LTV : CAC 为 {r}，低于 3× 的健康线','ins.loss':'本期成本超过收入 {v}',
+    'ins.worst':'流失最多的环节：{a} → {b}，转化率只有 {p}','ins.ltv.good':'LTGP : CAC 为 {r}，很健康（≥ 3×）',
+    'ins.ltv.bad':'LTGP : CAC 为 {r}，低于 3× 的健康线','ins.loss':'本期成本超过收入 {v}',
     'ins.profit':'本期净利率 {p}','ins.goals':'{t} 个目标中 {n} 个进度正常','ins.none':'再多记录几天就能看到洞察。',
 
     'log.title':'记录','log.quick':'快速记录','log.quickSub':'发生一件就点一下 +，自动保存。','log.full':'完整记录',
@@ -840,7 +845,7 @@ const I18N = {
     's.startF':'第一条记录之前就已经在付费的客户数，用于计算流失率、每客户收入和 LTV。',
     's.life':'客户生命周期上限','s.lifeF':'LTV 的生命周期 = 1 ÷ 流失率，并以此为上限，避免流失率为 0 时 LTV 无限大。',
     's.pay':'客户怎么付钱','s.payAuto':'自动','s.paySub':'订阅续费','s.payOnce':'一次性',
-    's.payF':'一次性：LTV = 平均每个新客户付的钱，扣掉交付成本。订阅续费：每客户月均收入 × 生命周期。自动：在你记录续费收入或流失客户之前，都按一次性算。',
+    's.payF':'一次性：LTV = 平均每个新客户付的钱。订阅续费：每客户月均收入 × 生命周期。LTGP = LTV 扣掉交付成本。自动：在你记录续费收入或流失客户之前，都按一次性算。',
     'kp.edit':'编辑','kp.title':'概览卡片','kp.slot':'第 {n} 格','kp.reset':'恢复默认','kp.foot':'六个格子都可以选任何指标，包括自定义指标。每个行业各自保存。',
     's.months':'个月','s.stages':'漏斗阶段','s.stagesF':'从上到下排列。最后一个阶段算作新客户，转化率按相邻两个阶段计算。',
     's.addStage':'添加阶段','s.newStage':'新阶段','s.minStages':'至少保留 2 个阶段','s.custom':'自定义指标',
@@ -928,7 +933,7 @@ const I18N = {
 
     'hz.f.noData':'先把数字记下来。没有数据，我没法告诉你问题出在哪。',
     'hz.f.noActions':'你还没有记录每天的「{s}」。100 法则看的是每天的行动量——每做一次，就在快速记录里点一下 +。',
-    'hz.f.losing':'每拉一个客户你都在亏钱：LTV : CAC 只有 {r}。先别加量，量越大亏越多。去提价，或者把 offer 做得更值钱。',
+    'hz.f.losing':'每拉一个客户你都在亏钱：LTGP : CAC 只有 {r}。先别加量，量越大亏越多。去提价，或者把 offer 做得更值钱。',
     'hz.f.more':'你缺的不是技巧，是量。过去 14 天平均每天只有 {avg} 次「{s}」，目标是 {target}。先把量做够，再谈优化。',
     'hz.f.leak':'你现在唯一要解决的是「{name}」：现在 {cur}，你自己做到过 {best}。修好它，同样的量每月多 {extra} 个客户。',
     'hz.f.leakNoExtra':'你现在唯一要解决的是「{name}」：现在 {cur}，你自己做到过 {best}。先修这一步，别的都可以等。',
@@ -940,7 +945,7 @@ const I18N = {
     'hz.x.streak':'连续 {n} 天做满，离 100 天还有 {left} 天。',
     'hz.x.ceiling':'按现在的进客速度和流失，你的天花板是 {max} 个客户、每月 {rev}。',
     'hz.x.ceilingNoRev':'按现在的进客速度和流失，你的天花板是 {max} 个客户。',
-    'hz.x.ltvGood':'LTV : CAC 是 {r}，过了 3 倍的线。你有本钱比对手花更多钱获客。',
+    'hz.x.ltvGood':'LTGP : CAC 是 {r}，过了 3 倍的线。你有本钱比对手花更多钱获客。',
     'hz.x.cashGood':'新客户 30 天就赚回获客花费的 {x}。客户在帮你出钱买客户——放大它。',
     'hz.x.winner':'测试有结论了：「{v}」在「{m}」上赢了。把输的版本停掉，再测下一个。',
 
@@ -948,8 +953,9 @@ const I18N = {
     'hz.take.maxRev':'这是这门生意按现在的样子，每月最多能做到的收入。不满意？改变进客速度、流失或者价格。',
     'hz.take.headroom':'低于 15%，说明你快到顶了——先修流失，再加量。',
     'hz.take.cash30':'≥ 1×：客户在 30 天内付清了自己的获客成本。≥ 2×：获客可以一直放大，现金不会断。',
-    'hz.take.ltvCac':'3 倍是底线。低于 3，获客越多越危险；过了 3，你就有本钱比对手花更多钱获客。',
-    'hz.take.cac':'CAC 不是越低越好。只要 LTV 撑得住，愿意为一个客户花最多钱的人会赢。',
+    'hz.take.ltvCac':'Hormozi 看的是毛利，不是收入：请看 LTGP : CAC，那里 3 倍才是底线。',
+    'hz.take.ltgpCac':'3 倍是底线。低于 3，获客越多越危险；过了 3，你就有本钱比对手花更多钱获客。',
+    'hz.take.cac':'CAC 不是越低越好。只要 LTGP 撑得住，愿意为一个客户花最多钱的人会赢。',
     'hz.take.churnRate':'流失就是漏水的桶。先堵漏，再加水。',
     'hz.take.conv':'转化掉了先别换渠道。先测开场白和 offer，一次只改一个变量。',
     'hz.take.convOverall':'同样的线索，转化率翻倍 = 客户翻倍，一分钱获客费都不用多花。',
@@ -964,8 +970,8 @@ const I18N = {
 
     'hz.ins.up':'{m} 比{prev}涨了 {p}。很好，别停。','hz.ins.down':'{m} 比{prev}掉了 {p}。找原因，别找借口。',
     'hz.ins.worst':'钱漏在 {a} → {b}：只有 {p}。这就是你的瓶颈。',
-    'hz.ins.ltv.good':'LTV : CAC 为 {r}，过了 3 倍的线，可以放心加大获客。',
-    'hz.ins.ltv.bad':'LTV : CAC 只有 {r}，低于 3 倍。不修好就放大，只会亏得更快。',
+    'hz.ins.ltv.good':'LTGP : CAC 为 {r}，过了 3 倍的线，可以放心加大获客。',
+    'hz.ins.ltv.bad':'LTGP : CAC 只有 {r}，低于 3 倍。不修好就放大，只会亏得更快。',
     'hz.ins.loss':'这段时间亏了 {v}。先止血。','hz.ins.profit':'净利率 {p}。收入是面子，利润才是里子。',
     'hz.ins.goals':'{t} 个目标里 {n} 个在轨道上。',
     'hz.g.behind':'有 {n} 个目标落后了。目标不会自己完成——今天能多做什么？',
@@ -1370,12 +1376,13 @@ function unit(c) {
   const cac = S[wonStage()] ? acqOf(S) / S[wonStage()] : null;
   const cap = Math.max(1, +DB.settings.lifeCap || 36);
   const life = churn == null ? null : churn > 0 ? Math.min(1 / churn, cap) : cap;
-  if (payOnce()) {   // clients pay once: a client is worth what an average new client paid, after delivery costs
-    const ltv = S[wonStage()] && gm != null ? rev / S[wonStage()] * gm : null;
-    return { arpa, churn, gm, cac, life: null, ltv, once: true };
+  // LTV = what one client pays you over their lifetime; LTGP (Hormozi's lifetime gross profit) = that minus delivery costs
+  if (payOnce()) {   // clients pay once: what an average new client paid
+    const ltv = S[wonStage()] ? rev / S[wonStage()] : null;
+    return { arpa, churn, gm, cac, life: null, ltv, ltgp: ltv != null && gm != null ? ltv * gm : null, once: true };
   }
-  const ltv = arpa != null && gm != null && life != null ? arpa * gm * life : null;
-  return { arpa, churn, gm, cac, life, ltv };
+  const ltv = arpa != null && life != null ? arpa * life : null;
+  return { arpa, churn, gm, cac, life, ltv, ltgp: ltv != null && gm != null ? ltv * gm : null };
 }
 /* settings.pay: 'once' | 'sub' | '' (auto: one-time until recurring revenue or churn is logged) */
 function payOnce() {
@@ -1474,11 +1481,16 @@ function rebuildMetrics() {
     parts: c => [[t('f.churned'), c.U.S.churned, 'num'], [t('m.active'), c.U.startA || c.U.startA + c.U.S[won], 'num']] });
   add({ key: 'ltv', group: 'ret', fmt: 'money', unit: true, name: () => t('m.ltv'), calc: c => unit(c).ltv,
     formula: () => t(payOnce() ? 'mf.ltvOnce' : 'mf.ltv'), desc: () => t(payOnce() ? 'md.ltvOnce' : 'md.ltv'),
-    parts: c => { const u = unit(c); return u.once ? [[t('m.revenue'), revenueOf(c.U.S), 'money'], [sn(won), c.U.S[won], 'num'], [t('m.grossMargin'), u.gm, 'pct']]
-      : [[t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct'], [t('m.life'), u.life, 'months']]; } });
+    parts: c => { const u = unit(c); return u.once ? [[t('m.revenue'), revenueOf(c.U.S), 'money'], [sn(won), c.U.S[won], 'num']]
+      : [[t('m.arpa'), u.arpa, 'money'], [t('m.life'), u.life, 'months']]; } });
+  add({ key: 'ltgp', group: 'ret', fmt: 'money', unit: true, name: () => t('m.ltgp'), calc: c => unit(c).ltgp,
+    parts: c => { const u = unit(c); return [[t('m.ltv'), u.ltv, 'money'], [t('m.grossMargin'), u.gm, 'pct']]; } });
   add({ key: 'ltvCac', group: 'ret', fmt: 'ratio', unit: true, name: () => t('m.ltvCac'),
     calc: c => { const u = unit(c); return u.ltv != null && u.cac ? u.ltv / u.cac : null; },
     parts: c => { const u = unit(c); return [[t('m.ltv'), u.ltv, 'money'], [t('m.cac'), u.cac, 'money']]; } });
+  add({ key: 'ltgpCac', group: 'ret', fmt: 'ratio', unit: true, name: () => t('m.ltgpCac'),
+    calc: c => { const u = unit(c); return u.ltgp != null && u.cac ? u.ltgp / u.cac : null; },
+    parts: c => { const u = unit(c); return [[t('m.ltgp'), u.ltgp, 'money'], [t('m.cac'), u.cac, 'money']]; } });
   add({ key: 'payback', group: 'ret', fmt: 'months', better: 'down', unit: true, name: () => t('m.payback'),
     calc: c => { const u = unit(c); return !u.once && u.cac != null && u.arpa && u.gm > 0 ? u.cac / (u.arpa * u.gm) : null; },
     parts: c => { const u = unit(c); return [[t('m.cac'), u.cac, 'money'], [t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct']]; } });
@@ -1713,7 +1725,7 @@ function coachState() {
   if (!mainEntries().length) return { phase: 0, kind: 'noData', focus: t('hz.f.noData'), extras: [] };
   const td = today(), fd = firstDate(), f0 = addDays(td, -29);
   const c = ctxFor(f0 < fd ? fd : f0, td), R = r100State(), s = stageName(stageById(R.sid));
-  const lc = MX.ltvCac.calc(c), maxC = MX.maxCust.calc(c), cash = MX.cash30.calc(c), leak = findLeak();
+  const lc = MX.ltgpCac.calc(c), maxC = MX.maxCust.calc(c), cash = MX.cash30.calc(c), leak = findLeak();
   let kind, phase = 1, v = {};
   if (lc != null && lc < 1) { kind = 'losing'; v = { r: fmtVal(lc, 'ratio') }; }
   else if (!R.recent) { kind = 'noActions'; phase = 0; v = { s }; }
@@ -2422,7 +2434,7 @@ function confirmSheet(msg, okLabel, danger = true) {
 /* --------------------------------------------------------------- views -- */
 const UI = { view: 'overview', period: 'month', offset: 0, trend: 'revenue', quick: today(), histLimit: 60, mview: 'metrics', qv: '' };
 const VIEW_KEYS = ['overview', 'log', 'metrics', 'goals', 'settings'];
-const COLORS = { revenue: 'var(--blue)', newCust: 'var(--green)', convOverall: 'var(--purple)', cac: 'var(--orange)', netProfit: 'var(--teal)', ltvCac: 'var(--indigo)' };
+const COLORS = { revenue: 'var(--blue)', newCust: 'var(--green)', convOverall: 'var(--purple)', cac: 'var(--orange)', netProfit: 'var(--teal)', ltvCac: 'var(--indigo)', ltgpCac: 'var(--indigo)' };
 const colorOf = k => COLORS[k] || (MX[k] && MX[k].better === 'down' ? 'var(--orange)' : 'var(--blue)');
 function saveUI() { try { localStorage.setItem('pulse.ui', JSON.stringify({ view: UI.view, period: UI.period, trend: UI.trend, mview: UI.mview, qv: UI.qv })); } catch (e) { } }
 const curRange = () => periodRange(UI.period, UI.offset);
@@ -2817,7 +2829,7 @@ function insights(c, pc, p) {
     if (r != null && c.S[a.id] >= 5 && (!worst || r < worst.r)) worst = { a, b, r };
   }
   if (worst) I('info', t(K('ins.worst'), { a: stageName(worst.a), b: stageName(worst.b), p: fmtVal(worst.r, 'pct') }));
-  const lc = MX.ltvCac.calc(c);
+  const lc = MX.ltgpCac.calc(c);
   if (lc != null) I(lc >= 3 ? 'good' : 'bad', t(K(lc >= 3 ? 'ins.ltv.good' : 'ins.ltv.bad'), { r: fmtVal(lc, 'ratio') }));
   const np = MX.netProfit.calc(c), nm = MX.netMargin.calc(c);
   if (c.n && np < 0) I('bad', t(K('ins.loss'), { v: fmtVal(-np, 'money') }));
@@ -3316,11 +3328,11 @@ function openMetric(key) {
   const v = m.calc(c), pv = pc ? m.calc(pc) : null;
   const parts = m.parts(c);
   const tk = !hzOn() ? null : key.startsWith('conv:') ? 'conv' : key === 'actions' || key === r100Stage() ? 'actions'
-    : ['maxCust', 'maxRev', 'headroom', 'cash30', 'ltvCac', 'cac', 'churnRate', 'convOverall', 'avgDeal', 'newCust'].includes(key) ? key : null;
+    : ['maxCust', 'maxRev', 'headroom', 'cash30', 'ltvCac', 'ltgpCac', 'cac', 'churnRate', 'convOverall', 'avgDeal', 'newCust'].includes(key) ? key : null;
   const take = tk ? t('hz.take.' + tk, { target: fmtNum(r100Target()) }) : '';
   const qTopics = key.startsWith('conv:') ? 'so' : ({ cac: 'lm', cpl: 'l', cpm: 'l', roas: 'l', mktRoi: 'lm', avgDeal: 'p', grossMargin: 'p',
-    revenue: 'm', grossProfit: 'm', netProfit: 'm', netMargin: 'm', totalCost: 'm', ltvCac: 'm', payback: 'm', cash30: 'm',
-    active: 'r', arpa: 'r', churnRate: 'r', ltv: 'r', maxCust: 'r', maxRev: 'r', headroom: 'r', newCust: 's', convOverall: 'so', actions: 'v' })[key] || 'vk';
+    revenue: 'm', grossProfit: 'm', netProfit: 'm', netMargin: 'm', totalCost: 'm', ltvCac: 'm', ltgpCac: 'm', payback: 'm', cash30: 'm',
+    active: 'r', arpa: 'r', churnRate: 'r', ltv: 'r', ltgp: 'r', maxCust: 'r', maxRev: 'r', headroom: 'r', newCust: 's', convOverall: 'so', actions: 'v' })[key] || 'vk';
   HZQ.slots.delete('sheet');   // a new rule each time a metric is opened
   const winNote = m.unit && c.U !== c ? `<div class="hint">${icon('info')}<span>${esc(t('mv.window', { a: fmtDay(c.U.from, { month: 'short', day: 'numeric', year: 'numeric' }), b: fmtDay(c.U.to, { month: 'short', day: 'numeric', year: 'numeric' }) }))}</span></div>` : '';
   const body = `<div class="bigval"><div class="small muted">${esc(periodLabel(r))}</div>
