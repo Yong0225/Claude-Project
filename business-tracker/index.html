@@ -574,6 +574,9 @@ const I18N = {
     'e.costF':'Give each cost a name and an amount, so later you can see exactly where the money went. Each category’s total is added up for you.',
     'cb.title':'Where it went','cb.lines':'Every cost','cb.unnamed':'No name','cb.times':'{n}×','cb.empty':'No costs logged in this period.',
     'cb.more':'Showing the latest {n}.','cb.share':'{p} of the total',
+    'e.revName':'Client name','e.revAdd':'Add a payment','e.revItems':'Revenue items',
+    'e.revF':'Log each payment with the client’s name, so later you can see who paid, how many times and when. Each category’s total is added up for you.',
+    'rb.title':'Who it came from','rb.unnamed':'No client name',
 
     'mv.title':'Metrics','mv.formula':'Formula','mv.calc':'This period','mv.hist':'History','mv.na':'Not enough data',
     'mv.addGoal':'Set a goal','mv.inputs':'Numbers used',
@@ -812,6 +815,9 @@ const I18N = {
     'e.costF':'每笔成本写上名称和金额，以后就能查到钱具体花在哪里。每个类别的合计会自动算好。',
     'cb.title':'花在哪里','cb.lines':'每一笔','cb.unnamed':'未命名','cb.times':'{n} 笔','cb.empty':'这段时间没有记录成本。',
     'cb.more':'只显示最近 {n} 笔。','cb.share':'占 {p}',
+    'e.revName':'客户名称','e.revAdd':'添加一笔收入','e.revItems':'收入明细',
+    'e.revF':'每笔收入写上客户名称和金额，以后就能查到是谁付的、付了几次、什么时候付的。每个类别的合计会自动算好。',
+    'rb.title':'收入来自谁','rb.unnamed':'未填客户',
 
     'mv.title':'指标','mv.formula':'公式','mv.calc':'本期计算','mv.hist':'历史走势','mv.na':'数据不足',
     'mv.addGoal':'设为目标','mv.inputs':'使用的数据',
@@ -982,21 +988,23 @@ const div = (a, b) => (b ? a / b : null);
 const parseNum = s => { const n = parseFloat(String(s ?? '').replace(/[,\s]/g, '')); return isFinite(n) ? n : 0; };
 
 const MONEY_FIELDS = ['revNew', 'revRec', 'mkt', 'sales', 'cogs', 'opex'];
-/* each cost can be logged with a name ("ci": [{ k: category, n: name, a: amount }]); the category totals
-   in v stay the sum of the items, so every metric reads v exactly as before */
-const COST_FIELDS = ['mkt', 'sales', 'cogs', 'opex'];
+/* money logged one item at a time with a name: costs in "ci" (name = what it was for), revenue in "ri"
+   (name = the client), both [{ k: category, n: name, a: amount }]. The category totals in v stay the sum
+   of the items, so every metric reads v exactly as before */
+const COST_FIELDS = ['mkt', 'sales', 'cogs', 'opex'], REV_FIELDS = ['revNew', 'revRec'];
+const ITEMS = { c: { f: 'ci', cats: COST_FIELDS }, r: { f: 'ri', cats: REV_FIELDS } };
 const round2 = n => Math.round(n * 100) / 100;
-function cleanCost(list) {
+function cleanItems(list, cats) {
   const out = [];
   if (Array.isArray(list)) for (const x of list) {
     const a = round2(+(x && x.a));
-    if (!x || !COST_FIELDS.includes(x.k) || !(a > 0) || !isFinite(a)) continue;
+    if (!x || !cats.includes(x.k) || !(a > 0) || !isFinite(a)) continue;
     out.push({ k: x.k, n: String(x.n || '').replace(/\s+/g, ' ').trim().slice(0, 60), a });
   }
   return out;
 }
 const DEFAULT_STAGES = ['leads', 'contacted', 'opened', 'replied', 'meeting', 'proposal', 'won'];
-const DATA_FV = 7;   // data format version; the server refuses pushes from pages that write an older one (3: positive replies, 4: referrals, 5: negative replies, 6: industries, 7: named cost items)
+const DATA_FV = 8;   // data format version; the server refuses pushes from pages that write an older one (3: positive replies, 4: referrals, 5: negative replies, 6: industries, 7: named cost items, 8: named revenue items)
 /* positive ("pos"), referral ("ref": "talk to our manager") and negative ("neg") replies are logged as
    parts of the "replied" stage; whatever is left over is unclassified */
 const POS = 'pos', REF = 'ref', NEG = 'neg', SPLIT = [POS, REF, NEG];
@@ -1039,13 +1047,15 @@ function normalize(d, isWs) {
     const vals = cleanVals(e.v);
     // before format 5 negatives weren't logged: they were whatever replies weren't positive or referral
     if (impliedNeg && (vals[POS] || vals[REF]) && !vals[NEG]) { const n = (vals.replied || 0) - (vals[POS] || 0) - (vals[REF] || 0); if (n > 0) vals[NEG] = n; }
-    const ci = cleanCost(e.ci);
-    const rec = { id: String(e.id || uid()), date: e.date, v: vals, note: e.note ? String(e.note) : '', u: +e.u || 0, ...(e.t ? { t: String(e.t) } : {}), ...(ci.length ? { ci } : {}) };
+    const ci = cleanItems(e.ci, COST_FIELDS), ri = cleanItems(e.ri, REV_FIELDS);
+    const rec = { id: String(e.id || uid()), date: e.date, v: vals, note: e.note ? String(e.note) : '', u: +e.u || 0, ...(e.t ? { t: String(e.t) } : {}),
+      ...(ci.length ? { ci } : {}), ...(ri.length ? { ri } : {}) };
     const prev = byKey.get(entryKey(rec));
     if (prev) {
       for (const k in vals) prev.v[k] = (prev.v[k] || 0) + vals[k];
       if (rec.note) prev.note = [prev.note, rec.note].filter(Boolean).join(' · ');
       if (ci.length) prev.ci = [...(prev.ci || []), ...ci];
+      if (ri.length) prev.ri = [...(prev.ri || []), ...ri];
     }
     else byKey.set(entryKey(rec), rec);
   }
@@ -1105,31 +1115,31 @@ function commit() {
   Sync.dirty();
 }
 
-/* an entry's costs as items: named ones first, then whatever part of a category total has no name
-   (entries logged before names existed, or only typed as a total) */
-function costItemsOf(e) {
+/* an entry's costs (g 'c') or revenue (g 'r') as items: named ones first, then whatever part of a category
+   total has no name (entries logged before names existed, or only typed as a total) */
+function itemsOf(e, g = 'c') {
   if (!e) return [];
-  const its = (e.ci || []).map(x => ({ ...x }));
-  for (const k of COST_FIELDS) {
+  const G = ITEMS[g], its = (e[G.f] || []).map(x => ({ ...x }));
+  for (const k of G.cats) {
     const rest = round2((e.v[k] || 0) - its.filter(x => x.k === k).reduce((a, x) => a + x.a, 0));
     if (rest > 0) its.push({ k, n: '', a: rest });
   }
   return its;
 }
-/* every cost in a date range (A/B test entries excluded, like all totals), newest first */
-function costLines(from, to, cats = COST_FIELDS) {
+/* every item in a date range (A/B test entries excluded, like all totals), newest first */
+function itemLines(from, to, cats, g = 'c') {
   const out = [];
   for (const e of mainEntries()) {
     if (e.date < from) continue;
     if (e.date > to) break;
-    for (const it of costItemsOf(e)) if (cats.includes(it.k)) out.push({ ...it, date: e.date, key: entryKey(e) });
+    for (const it of itemsOf(e, g)) if (cats.includes(it.k)) out.push({ ...it, date: e.date, key: entryKey(e) });
   }
   return out.reverse();
 }
 /* names already used, newest wins: suggestions while typing, and a known name brings its category along */
-function knownCosts() {
-  const m = new Map();
-  for (const e of DB.entries) for (const x of e.ci || []) if (x.n) m.set(x.n.toLowerCase(), x);
+function knownItems(g = 'c') {
+  const m = new Map(), f = ITEMS[g].f;
+  for (const e of DB.entries) for (const x of e[f] || []) if (x.n) m.set(x.n.toLowerCase(), x);
   return m;
 }
 
@@ -2814,6 +2824,8 @@ function entrySummary(e) {
   for (const s of DB.stages.slice(1, -1)) if (e.v[s.id]) parts.push(`${stageName(s)} ${fmtNum(e.v[s.id])}` + (s.id === 'replied' && SPLIT.some(k => e.v[k]) ? ` (${SPLIT.map(k => [k, 'f.' + k + 'Short']).filter(([k]) => e.v[k]).map(([k, l]) => `${t(l)} ${fmtNum(e.v[k])}`).join(' · ')})` : ''));
   if (e.v[won.id]) parts.push(`${stageName(won)} ${fmtNum(e.v[won.id])}`);
   const cost = (e.v.mkt || 0) + (e.v.sales || 0) + (e.v.cogs || 0) + (e.v.opex || 0);
+  const rn = [...new Set((e.ri || []).map(x => x.n).filter(Boolean))];
+  if (rn.length) parts.push(`${t('m.revenue')} (${rn.slice(0, 2).join(', ')}${rn.length > 2 ? '…' : ''})`);
   const names = [...new Set((e.ci || []).map(x => x.n).filter(Boolean))];
   if (cost) parts.push(`${t('m.totalCost')} ${fmtVal(cost, 'money')}${names.length ? ` (${names.slice(0, 2).join(', ')}${names.length > 2 ? '…' : ''})` : ''}`);
   if (e.note) parts.push(e.note);
@@ -3104,9 +3116,8 @@ function openEntry(key) {
       ${DB.tests.length || v0 ? `<div class="row"><span class="lbl">${esc(t('tv.variant'))}</span><select class="inl" data-var>${variantOptions(v0)}</select></div>` : ''}</div>
     <div class="gf ${target ? '' : 'hide'}" data-exists style="color:var(--blue)">${esc(t('e.exists'))}</div>
     <div class="gh">${esc(t('e.funnel'))}</div><div class="list">${DB.stages.map(s => field(s.id, stageName(s)) + (s.id === 'replied' && posStages() ? SPLIT.map(k => field(k, '↳ ' + t('f.' + k), t('fh.' + k))).join('') : '')).join('')}</div>
-    <div class="gh">${esc(t('e.rev'))}</div><div class="list">${['revNew', 'revRec'].map(k => field(k, t('f.' + k), t('fh.' + k), true)).join('')}</div>
-    <div class="gh">${esc(t('e.cost'))}<span data-ctotal></span></div><div class="list" data-costs></div><div class="gf">${esc(t('e.costF'))}</div>
-    <datalist id="costNames">${[...knownCosts().values()].map(x => `<option value="${esc(x.n)}">`).join('')}</datalist>
+    <div class="gh">${esc(t('e.rev'))}<span data-total="r"></span></div><div class="list" data-items="r"></div><div class="gf">${esc(t('e.revF'))}</div>
+    <div class="gh">${esc(t('e.cost'))}<span data-total="c"></span></div><div class="list" data-items="c"></div><div class="gf">${esc(t('e.costF'))}</div>
     <div class="gh">${esc(t('e.clients'))}</div><div class="list">${field('churned', t('f.churned'), t('fh.churned'))}</div>
     <div class="gh">${esc(t('e.note'))}</div><div class="list"><div class="row"><input class="inl" style="text-align:left" data-note maxlength="200" placeholder="${esc(t('e.notePh'))}" value="${esc(target ? target.note : '')}"></div></div>
     <div class="gf">${esc(t('e.tip'))}</div>
@@ -3118,54 +3129,11 @@ function openEntry(key) {
   });
   const sb = sh.body;
   const inputs = $$('[data-f]', sb);
-  // costs: one row per named cost (name, category, amount)
-  let items = costItemsOf(target);
-  const known = knownCosts(), cl = $('[data-costs]', sb), cur = DB.settings.currency || '$';
-  let lastCat = (items[items.length - 1] || {}).k || 'mkt';
-  const paintTotal = () => {
-    const sum = items.reduce((a, x) => a + (x.a || 0), 0);
-    $('[data-ctotal]', sb).textContent = sum ? ' · ' + t('e.costTotal', { v: fmtVal(sum, 'money') }) : '';
-  };
-  const drawCosts = () => {
-    cl.innerHTML = items.map((it, i) => `<div class="row citem"><div class="bd">
-        <input class="inl cname" data-cn="${i}" list="costNames" maxlength="60" placeholder="${esc(t('e.costName'))}" value="${esc(it.n)}" enterkeyhint="next" autocomplete="off">
-        <select class="cksel" data-ck="${i}" aria-label="${esc(t('e.cost'))}">${COST_FIELDS.map(c => `<option value="${c}" ${c === it.k ? 'selected' : ''}>${esc(t('f.' + c))}</option>`).join('')}</select></div>
-      <span class="unit">${esc(cur)}</span><input class="inl num" style="max-width:28%" inputmode="decimal" data-ca="${i}" placeholder="0" value="${it.a || ''}" enterkeyhint="done">
-      <button class="step" style="width:30px;height:30px;color:var(--red)" data-cdel="${i}" aria-label="${esc(t('delete'))}">${icon('minus', 2.6)}</button></div>`).join('')
-      + `<button class="row" data-cadd><div class="bd"><div class="t1" style="color:var(--blue)">${icon('plus', 2.4).replace('<svg', '<svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px"')}${esc(t('e.costAdd'))}</div></div></button>`;
-    paintTotal();
-  };
-  drawCosts();
-  cl.addEventListener('input', e => {
-    const el = e.target;
-    if (el.dataset.cn != null) items[+el.dataset.cn].n = el.value;
-    else if (el.dataset.ca != null) { items[+el.dataset.ca].a = parseNum(el.value); paintTotal(); }
-  });
-  cl.addEventListener('change', e => {
-    const el = e.target;
-    if (el.dataset.ck != null) { items[+el.dataset.ck].k = lastCat = el.value; return; }
-    if (el.dataset.cn != null) {   // a name used before brings its category along
-      const k = known.get(el.value.trim().toLowerCase());
-      if (k) { const it = items[+el.dataset.cn]; it.k = lastCat = k.k; const s = $(`[data-ck="${el.dataset.cn}"]`, cl); if (s) s.value = k.k; }
-    }
-  });
-  cl.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const el = e.target;
-    if (el.dataset.cn != null) { e.preventDefault(); $(`[data-ca="${el.dataset.cn}"]`, cl).focus(); }
-    else if (el.dataset.ca != null) { e.preventDefault(); el.blur(); }
-  });
-  cl.addEventListener('click', e => {
-    const d = e.target.closest('[data-cdel]');
-    if (d) { items.splice(+d.dataset.cdel, 1); drawCosts(); return; }
-    if (e.target.closest('[data-cadd]')) {
-      items.push({ k: lastCat, n: '', a: 0 }); drawCosts();
-      $(`[data-cn="${items.length - 1}"]`, cl).focus();
-    }
-  });
+  // revenue and costs: one row per named item (name, category, amount)
+  const eds = { r: itemEditor(sb, 'r', target), c: itemEditor(sb, 'c', target) };
   const fill = e => {
     inputs.forEach(i => { i.value = e && e.v[i.dataset.f] ? e.v[i.dataset.f] : ''; }); $('[data-note]', sb).value = e ? e.note : '';
-    items = costItemsOf(e); drawCosts();
+    eds.r.load(e); eds.c.load(e);
   };
   // an entry is identified by day + test variant; switching either loads that entry if it exists
   const keyNow = () => [$('[data-date]', sb).value || d0, $('[data-var]', sb) ? $('[data-var]', sb).value : v0];
@@ -3195,39 +3163,94 @@ function openEntry(key) {
     const v = {};
     inputs.forEach(i => { const n = parseNum(i.value); if (n) v[i.dataset.f] = i.dataset.f in { revNew: 1, revRec: 1, mkt: 1, sales: 1, cogs: 1, opex: 1 } ? Math.round(n * 100) / 100 : Math.round(n); });
     fixPos(v, POS);
-    const ci = cleanCost(items);
-    for (const k of COST_FIELDS) { const sum = round2(ci.filter(x => x.k === k).reduce((a, x) => a + x.a, 0)); if (sum) v[k] = sum; }
-    const named = ci.some(x => x.n);   // without any names the category totals already say everything
+    const lists = {};
+    for (const g in eds) {
+      const G = ITEMS[g], list = cleanItems(eds[g].items(), G.cats);
+      for (const k of G.cats) { const sum = round2(list.filter(x => x.k === k).reduce((a, x) => a + x.a, 0)); if (sum) v[k] = sum; }
+      if (list.some(x => x.n)) lists[G.f] = list;   // without any names the category totals already say everything
+    }
     const note = $('[data-note]', sb).value.trim();
     const hit = findEntry(nd, nv);
     if (orig && orig !== hit) DB.entries.splice(DB.entries.indexOf(orig), 1);   // moved to another day or variant
     if (!Object.keys(v).length && !note) { if (hit) DB.entries.splice(DB.entries.indexOf(hit), 1); }
-    else if (hit) { hit.v = v; hit.note = note; if (named) hit.ci = ci; else delete hit.ci; }
-    else DB.entries.push({ id: uid(), date: nd, v, note, ...(nv ? { t: nv } : {}), ...(named ? { ci } : {}) });
+    else if (hit) { hit.v = v; hit.note = note; delete hit.ci; delete hit.ri; Object.assign(hit, lists); }
+    else DB.entries.push({ id: uid(), date: nd, v, note, ...(nv ? { t: nv } : {}), ...lists });
     commit(); api.close(); haptic();
     render();
     savedToast('vks');
   }
 }
 
-/* ---- where the money went: costs grouped by name for a period, then every line ---- */
+/* rows of named money items inside the entry form: costs (g 'c') or revenue by client (g 'r') */
+function itemEditor(sb, g, e0) {
+  const G = ITEMS[g], cl = $(`[data-items="${g}"]`, sb), tot = $(`[data-total="${g}"]`, sb), cur = DB.settings.currency || '$';
+  const known = knownItems(g), dl = 'names-' + g;
+  let items = itemsOf(e0, g), lastCat = (items[items.length - 1] || {}).k || G.cats[0];
+  const L = g === 'r' ? { name: 'e.revName', add: 'e.revAdd', sec: 'e.rev' } : { name: 'e.costName', add: 'e.costAdd', sec: 'e.cost' };
+  const paintTotal = () => {
+    const sum = items.reduce((a, x) => a + (x.a || 0), 0);
+    tot.textContent = sum ? ' · ' + t('e.costTotal', { v: fmtVal(sum, 'money') }) : '';
+  };
+  const draw = () => {
+    cl.innerHTML = `<datalist id="${dl}">${[...known.values()].map(x => `<option value="${esc(x.n)}">`).join('')}</datalist>`
+      + items.map((it, i) => `<div class="row citem"><div class="bd">
+        <input class="inl cname" data-cn="${i}" list="${dl}" maxlength="60" placeholder="${esc(t(L.name))}" value="${esc(it.n)}" enterkeyhint="next" autocomplete="off">
+        <select class="cksel" data-ck="${i}" aria-label="${esc(t(L.sec))}">${G.cats.map(c => `<option value="${c}" ${c === it.k ? 'selected' : ''}>${esc(t('f.' + c))}</option>`).join('')}</select></div>
+      <span class="unit">${esc(cur)}</span><input class="inl num" style="max-width:28%" inputmode="decimal" data-ca="${i}" placeholder="0" value="${it.a || ''}" enterkeyhint="done">
+      <button class="step" style="width:30px;height:30px;color:var(--red)" data-cdel="${i}" aria-label="${esc(t('delete'))}">${icon('minus', 2.6)}</button></div>`).join('')
+      + `<button class="row" data-cadd><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t(L.add))}</div></div></button>`;
+    paintTotal();
+  };
+  draw();
+  cl.addEventListener('input', e => {
+    const el = e.target;
+    if (el.dataset.cn != null) items[+el.dataset.cn].n = el.value;
+    else if (el.dataset.ca != null) { items[+el.dataset.ca].a = parseNum(el.value); paintTotal(); }
+  });
+  cl.addEventListener('change', e => {
+    const el = e.target;
+    if (el.dataset.ck != null) { const it = items[+el.dataset.ck]; it.k = lastCat = el.value; it.picked = true; return; }
+    if (el.dataset.cn != null) {   // a name used before brings its category along, unless one was picked by hand
+      const k = known.get(el.value.trim().toLowerCase());
+      if (k && !items[+el.dataset.cn].picked) { items[+el.dataset.cn].k = lastCat = k.k; const s = $(`[data-ck="${el.dataset.cn}"]`, cl); if (s) s.value = k.k; }
+    }
+  });
+  cl.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const el = e.target;
+    if (el.dataset.cn != null) { e.preventDefault(); $(`[data-ca="${el.dataset.cn}"]`, cl).focus(); }
+    else if (el.dataset.ca != null) { e.preventDefault(); el.blur(); }
+  });
+  cl.addEventListener('click', e => {
+    const d = e.target.closest('[data-cdel]');
+    if (d) { items.splice(+d.dataset.cdel, 1); draw(); return; }
+    if (e.target.closest('[data-cadd]')) {
+      items.push({ k: lastCat, n: '', a: 0 }); draw();
+      $(`[data-cn="${items.length - 1}"]`, cl).focus();
+    }
+  });
+  return { items: () => items, load(e) { items = itemsOf(e, g); draw(); } };
+}
+
+/* ---- where the money went / who it came from: items grouped by name for a period, then every line ---- */
 const COST_VIEW = { totalCost: COST_FIELDS, mkt: ['mkt'], sales: ['sales'], cogs: ['cogs'], opex: ['opex'], netProfit: COST_FIELDS, cac: ['mkt', 'sales'] };
-function costBreakdownHTML(from, to, cats) {
-  const lines = costLines(from, to, cats);
-  const head = `<div class="gh">${esc(t('cb.title'))}</div>`;
+const REV_VIEW = { revenue: REV_FIELDS, revNew: ['revNew'], revRec: ['revRec'], avgDeal: ['revNew'], netProfit: REV_FIELDS, grossProfit: REV_FIELDS };
+function costBreakdownHTML(from, to, cats, g = 'c') {
+  const lines = itemLines(from, to, cats, g), unnamed = t(g === 'r' ? 'rb.unnamed' : 'cb.unnamed');
+  const head = `<div class="gh">${esc(t(g === 'r' ? 'rb.title' : 'cb.title'))}</div>`;
   if (!lines.length) return head + `<div class="list"><div class="row"><div class="bd"><div class="t2">${esc(t('cb.empty'))}</div></div></div></div>`;
   const total = lines.reduce((a, x) => a + x.a, 0), groups = new Map();
   for (const l of lines) {
     const gk = l.n ? 'n:' + l.n.toLowerCase() : 'k:' + l.k;
-    const g = groups.get(gk) || { label: l.n || `${t('f.' + l.k)} · ${t('cb.unnamed')}`, k: l.k, sum: 0, n: 0, lines: [] };
-    g.sum += l.a; g.n++; g.lines.push(l); groups.set(gk, g);
+    const g = groups.get(gk) || { label: l.n || `${t('f.' + l.k)} · ${unnamed}`, k: l.k, ks: new Set(), sum: 0, n: 0, lines: [] };
+    g.sum += l.a; g.n++; g.lines.push(l); g.ks.add(l.k); groups.set(gk, g);
   }
   const gs = [...groups.values()].sort((a, b) => b.sum - a.sum), top = gs[0].sum, cap = 80;
-  const line = (l, sub) => `<button class="row${sub ? ' cbl' : ''}" data-open="entry:${esc(l.key)}"><div class="bd"><div class="t1">${esc(sub ? fmtDayLong(l.date) : l.n || t('cb.unnamed'))}</div>
+  const line = (l, sub) => `<button class="row${sub ? ' cbl' : ''}" data-open="entry:${esc(l.key)}"><div class="bd"><div class="t1">${esc(sub ? fmtDayLong(l.date) : l.n || unnamed)}</div>
       <div class="t2">${esc(sub ? fmtDay(l.date, { year: 'numeric', month: 'short', day: 'numeric' }) : fmtDayLong(l.date) + ' · ' + t('f.' + l.k))}</div></div><div class="rv num">${esc(fmtVal(l.a, 'money'))}</div>${chevSVG}</button>`;
-  // tap a name to see each time it was paid: when and how much
+  // tap a name to see each payment: when and how much
   const grp = gs.map((g, i) => `<button class="row" data-cbg="${i}" aria-expanded="false"><div class="bd"><div class="t1">${esc(g.label)}</div>
-      <div class="t2">${esc(t('f.' + g.k))} · ${esc(t('cb.times', { n: fmtNum(g.n) }))} · ${esc(t('cb.share', { p: fmtVal(g.sum / total, 'pct') }))}</div>
+      <div class="t2">${esc([...g.ks].map(k => t('f.' + k)).join(' + '))} · ${esc(t('cb.times', { n: fmtNum(g.n) }))} · ${esc(t('cb.share', { p: fmtVal(g.sum / total, 'pct') }))}</div>
       <i class="cbar" style="--w:${g.sum / top * 100}%"></i></div><div class="rv num">${esc(fmtVal(round2(g.sum), 'money'))}</div><svg class="cv cbcv" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l6 6-6 6"/></svg></button>
     <div class="cbsub" hidden>${g.lines.map(l => line(l, true)).join('')}</div>`).join('');
   const each = lines.slice(0, cap).map(l => line(l)).join('');
@@ -3252,6 +3275,7 @@ function openMetric(key) {
       <div class="v" style="color:${colorOf(key)}">${numHTML('sheet:' + key, v, m.fmt)}</div>${deltaHTML(delta(v, pv, m.fmt, m.better))}
       ${p ? `<div class="small muted" style="margin-top:6px">${esc(vsLabel(p))}: ${esc(fmtVal(pv, m.fmt))}</div>` : ''}</div>
     <div class="card" style="margin-top:14px;padding-top:62px"><div data-chart></div></div>
+    ${REV_VIEW[key] ? costBreakdownHTML(r.from, r.to, REV_VIEW[key], 'r') : ''}
     ${COST_VIEW[key] ? costBreakdownHTML(r.from, r.to, COST_VIEW[key]) : ''}
     ${take ? `<div style="margin-top:16px">${coachHTML(take, { size: 44 })}</div>` : ''}
     ${hzOn() ? quoteCardHTML('sheet', qTopics, { style: 'margin-top:14px' }) : ''}
@@ -3413,9 +3437,10 @@ function download(name, text, type) {
 function exportCSV() {
   const cols = [...DB.stages.flatMap(s => s.id === 'replied' && posStages() ? [[s.id, stageName(s)], ...SPLIT.map(k => [k, t('f.' + k)])] : [[s.id, stageName(s)]]), ...MONEY_FIELDS.map(f => [f, t('f.' + f)]), ['churned', t('f.churned')]];
   const q = s => /[",\n]/.test(s) ? `"${String(s).replace(/"/g, '""')}"` : s;
-  const lines = [[t('e.date'), t('tv.variant'), ...cols.map(c => c[1]), t('e.costItems'), t('e.note')].map(q).join(',')];
+  const lines = [[t('e.date'), t('tv.variant'), ...cols.map(c => c[1]), t('e.revItems'), t('e.costItems'), t('e.note')].map(q).join(',')];
+  const itemsText = (list, un) => (list || []).map(x => `${x.n || t(un)} (${t('f.' + x.k)}) ${x.a}`).join('; ');
   for (const e of DB.entries) lines.push([e.date, q(e.t ? variantLabel(e.t) : ''), ...cols.map(c => e.v[c[0]] || 0),
-    q((e.ci || []).map(x => `${x.n || t('cb.unnamed')} (${t('f.' + x.k)}) ${x.a}`).join('; ')), q(e.note || '')].join(','));
+    q(itemsText(e.ri, 'rb.unnamed')), q(itemsText(e.ci, 'cb.unnamed')), q(e.note || '')].join(','));
   download(`pulse-entries-${today()}.csv`, '﻿' + lines.join('\n'), 'text/csv;charset=utf-8');
 }
 function importJSON() {
