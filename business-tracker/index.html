@@ -99,6 +99,8 @@ svg{display:block}
 [aria-expanded="true"] .cbcv{transform:rotate(90deg)}
 .cbar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:var(--orange);border-radius:2px}
 .cbar.rev::after{background:var(--green-t)}
+.kpedit{padding:6px 14px;font-size:15px;min-height:0}
+.kpdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px}
 .indgo{flex:1;min-width:0;border:0;background:none;padding:0;margin:0;text-align:left;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:1px}
 .indck{color:var(--blue);display:grid;place-items:center;flex:none}
 .indck svg{width:18px;height:18px}
@@ -525,7 +527,7 @@ const I18N = {
     'mf.active':'Clients before tracking + all Won − all Lost',
     'mf.arpa':'Revenue ÷ Avg active clients ÷ Months',
     'mf.churnRate':'Clients lost ÷ Clients at start ÷ Months',
-    'mf.ltv':'Revenue per client / mo × Gross margin × Lifetime',
+    'mf.ltv':'Revenue per client / mo × Gross margin × Lifetime','mf.ltvOnce':'Revenue ÷ New clients × Gross margin',
     'mf.ltvCac':'LTV ÷ CAC',
     'mf.payback':'CAC ÷ (Revenue per client / mo × Gross margin)',
     'md.revenue':'Everything you collected in this period.',
@@ -553,6 +555,7 @@ const I18N = {
     'md.arpa':'Average monthly revenue from one client (ARPA).',
     'md.churnRate':'Share of clients lost per month. Under 5% is healthy for retainers.',
     'md.ltv':'Lifetime value — gross profit you expect from one client. Lifetime = 1 ÷ churn, capped in Settings.',
+    'md.ltvOnce':'Lifetime value — gross profit one client brings. Clients pay once here, so it is what an average new client paid, after delivery costs.',
     'md.ltvCac':'How much a client is worth vs. what they cost. 3× or more is healthy; under 1× loses money.',
     'md.payback':'Months of gross profit needed to earn back the CAC. Under 12 months is good.',
     'better.up':'Higher is better','better.down':'Lower is better',
@@ -592,6 +595,9 @@ const I18N = {
     's.theme':'Appearance','s.auto':'Auto','s.light':'Light','s.dark':'Dark','s.clients':'Clients','s.start':'Clients before tracking',
     's.startF':'Active clients you already had before your first entry. Used for churn, revenue per client and LTV.',
     's.life':'Max client lifetime','s.lifeF':'LTV uses 1 ÷ churn for lifetime, capped at this many months so LTV stays sensible when churn is 0.',
+    's.pay':'How clients pay','s.payAuto':'Auto','s.paySub':'Recurring','s.payOnce':'One-time',
+    's.payF':'One-time: LTV is what an average new client paid, after delivery costs. Recurring: monthly revenue per client × lifetime. Auto picks one-time until you log recurring revenue or churn.',
+    'kp.edit':'Edit','kp.title':'Overview cards','kp.slot':'Card {n}','kp.reset':'Reset to default','kp.foot':'Pick any metric for each of the six cards, including your custom metrics. Each industry keeps its own cards.',
     's.months':'months','s.stages':'Funnel stages','s.stagesF':'Top to bottom. The last stage counts as new clients; conversion rates are calculated between neighbouring stages.',
     's.addStage':'Add stage','s.newStage':'New stage','s.minStages':'Keep at least 2 stages','s.custom':'Custom metrics',
     's.customF':'Build any ratio from your numbers — e.g. Revenue ÷ Meetings.','s.addCustom':'Add custom metric',
@@ -765,7 +771,7 @@ const I18N = {
     'mf.active':'开始记录前已有客户 + 累计成交 − 累计流失',
     'mf.arpa':'总收入 ÷ 平均活跃客户 ÷ 月数',
     'mf.churnRate':'流失客户 ÷ 期初客户 ÷ 月数',
-    'mf.ltv':'每客户月均收入 × 毛利率 × 生命周期',
+    'mf.ltv':'每客户月均收入 × 毛利率 × 生命周期','mf.ltvOnce':'收入 ÷ 新客户 × 毛利率',
     'mf.ltvCac':'LTV ÷ CAC',
     'mf.payback':'CAC ÷（每客户月均收入 × 毛利率）',
     'md.revenue':'这段时间收到的全部收入。',
@@ -793,6 +799,7 @@ const I18N = {
     'md.arpa':'单个客户平均每月带来的收入（ARPA）。',
     'md.churnRate':'每月流失客户的比例。月费型业务低于 5% 算健康。',
     'md.ltv':'终身价值——一个客户预计带来的毛利。生命周期 = 1 ÷ 流失率，上限可在设置中调整。',
+    'md.ltvOnce':'终身价值——一个客户带来的毛利。这里客户只付一次，所以就是平均每个新客户付的钱，扣掉交付成本。',
     'md.ltvCac':'客户价值是获客成本的几倍。3× 以上健康，低于 1× 就是在亏钱。',
     'md.payback':'需要几个月的毛利才能赚回 CAC。12 个月以内算好。',
     'better.up':'越高越好','better.down':'越低越好',
@@ -832,6 +839,9 @@ const I18N = {
     's.theme':'外观','s.auto':'自动','s.light':'浅色','s.dark':'深色','s.clients':'客户','s.start':'开始记录前已有客户',
     's.startF':'第一条记录之前就已经在付费的客户数，用于计算流失率、每客户收入和 LTV。',
     's.life':'客户生命周期上限','s.lifeF':'LTV 的生命周期 = 1 ÷ 流失率，并以此为上限，避免流失率为 0 时 LTV 无限大。',
+    's.pay':'客户怎么付钱','s.payAuto':'自动','s.paySub':'订阅续费','s.payOnce':'一次性',
+    's.payF':'一次性：LTV = 平均每个新客户付的钱，扣掉交付成本。订阅续费：每客户月均收入 × 生命周期。自动：在你记录续费收入或流失客户之前，都按一次性算。',
+    'kp.edit':'编辑','kp.title':'概览卡片','kp.slot':'第 {n} 格','kp.reset':'恢复默认','kp.foot':'六个格子都可以选任何指标，包括自定义指标。每个行业各自保存。',
     's.months':'个月','s.stages':'漏斗阶段','s.stagesF':'从上到下排列。最后一个阶段算作新客户，转化率按相邻两个阶段计算。',
     's.addStage':'添加阶段','s.newStage':'新阶段','s.minStages':'至少保留 2 个阶段','s.custom':'自定义指标',
     's.customF':'用你的数据组合任意比率——例如 总收入 ÷ 会议数。','s.addCustom':'添加自定义指标',
@@ -1360,8 +1370,20 @@ function unit(c) {
   const cac = S[wonStage()] ? acqOf(S) / S[wonStage()] : null;
   const cap = Math.max(1, +DB.settings.lifeCap || 36);
   const life = churn == null ? null : churn > 0 ? Math.min(1 / churn, cap) : cap;
+  if (payOnce()) {   // clients pay once: a client is worth what an average new client paid, after delivery costs
+    const ltv = S[wonStage()] && gm != null ? rev / S[wonStage()] * gm : null;
+    return { arpa, churn, gm, cac, life: null, ltv, once: true };
+  }
   const ltv = arpa != null && gm != null && life != null ? arpa * gm * life : null;
   return { arpa, churn, gm, cac, life, ltv };
+}
+/* settings.pay: 'once' | 'sub' | '' (auto: one-time until recurring revenue or churn is logged) */
+function payOnce() {
+  const p = DB.settings.pay;
+  if (p === 'once' || p === 'sub') return p === 'once';
+  let k = ctxCache.get('payAuto');
+  if (k === undefined) { k = !mainEntries().some(e => e.v.revRec > 0 || e.v.churned > 0); ctxCache.set('payAuto', k); }
+  return k;
 }
 
 /* standard names for a conversion step between two known stages */
@@ -1451,12 +1473,14 @@ function rebuildMetrics() {
   add({ key: 'churnRate', group: 'ret', fmt: 'pct', better: 'down', unit: true, name: () => t('m.churnRate'), calc: c => unit(c).churn,
     parts: c => [[t('f.churned'), c.U.S.churned, 'num'], [t('m.active'), c.U.startA || c.U.startA + c.U.S[won], 'num']] });
   add({ key: 'ltv', group: 'ret', fmt: 'money', unit: true, name: () => t('m.ltv'), calc: c => unit(c).ltv,
-    parts: c => { const u = unit(c); return [[t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct'], [t('m.life'), u.life, 'months']]; } });
+    formula: () => t(payOnce() ? 'mf.ltvOnce' : 'mf.ltv'), desc: () => t(payOnce() ? 'md.ltvOnce' : 'md.ltv'),
+    parts: c => { const u = unit(c); return u.once ? [[t('m.revenue'), revenueOf(c.U.S), 'money'], [sn(won), c.U.S[won], 'num'], [t('m.grossMargin'), u.gm, 'pct']]
+      : [[t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct'], [t('m.life'), u.life, 'months']]; } });
   add({ key: 'ltvCac', group: 'ret', fmt: 'ratio', unit: true, name: () => t('m.ltvCac'),
     calc: c => { const u = unit(c); return u.ltv != null && u.cac ? u.ltv / u.cac : null; },
     parts: c => { const u = unit(c); return [[t('m.ltv'), u.ltv, 'money'], [t('m.cac'), u.cac, 'money']]; } });
   add({ key: 'payback', group: 'ret', fmt: 'months', better: 'down', unit: true, name: () => t('m.payback'),
-    calc: c => { const u = unit(c); return u.cac != null && u.arpa && u.gm > 0 ? u.cac / (u.arpa * u.gm) : null; },
+    calc: c => { const u = unit(c); return !u.once && u.cac != null && u.arpa && u.gm > 0 ? u.cac / (u.arpa * u.gm) : null; },
     parts: c => { const u = unit(c); return [[t('m.cac'), u.cac, 'money'], [t('m.arpa'), u.arpa, 'money'], [t('m.grossMargin'), u.gm, 'pct']]; } });
 
   /* Hormozi numbers. Ceiling ("hypothetical max") = new clients per month ÷ monthly churn, over the
@@ -2700,13 +2724,33 @@ function replySplit(c, col) {
     + (rest > 0 ? `<span><i style="background:${segs[3][1]}"></i>${esc(t('f.restShort'))} <b>${esc(fmtNum(rest))}</b></span>` : '');
   return { bar, legend: `<div class="fn-split">${legend}</div>` };
 }
+/* the six overview cards: settings.kpis per industry; a missing metric (deleted custom metric, renamed stage) falls back to the default card for that slot */
+const KPI_DEF = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltvCac'];
+const KPI_HUES = ['var(--blue)', 'var(--green)', 'var(--purple)', 'var(--orange)', 'var(--teal)', 'var(--indigo)'];
+function kpiKeys() {
+  const s = Array.isArray(DB.settings.kpis) ? DB.settings.kpis : [];
+  return KPI_DEF.map((d, i) => MX[s[i]] ? s[i] : MX[d] ? d : 'revenue');
+}
+function openKpis() {
+  const keys = kpiKeys();
+  const rows = () => keys.map((k, i) => `<div class="row"><span class="lbl"><i class="kpdot" style="background:${COLORS[k] || KPI_HUES[i]}"></i>${esc(t('kp.slot', { n: i + 1 }))}</span>
+      <select class="inl" data-kp="${i}">${metricOptions(k)}</select></div>`).join('');
+  const body = `<div class="list" data-kplist>${rows()}</div><div class="gf">${esc(t('kp.foot'))}</div>
+    <div style="margin-top:22px"><button class="btn sec block" data-kpreset>${esc(t('kp.reset'))}</button></div>`;
+  const sh = openSheet({ title: t('kp.title'), body, small: true, left: { label: t('cancel') }, right: { label: t('save'), fn: api => {
+    if (keys.every((k, i) => k === KPI_DEF[i])) delete DB.settings.kpis; else DB.settings.kpis = keys.slice();
+    commit(); api.close(); haptic(); render();
+  } } });
+  sh.body.addEventListener('change', e => { const x = e.target.closest('[data-kp]'); if (x) { keys[+x.dataset.kp] = x.value; $('[data-kplist]', sh.body).innerHTML = rows(); } });
+  $('[data-kpreset]', sh.body).addEventListener('click', () => { KPI_DEF.forEach((d, i) => keys[i] = MX[d] ? d : 'revenue'); $('[data-kplist]', sh.body).innerHTML = rows(); haptic(); });
+}
 function viewOverview() {
-  const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(bizLine())}</p>`;
+  const head = `<div class="srow"><h1 class="lt" style="flex:1">${esc(t('ov.title'))}</h1>${mainEntries().length ? `<button class="btn sec kpedit" data-act="kpis">${esc(t('kp.edit'))}</button>` : ''}</div><p class="sub">${esc(bizLine())}</p>`;
   if (!mainEntries().length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const hist = historyRanges(UI.period, UI.offset, 8).map(h => ctxFor(h.from, h.to));
-  const kpis = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltvCac'].map((k, i) => {
-    const m = MX[k], v = m.calc(c), pv = pc ? m.calc(pc) : null, col = colorOf(k);
+  const kpis = kpiKeys().map((k, i) => {
+    const m = MX[k], v = m.calc(c), pv = pc ? m.calc(pc) : null, col = COLORS[k] || KPI_HUES[i];
     return `<div class="card kpi press rise" style="--i:${i + 1}" data-open="metric:${k}" role="button" tabindex="0">
       <div class="lb"><i style="background:${col}"></i>${esc(m.name())}</div>
       <div class="v">${numHTML('kpi:' + k, v, m.fmt, true)}</div>
@@ -2981,8 +3025,9 @@ function viewSettings() {
     ${hzSettingsHTML()}
     <div class="rise" style="--i:1"><div class="gh">${esc(t('s.clients'))}</div><div class="list">
       <div class="row"><span class="lbl">${esc(t('s.start'))}</span><input class="inl num" inputmode="numeric" data-set="startCust" value="${esc(st.startCust)}"></div>
+      <div class="row"><span class="lbl">${esc(t('s.pay'))}</span><span style="flex:1"></span><div data-mount="seg:pay"></div></div>
       <div class="row"><span class="lbl">${esc(t('s.life'))}</span><input class="inl num" inputmode="numeric" data-set="lifeCap" value="${esc(st.lifeCap)}"><span class="unit">${esc(t('s.months'))}</span></div>
-    </div><div class="gf">${esc(t('s.startF'))} ${esc(t('s.lifeF'))}</div></div>
+    </div><div class="gf">${esc(t('s.payF'))}</div><div class="gf">${esc(t('s.startF'))} ${esc(t('s.lifeF'))}</div></div>
     <div class="rise" style="--i:2"><div class="gh">${esc(t('s.stages'))}</div><div class="list">${stages}
       <button class="row" data-act="addstage"><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('s.addStage'))}</div></div></button></div>
       <div class="gf">${esc(t('s.stagesF'))}</div></div>
@@ -3067,6 +3112,9 @@ function mountAll(root) {
     } else if (k === 'seg:mview') {
       m.appendChild(Segmented([{ value: 'metrics', label: t('mv.tabMetrics') }, { value: 'tests', label: t('mv.tabTests') }], UI.mview,
         v => { UI.mview = v; saveUI(); render(); }, { full: true }).el);
+    } else if (k === 'seg:pay') {
+      m.appendChild(Segmented(['', 'sub', 'once'].map(v => ({ value: v, label: t(v === 'sub' ? 's.paySub' : v === 'once' ? 's.payOnce' : 's.payAuto') })), DB.settings.pay || '',
+        v => { if (v) DB.settings.pay = v; else delete DB.settings.pay; ctxCache.clear(); commit(); }).el);
     } else if (k === 'seg:theme') {
       const s = Segmented(['auto', 'light', 'dark'].map(v => ({ value: v, label: t('s.' + v) })), ROOT.settings.theme || 'auto', v => { ROOT.settings.theme = v; applyTheme(); save(); });
       m.appendChild(s.el);
@@ -3970,6 +4018,7 @@ document.addEventListener('click', async e => {
     case 'newgoal': openGoal(); break;
     case 'newcustom': openCustom(); break;
     case 'more': UI.histLimit += 60; render(); break;
+    case 'kpis': openKpis(); break;
     case 'export': download(`pulse-backup-${today()}.json`, JSON.stringify(ROOT, null, 2), 'application/json'); break;
     case 'import': importJSON(); break;
     case 'csv': exportCSV(); break;
