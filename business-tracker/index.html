@@ -3324,6 +3324,11 @@ function costBreakdownHTML(from, to, cats, g = 'c') {
 }
 
 /* ---- metric detail ---- */
+/* a "numbers used" row that is itself a metric (gross margin inside LTGP, delivery cost inside gross profit…) opens that metric */
+function partKey(label, self) {
+  for (const m of METRICS) if (m.key !== self && (m.baseName() === label || m.name() === label)) return m.key;
+  return null;
+}
 function openMetric(key) {
   const m = MX[key]; if (!m) return;
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
@@ -3346,7 +3351,8 @@ function openMetric(key) {
     ${take ? `<div style="margin-top:16px">${coachHTML(take, { size: 44 })}</div>` : ''}
     ${hzOn() ? quoteCardHTML('sheet', qTopics, { style: 'margin-top:14px' }) : ''}
     ${m.formula() ? `<div class="gh">${esc(t('mv.formula'))}</div><div class="formula">${esc(m.name())} = ${esc(m.formula())}</div>` : ''}
-    ${parts.length ? `<div class="gh">${esc(t('mv.inputs'))}</div><div class="list">${parts.map(([l, pvv, f]) => `<div class="row"><div class="bd"><div class="t1">${esc(l)}</div></div><div class="rv num">${esc(fmtVal(pvv, f))}</div></div>`).join('')}</div>` : ''}
+    ${parts.length ? `<div class="gh">${esc(t('mv.inputs'))}</div><div class="list">${parts.map(([l, pvv, f]) => { const k = partKey(l, key);
+      return `<${k ? `button class="row" data-open="metric:${esc(k)}"` : 'div class="row"'}><div class="bd"><div class="t1">${esc(l)}</div></div><div class="rv num">${esc(fmtVal(pvv, f))}</div>${k ? chevSVG + '</button>' : '</div>'}`; }).join('')}</div>` : ''}
     ${winNote}
     ${m.desc() ? `<p class="note">${esc(m.desc())}${m.better ? ` <b>${esc(t('better.' + m.better))}.</b>` : ''}</p>` : ''}
     <div style="margin-top:22px"><button class="btn sec block" data-goal>${icon('goals', 2)}${esc(t('mv.addGoal'))}</button></div>`;
