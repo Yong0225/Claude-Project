@@ -98,6 +98,7 @@ svg{display:block}
 .cbcv{transition:transform .25s var(--ease)}
 [aria-expanded="true"] .cbcv{transform:rotate(90deg)}
 .cbar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:var(--orange);border-radius:2px}
+.cbar.rev::after{background:var(--green-t)}
 .indgo{flex:1;min-width:0;border:0;background:none;padding:0;margin:0;text-align:left;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:1px}
 .indck{color:var(--blue);display:grid;place-items:center;flex:none}
 .indck svg{width:18px;height:18px}
@@ -572,11 +573,10 @@ const I18N = {
     'e.deleted':'Entry deleted','e.saved':'Saved','e.tip':'Log daily, weekly or monthly — everything adds up by date.',
     'e.costName':'What for? e.g. Facebook ads','e.costAdd':'Add a cost','e.costTotal':'total {v}','e.costItems':'Cost items',
     'e.costF':'Give each cost a name and an amount, so later you can see exactly where the money went. Each category’s total is added up for you.',
-    'cb.title':'Where it went','cb.lines':'Every cost','cb.unnamed':'No name','cb.times':'{n}×','cb.empty':'No costs logged in this period.',
-    'cb.more':'Showing the latest {n}.','cb.share':'{p} of the total',
+    'cb.title':'Where it went','cb.unnamed':'No name','cb.times':'{n}×','cb.empty':'No costs logged in this period.','cb.share':'{p} of the total',
     'e.revName':'Client name','e.revAdd':'Add a payment','e.revItems':'Revenue items',
     'e.revF':'Log each payment with the client’s name, so later you can see who paid, how many times and when. Each category’s total is added up for you.',
-    'rb.title':'Who it came from','rb.unnamed':'No client name',
+    'rb.title':'Who it came from','rb.unnamed':'No client name','rb.empty':'No revenue logged in this period.',
 
     'mv.title':'Metrics','mv.formula':'Formula','mv.calc':'This period','mv.hist':'History','mv.na':'Not enough data',
     'mv.addGoal':'Set a goal','mv.inputs':'Numbers used',
@@ -813,11 +813,10 @@ const I18N = {
     'e.deleted':'已删除记录','e.saved':'已保存','e.tip':'按天、按周、按月记录都可以——所有数据按日期累加。',
     'e.costName':'花在什么？例如 Facebook 广告','e.costAdd':'添加一笔成本','e.costTotal':'合计 {v}','e.costItems':'成本明细',
     'e.costF':'每笔成本写上名称和金额，以后就能查到钱具体花在哪里。每个类别的合计会自动算好。',
-    'cb.title':'花在哪里','cb.lines':'每一笔','cb.unnamed':'未命名','cb.times':'{n} 笔','cb.empty':'这段时间没有记录成本。',
-    'cb.more':'只显示最近 {n} 笔。','cb.share':'占 {p}',
+    'cb.title':'花在哪里','cb.unnamed':'未命名','cb.times':'{n} 笔','cb.empty':'这段时间没有记录成本。','cb.share':'占 {p}',
     'e.revName':'客户名称','e.revAdd':'添加一笔收入','e.revItems':'收入明细',
     'e.revF':'每笔收入写上客户名称和金额，以后就能查到是谁付的、付了几次、什么时候付的。每个类别的合计会自动算好。',
-    'rb.title':'收入来自谁','rb.unnamed':'未填客户',
+    'rb.title':'收入来自谁','rb.unnamed':'未填客户','rb.empty':'这段时间没有记录收入。',
 
     'mv.title':'指标','mv.formula':'公式','mv.calc':'本期计算','mv.hist':'历史走势','mv.na':'数据不足',
     'mv.addGoal':'设为目标','mv.inputs':'使用的数据',
@@ -3232,29 +3231,34 @@ function itemEditor(sb, g, e0) {
   return { items: () => items, load(e) { items = itemsOf(e, g); draw(); } };
 }
 
-/* ---- where the money went / who it came from: items grouped by name for a period, then every line ---- */
+/* ---- where the money went / who it came from: one row per name for a period; a name paid more than once opens to its dated lines ---- */
 const COST_VIEW = { totalCost: COST_FIELDS, mkt: ['mkt'], sales: ['sales'], cogs: ['cogs'], opex: ['opex'], netProfit: COST_FIELDS, cac: ['mkt', 'sales'] };
 const REV_VIEW = { revenue: REV_FIELDS, revNew: ['revNew'], revRec: ['revRec'], avgDeal: ['revNew'], netProfit: REV_FIELDS, grossProfit: REV_FIELDS };
 function costBreakdownHTML(from, to, cats, g = 'c') {
-  const lines = itemLines(from, to, cats, g), unnamed = t(g === 'r' ? 'rb.unnamed' : 'cb.unnamed');
-  const head = `<div class="gh">${esc(t(g === 'r' ? 'rb.title' : 'cb.title'))}</div>`;
-  if (!lines.length) return head + `<div class="list"><div class="row"><div class="bd"><div class="t2">${esc(t('cb.empty'))}</div></div></div></div>`;
+  const R = g === 'r', lines = itemLines(from, to, cats, g), unnamed = t(R ? 'rb.unnamed' : 'cb.unnamed');
+  const head = `<div class="gh">${esc(t(R ? 'rb.title' : 'cb.title'))}</div>`;
+  if (!lines.length) return head + `<div class="list"><div class="row"><div class="bd"><div class="t2">${esc(t(R ? 'rb.empty' : 'cb.empty'))}</div></div></div></div>`;
   const total = lines.reduce((a, x) => a + x.a, 0), groups = new Map();
   for (const l of lines) {
     const gk = l.n ? 'n:' + l.n.toLowerCase() : 'k:' + l.k;
-    const g = groups.get(gk) || { label: l.n || `${t('f.' + l.k)} · ${unnamed}`, k: l.k, ks: new Set(), sum: 0, n: 0, lines: [] };
-    g.sum += l.a; g.n++; g.lines.push(l); g.ks.add(l.k); groups.set(gk, g);
+    const g = groups.get(gk) || { label: l.n || `${t('f.' + l.k)} · ${unnamed}`, ks: new Set(), sum: 0, lines: [] };
+    g.sum += l.a; g.lines.push(l); g.ks.add(l.k); groups.set(gk, g);
   }
-  const gs = [...groups.values()].sort((a, b) => b.sum - a.sum), top = gs[0].sum, cap = 80;
-  const line = (l, sub) => `<button class="row${sub ? ' cbl' : ''}" data-open="entry:${esc(l.key)}"><div class="bd"><div class="t1">${esc(sub ? fmtDayLong(l.date) : l.n || unnamed)}</div>
-      <div class="t2">${esc(sub ? fmtDay(l.date, { year: 'numeric', month: 'short', day: 'numeric' }) : fmtDayLong(l.date) + ' · ' + t('f.' + l.k))}</div></div><div class="rv num">${esc(fmtVal(l.a, 'money'))}</div>${chevSVG}</button>`;
-  // tap a name to see each payment: when and how much
-  const grp = gs.map((g, i) => `<button class="row" data-cbg="${i}" aria-expanded="false"><div class="bd"><div class="t1">${esc(g.label)}</div>
-      <div class="t2">${esc([...g.ks].map(k => t('f.' + k)).join(' + '))} · ${esc(t('cb.times', { n: fmtNum(g.n) }))} · ${esc(t('cb.share', { p: fmtVal(g.sum / total, 'pct') }))}</div>
-      <i class="cbar" style="--w:${g.sum / top * 100}%"></i></div><div class="rv num">${esc(fmtVal(round2(g.sum), 'money'))}</div><svg class="cv cbcv" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l6 6-6 6"/></svg></button>
-    <div class="cbsub" hidden>${g.lines.map(l => line(l, true)).join('')}</div>`).join('');
-  const each = lines.slice(0, cap).map(l => line(l)).join('');
-  return `${head}<div class="list">${grp}</div><div class="gh">${esc(t('cb.lines'))}</div><div class="list">${each}</div>${lines.length > cap ? `<div class="gf">${esc(t('cb.more', { n: cap }))}</div>` : ''}`;
+  const gs = [...groups.values()].sort((a, b) => b.sum - a.sum), top = gs[0].sum;
+  const cats$ = g => [...g.ks].map(k => t('f.' + k)).join(' + '), share = g => t('cb.share', { p: fmtVal(g.sum / total, 'pct') });
+  const bar = g => `<i class="cbar${R ? ' rev' : ''}" style="--w:${g.sum / top * 100}%"></i>`, amt = v => `<div class="rv num">${esc(fmtVal(round2(v), 'money'))}</div>`;
+  const rows = gs.map((g, i) => {
+    if (g.lines.length === 1) {   // paid once: the row is that payment, with its date
+      const l = g.lines[0];
+      return `<button class="row" data-open="entry:${esc(l.key)}"><div class="bd"><div class="t1">${esc(g.label)}</div>
+        <div class="t2">${esc(fmtDayLong(l.date))} · ${esc(cats$(g))} · ${esc(share(g))}</div>${bar(g)}</div>${amt(g.sum)}${chevSVG}</button>`;
+    }
+    return `<button class="row" data-cbg="${i}" aria-expanded="false"><div class="bd"><div class="t1">${esc(g.label)}</div>
+        <div class="t2">${esc(t('cb.times', { n: fmtNum(g.lines.length) }))} · ${esc(cats$(g))} · ${esc(share(g))}</div>${bar(g)}</div>${amt(g.sum)}<svg class="cv cbcv" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l6 6-6 6"/></svg></button>
+      <div class="cbsub" hidden>${g.lines.map(l => `<button class="row" data-open="entry:${esc(l.key)}"><div class="bd"><div class="t1">${esc(fmtDayLong(l.date))}</div>
+        <div class="t2">${esc(t('f.' + l.k))}</div></div>${amt(l.a)}${chevSVG}</button>`).join('')}</div>`;
+  }).join('');
+  return `${head}<div class="list">${rows}</div>`;
 }
 
 /* ---- metric detail ---- */
