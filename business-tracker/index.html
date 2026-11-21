@@ -87,6 +87,14 @@ svg{display:block}
 .ename:focus{background:var(--fill);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 35%,transparent);text-overflow:clip}
 .row.tap{cursor:pointer}
 .mview{margin:0 0 14px}
+.indrow{gap:10px}
+.indgo{flex:1;min-width:0;border:0;background:none;padding:0;margin:0;text-align:left;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.indck{color:var(--blue);display:grid;place-items:center;flex:none}
+.indck svg{width:18px;height:18px}
+#indBtn{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+#indBtn[hidden]{display:none}
+#indBtn svg{width:12px;height:12px;flex:none;color:var(--text2)}
+#indBtn span{overflow:hidden;text-overflow:ellipsis}
 .vtag{display:inline-block;font-size:11px;font-weight:600;color:var(--purple);background:color-mix(in srgb,var(--purple) 12%,transparent);border-radius:99px;padding:0 6px;margin-right:6px;letter-spacing:0;vertical-align:1px}
 /* A/B test comparison */
 .test .tt1{font-size:17px;letter-spacing:-.02em}
@@ -447,6 +455,7 @@ button.row:active,.row.tap:active{background:var(--fill2);transition:none}
   <div class="main">
     <header class="topbar" id="topbar">
       <div class="tt" id="tt"></div>
+      <button class="pill" id="indBtn" hidden aria-label="Industry"></button>
       <div class="sp"></div>
       <button class="iconbtn" id="syncBtn" hidden aria-label="Cloud sync"></button>
       <button class="pill" id="langBtn" aria-label="Language"></button>
@@ -572,6 +581,14 @@ const I18N = {
     's.data':'Data','s.export':'Export backup','s.import':'Import backup','s.csv':'Export entries as CSV','s.sample':'Load sample data',
     's.erase':'Erase all data','s.eraseQ':'Erase every entry, goal and setting? This can’t be undone.','s.sampleQ':'Replace your current data with sample data?',
     's.imported':'Backup imported','s.bad':'That file isn’t a valid backup','s.erased':'All data erased','s.sampled':'Sample data loaded',
+    's.eraseIndQ':'Erase every entry, goal and setting in “{n}”? Your other industries are kept. This can’t be undone.',
+    'ind.title':'Industry','ind.unnamed':'My industry','ind.add':'Add industry','ind.new':'New industry','ind.edit':'Edit industry',
+    'ind.name':'Name','ind.namePh':'e.g. F&B, Beauty, Retail','ind.entries':'{n} entries','ind.current':'showing now',
+    'ind.F':'Each industry keeps its own entries, goals, A/B tests and settings, so their numbers never mix. Screens and metrics are the same for all. Tap one to switch.',
+    'ind.newF':'Starts empty, with the same funnel stages, custom metrics and preferences as the industry you’re in now.',
+    'ind.editF':'Only the name changes. Its data stays as it is.',
+    'ind.switch':'Switch to this industry','ind.switched':'Now showing {n}','ind.pick':'Industry',
+    'ind.delete':'Delete industry','ind.delQ':'Delete “{n}” with all its entries, goals and A/B tests? Your other industries are kept.','ind.deleted':'Industry deleted',
     's.privacy':'Every change is saved on this device instantly. Cloud sync (above) keeps a copy online for your other devices; a backup file is extra insurance.',
     's.kbd':'Shortcuts','s.kbdF':'N  new entry  ·  1–5  switch tabs  ·  ← →  previous / next period  ·  Esc  close',
     's.moveUp':'Move up','s.moveDown':'Move down','edit':'Edit',
@@ -798,6 +815,14 @@ const I18N = {
     's.data':'数据','s.export':'导出备份','s.import':'导入备份','s.csv':'导出记录 CSV','s.sample':'载入示例数据',
     's.erase':'清除所有数据','s.eraseQ':'清除所有记录、目标和设置？此操作无法撤销。','s.sampleQ':'用示例数据替换当前数据？',
     's.imported':'已导入备份','s.bad':'这不是有效的备份文件','s.erased':'已清除所有数据','s.sampled':'已载入示例数据',
+    's.eraseIndQ':'清除「{n}」的所有记录、目标和设置？其他行业不受影响。此操作无法撤销。',
+    'ind.title':'行业','ind.unnamed':'我的行业','ind.add':'新增行业','ind.new':'新增行业','ind.edit':'编辑行业',
+    'ind.name':'名称','ind.namePh':'例如：餐饮、美容、零售','ind.entries':'{n} 条记录','ind.current':'当前显示',
+    'ind.F':'每个行业的记录、目标、A/B 测试和设置都分开保存，数据不会混在一起。界面和指标都一样。点一下就切换。',
+    'ind.newF':'新行业从空白开始，漏斗阶段、自定义指标和偏好设置沿用你现在所在的行业。',
+    'ind.editF':'只改名称，数据不变。',
+    'ind.switch':'切换到这个行业','ind.switched':'已切换到「{n}」','ind.pick':'行业',
+    'ind.delete':'删除行业','ind.delQ':'删除「{n}」以及它的所有记录、目标和 A/B 测试？其他行业不受影响。','ind.deleted':'已删除行业',
     's.privacy':'每次改动都会立刻保存在这台设备上。开启上面的云同步后，云端也有一份，其他设备都能用；导出备份文件是额外的保险。',
     's.kbd':'快捷键','s.kbdF':'N  新记录  ·  1–5  切换页面  ·  ← →  上一期 / 下一期  ·  Esc  关闭',
     's.moveUp':'上移','s.moveDown':'下移','edit':'编辑',
@@ -940,7 +965,7 @@ const parseNum = s => { const n = parseFloat(String(s ?? '').replace(/[,\s]/g, '
 
 const MONEY_FIELDS = ['revNew', 'revRec', 'mkt', 'sales', 'cogs', 'opex'];
 const DEFAULT_STAGES = ['leads', 'contacted', 'opened', 'replied', 'meeting', 'proposal', 'won'];
-const DATA_FV = 5;   // data format version; the server refuses pushes from pages that write an older one (3: positive replies, 4: referrals, 5: negative replies)
+const DATA_FV = 6;   // data format version; the server refuses pushes from pages that write an older one (3: positive replies, 4: referrals, 5: negative replies, 6: industries)
 /* positive ("pos"), referral ("ref": "talk to our manager") and negative ("neg") replies are logged as
    parts of the "replied" stage; whatever is left over is unclassified */
 const POS = 'pos', REF = 'ref', NEG = 'neg', SPLIT = [POS, REF, NEG];
@@ -956,21 +981,28 @@ function defaultDB() {
     settings: { lang: null, currency: '$', theme: 'auto', biz: '', startCust: 0, lifeCap: 36, hz: true, r100: 100, r100Stage: '', r100Wknd: true },
     stages: DEFAULT_STAGES.map(id => ({ id })),
     entries: [], goals: [], custom: [], tests: [], names: {},
-    fv: DATA_FV, su: 0, setu: 0, nu: 0, del: { e: {}, g: {}, c: {}, t: {} }
+    fv: DATA_FV, su: 0, setu: 0, nu: 0, del: { e: {}, g: {}, c: {}, t: {}, w: {} }, ws: {}
   };
 }
-let DB = defaultDB();
+/* Industries. The stored document (ROOT) is the first industry, exactly as before, plus "ws": the other
+   industries, each a complete set of its own (settings, stages, entries, goals, custom metrics, tests, names)
+   with the same shape and the same sync stamps. DB is the industry this device is looking at (ACT, kept per
+   device); every screen reads DB, so all industries share the same screens and metrics but never each other's data.
+   settings.ind is an industry's name; language and theme live on ROOT only. */
+let DB = defaultDB(), ROOT = DB, ACT = 'main';
+const INDKEY = 'pulse.ind';
+const WS_ID = /^[A-Za-z0-9_-]{1,40}$/;
 
 function cleanVals(v) {
   const o = {};
   if (v && typeof v === 'object') for (const k in v) { const n = +v[k]; if (isFinite(n) && n !== 0) o[k] = n; }
   return o;
 }
-function normalize(d) {
+function normalize(d, isWs) {
   if (!d || typeof d !== 'object' || !Array.isArray(d.entries)) throw new Error('invalid');
   const base = defaultDB();
   const stages = Array.isArray(d.stages) ? d.stages.filter(s => s && s.id).map(s => ({ id: String(s.id), ...(s.label ? { label: String(s.label) } : {}) })) : [];
-  const byKey = new Map(), impliedNeg = (+d.fv || 1) < 5;
+  const byKey = new Map(), impliedNeg = (+d.fv || (isWs ? DATA_FV : 1)) < 5;
   for (const e of d.entries) {
     if (!e || !/^\d{4}-\d{2}-\d{2}$/.test(e.date)) continue;
     const vals = cleanVals(e.v);
@@ -983,9 +1015,18 @@ function normalize(d) {
   }
   const names = {};
   if (d.names && typeof d.names === 'object') for (const k in d.names) { const s = String(d.names[k] || '').trim().slice(0, 60); if (s) names[k] = s; }
+  const ws = {};
+  if (!isWs && d.ws && typeof d.ws === 'object') for (const id in d.ws) {
+    if (id === 'main' || !WS_ID.test(id)) continue;
+    try { ws[id] = normalize(d.ws[id], true); } catch (e) { }
+  }
+  const settings = { ...base.settings, ...(d.settings || {}) };
+  settings.ind = String(settings.ind || '').slice(0, 40);
+  if (isWs) settings.lang = settings.theme = null;   // per device: kept on ROOT only
   return {
     v: 1, fv: DATA_FV,
-    settings: { ...base.settings, ...(d.settings || {}) },
+    ...(isWs ? { c: +d.c || 0 } : { ws }),
+    settings,
     stages: stages.length >= 2 ? stages : base.stages,
     entries: [...byKey.values()].sort(byEntry),
     su: +d.su || 0, setu: +d.setu || 0, nu: +d.nu || 0, del: cleanDel(d.del), names,
@@ -1004,10 +1045,20 @@ function normalize(d) {
   };
 }
 function load() {
-  try { const raw = localStorage.getItem(LSKEY); if (raw) DB = normalize(JSON.parse(raw)); } catch (e) { }
+  try { const raw = localStorage.getItem(LSKEY); if (raw) ROOT = normalize(JSON.parse(raw)); } catch (e) { }
+  try { ACT = localStorage.getItem(INDKEY) || 'main'; } catch (e) { }
+  setRoot(ROOT);
   snapshot();
 }
-function save() { try { localStorage.setItem(LSKEY, JSON.stringify(DB)); } catch (e) { } }
+/* point DB at the active industry of a (new) ROOT; falls back to the first industry if the active one is gone */
+function setRoot(r) {
+  ROOT = r;
+  if (!ROOT.ws) ROOT.ws = {};
+  if (ACT !== 'main' && !ROOT.ws[ACT]) { ACT = 'main'; try { localStorage.setItem(INDKEY, ACT); } catch (e) { } }
+  DB = ACT === 'main' ? ROOT : ROOT.ws[ACT];
+  ctxCache.clear();
+}
+function save() { try { localStorage.setItem(LSKEY, JSON.stringify(ROOT)); } catch (e) { } }
 /* every data mutation goes through commit(): sort, drop caches, stamp what changed (for sync),
    persist locally, then queue a cloud push */
 function commit() {
@@ -1016,6 +1067,62 @@ function commit() {
   stamp();
   save();
   Sync.dirty();
+}
+
+/* ---- industries ---- */
+const industries = () => [['main', ROOT], ...Object.entries(ROOT.ws || {}).sort((a, b) => (a[1].c || 0) - (b[1].c || 0))];
+const indName = w => (w.settings.ind || '').trim() || t('ind.unnamed');
+/* business name, plus the industry once there's more than one */
+const bizLine = () => (DB.settings.biz || t('s.bizPh')) + (industries().length > 1 ? ' · ' + indName(DB) : '');
+function switchIndustry(id, quiet) {
+  if (id === ACT || (id !== 'main' && !ROOT.ws[id])) return;
+  ACT = id;
+  try { localStorage.setItem(INDKEY, id); } catch (e) { }
+  setRoot(ROOT); snapshot(); rebuildMetrics();
+  if (!MX[UI.trend]) UI.trend = 'revenue';
+  HZQ.slots.clear(); HZ.idx = 0; HZ.q = null;
+  renderShell(); render(true);
+  if (!quiet) toast(t('ind.switched', { n: indName(DB) }));
+}
+/* a new industry starts with the same funnel, renamed metrics, custom metrics and preferences, and no data */
+function addIndustry(name) {
+  let id;
+  do id = 'w' + uid(); while (ROOT.ws[id]);
+  const now = Date.now();
+  ROOT.ws[id] = normalize({
+    settings: { ...DB.settings, ind: name, startCust: 0, lang: null, theme: null },
+    stages: DB.stages.map(s => ({ ...s })), names: { ...(DB.names || {}) },
+    custom: DB.custom.map(c => ({ ...c, u: now })), entries: [], goals: [], tests: [],
+    c: now, su: now, setu: now, nu: now, fv: DATA_FV
+  }, true);
+  commit();
+  return id;
+}
+function renameIndustry(id, name) {
+  const w = id === 'main' ? ROOT : ROOT.ws[id];
+  if (!w) return;
+  w.settings.ind = name.slice(0, 40);
+  w.setu = Date.now();   // the industry on screen is stamped by commit() as well; the others need it by hand
+  commit();
+}
+function deleteIndustry(id) {
+  if (id === 'main' || !ROOT.ws[id]) return;
+  if (ACT === id) switchIndustry('main', true);
+  delete ROOT.ws[id];
+  ROOT.del.w = { ...(ROOT.del.w || {}), [id]: Date.now() };
+  commit();
+}
+/* replace the data of the industry on screen (sample data, erase) and keep the other industries */
+function replaceActive(raw) {
+  const isWs = DB !== ROOT, d = normalize(raw, isWs);
+  d.settings.ind = DB.settings.ind || '';
+  if (isWs) { d.c = DB.c; ROOT.ws[ACT] = d; DB = d; }
+  else {
+    d.ws = ROOT.ws; d.del.w = { ...(ROOT.del.w || {}) };
+    d.settings.lang = ROOT.settings.lang; d.settings.theme = ROOT.settings.theme;
+    ROOT = DB = d;
+  }
+  ctxCache.clear();
 }
 
 /* ---- dates (local calendar days as YYYY-MM-DD strings) ---- */
@@ -1490,8 +1597,6 @@ function findLeak() {
 }
 /* first A/B test step with a significant winner, all time */
 function testWinner() {
-  const fd = firstDate();
-  if (!fd) return null;
   for (const ts of DB.tests) {
     const sums = ts.variants.map(v => sumRange('0000-01-01', '9999-12-31', v.id).S);
     for (let i = 1; i < DB.stages.length; i++) {
@@ -2450,10 +2555,14 @@ function hzSettingsHTML() {
 
 function renderShell() {
   const nav = VIEW_KEYS.map(k => `<button class="nav${UI.view === k ? ' on' : ''}" data-tab="${k}">${icon(k)}<span>${esc(t('nav.' + k))}</span></button>`).join('');
-  $('#side').innerHTML = `<div class="brand"><i>${icon('pulse', 2.4).replace('<svg', '<svg style="width:18px;height:18px;color:#fff"')}</i><div>Pulse<small>${esc(DB.settings.biz || t('s.bizPh'))}</small></div></div>${nav}<div class="grow"></div><div class="langsw" data-mount="seg:lang-side"></div>`;
+  $('#side').innerHTML = `<div class="brand"><i>${icon('pulse', 2.4).replace('<svg', '<svg style="width:18px;height:18px;color:#fff"')}</i><div>Pulse<small>${esc(bizLine())}</small></div></div>${nav}<div class="grow"></div><div class="langsw" data-mount="seg:lang-side"></div>`;
   $('#tabbar').innerHTML = VIEW_KEYS.map(k => `<button class="${UI.view === k ? 'on' : ''}" data-tab="${k}" aria-label="${esc(t('nav.' + k))}">${icon(k, 1.8)}<span>${esc(t('nav.' + k))}</span></button>`).join('');
   $('#tt').textContent = t('nav.' + UI.view);
   $('#langBtn').textContent = LANG === 'zh' ? 'EN' : '中文';
+  const ib = $('#indBtn');
+  ib.hidden = industries().length < 2;
+  ib.innerHTML = `<span>${esc(indName(DB))}</span>${icon('down', 2.6)}`;
+  ib.setAttribute('aria-label', t('ind.pick') + ': ' + indName(DB));
   $('#addBtn').innerHTML = icon('plus', 2.4);
   $('#addBtn').setAttribute('aria-label', t('e.new'));
   mountAll($('#side'));
@@ -2698,7 +2807,7 @@ function setQuick(stageId, value, date = UI.quick, qv = variantById(UI.qv) ? UI.
 
 /* ---- Metrics ---- */
 function viewMetrics() {
-  const head = `<h1 class="lt">${esc(t('mv.title'))}</h1><p class="sub">${esc(DB.settings.biz || t('s.bizPh'))}</p>
+  const head = `<h1 class="lt">${esc(t('mv.title'))}</h1><p class="sub">${esc(bizLine())}</p>
     <div class="mview" data-mount="seg:mview"></div><div data-mount="period"></div>`;
   if (UI.mview === 'tests') return head + viewTests();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
@@ -2786,7 +2895,8 @@ function viewSettings() {
   const curs = ['$', 'RM', 'S$', '¥', '€', '£', 'A$', 'NT$', 'HK$', '₩', '฿', '₱', 'Rp', '₹'];
   return `<h1 class="lt">${esc(t('s.title'))}</h1><p class="sub">&nbsp;</p>
   <div style="max-width:680px">
-    <div class="rise" style="--i:0"><div class="gh" style="margin-top:0">${esc(t('s.general'))}</div><div class="list">
+    ${industrySettingsHTML()}
+    <div class="rise" style="--i:0"><div class="gh">${esc(t('s.general'))}</div><div class="list">
       <div class="row"><span class="lbl">${esc(t('s.biz'))}</span><input class="inl" data-set="biz" value="${esc(st.biz)}" placeholder="${esc(t('s.bizPh'))}" maxlength="60"></div>
       <div class="row"><span class="lbl">${esc(t('s.lang'))}</span><span style="flex:1"></span><div data-mount="seg:lang"></div></div>
       <div class="row"><span class="lbl">${esc(t('s.cur'))}</span><select class="inl" data-set="currency">${[...new Set([st.currency, ...curs])].map(c => `<option ${c === st.currency ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
@@ -2815,6 +2925,59 @@ function viewSettings() {
   </div>`;
 }
 
+function industrySettingsHTML() {
+  const rows = industries().map(([id, w]) => {
+    const on = id === ACT, n = w.entries.filter(e => !e.t).length;
+    return `<div class="row indrow"><button class="indgo" data-ind="${esc(id)}"><span class="t1">${esc(indName(w))}</span>
+        <span class="t2">${esc(t('ind.entries', { n: fmtNum(n) }))}${on ? ' · ' + esc(t('ind.current')) : ''}</span></button>
+      ${on ? `<span class="indck">${icon('check', 2.6)}</span>` : ''}<button class="pill" data-indedit="${esc(id)}">${esc(t('edit'))}</button></div>`;
+  }).join('');
+  return `<div class="rise" style="--i:0"><div class="gh" style="margin-top:0">${esc(t('ind.title'))}</div><div class="list">${rows}
+      <button class="row" data-act="newind"><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('ind.add'))}</div></div></button></div>
+    <div class="gf">${esc(t('ind.F'))}</div></div>`;
+}
+function openIndustry(id) {
+  const w = id ? (id === 'main' ? ROOT : ROOT.ws[id]) : null;
+  if (id && !w) return;
+  const sh = openSheet({
+    title: w ? t('ind.edit') : t('ind.new'), small: true, left: { label: t('cancel') }, right: { label: t('save'), fn: api => save(api) },
+    body: `<div class="list"><div class="row"><span class="lbl">${esc(t('ind.name'))}</span><input class="inl" data-in maxlength="40" placeholder="${esc(t('ind.namePh'))}" value="${esc(w ? w.settings.ind || '' : '')}"></div></div>
+      <div class="gf">${esc(t(w ? 'ind.editF' : 'ind.newF'))}</div>
+      ${w && id !== ACT ? `<div style="margin-top:22px"><button class="btn block" data-sw>${esc(t('ind.switch'))}</button></div>` : ''}
+      ${w && id !== 'main' ? `<div style="margin-top:12px"><button class="btn sec block danger" data-del>${icon('trash', 2.2)}${esc(t('ind.delete'))}</button></div>` : ''}`
+  });
+  const inp = $('[data-in]', sh.body);
+  if (!w && innerWidth >= 720) setTimeout(() => inp.focus(), 60);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); save(sh); } });
+  function save(api) {
+    const name = inp.value.replace(/\s+/g, ' ').trim();
+    if (!name) { inp.focus(); return; }
+    inp.blur(); api.close();
+    if (w) { if (name !== (w.settings.ind || '')) { renameIndustry(id, name); renderShell(); render(); toast(t('e.saved')); } }
+    else switchIndustry(addIndustry(name));
+  }
+  $('[data-sw]', sh.body)?.addEventListener('click', () => { sh.close(); switchIndustry(id); });
+  $('[data-del]', sh.body)?.addEventListener('click', async () => {
+    if (!(await confirmSheet(t('ind.delQ', { n: indName(w) }), t('ind.delete')))) return;
+    sh.close(); deleteIndustry(id); renderShell(); render(); toast(t('ind.deleted'));
+  });
+}
+/* quick switcher behind the industry pill in the top bar */
+function openIndPick() {
+  const sh = openSheet({
+    title: t('ind.pick'), small: true, right: { label: t('done'), fn: api => api.close() },
+    body: `<div class="list">${industries().map(([id, w]) => `<button class="row" data-pk="${esc(id)}"><div class="bd"><div class="t1">${esc(indName(w))}</div>
+        <div class="t2">${esc(t('ind.entries', { n: fmtNum(w.entries.filter(e => !e.t).length) }))}</div></div>${id === ACT ? `<span class="indck">${icon('check', 2.6)}</span>` : ''}</button>`).join('')}
+      <button class="row" data-pk=""><div class="bd"><div class="t1" style="color:var(--blue)">${esc(t('ind.add'))}</div></div></button></div>`
+  });
+  sh.body.addEventListener('click', e => {
+    const b = e.target.closest('[data-pk]');
+    if (!b) return;
+    sh.close();
+    if (b.dataset.pk) switchIndustry(b.dataset.pk); else openIndustry();
+  });
+}
+
 const VIEWS = { overview: viewOverview, log: viewLog, metrics: viewMetrics, goals: viewGoals, settings: viewSettings };
 
 function mountAll(root) {
@@ -2829,7 +2992,7 @@ function mountAll(root) {
       m.appendChild(Segmented([{ value: 'metrics', label: t('mv.tabMetrics') }, { value: 'tests', label: t('mv.tabTests') }], UI.mview,
         v => { UI.mview = v; saveUI(); render(); }, { full: true }).el);
     } else if (k === 'seg:theme') {
-      const s = Segmented(['auto', 'light', 'dark'].map(v => ({ value: v, label: t('s.' + v) })), DB.settings.theme || 'auto', v => { DB.settings.theme = v; applyTheme(); save(); });
+      const s = Segmented(['auto', 'light', 'dark'].map(v => ({ value: v, label: t('s.' + v) })), ROOT.settings.theme || 'auto', v => { ROOT.settings.theme = v; applyTheme(); save(); });
       m.appendChild(s.el);
     }
   }
@@ -3118,8 +3281,14 @@ function importJSON() {
     const f = inp.files && inp.files[0]; if (!f) return;
     const rd = new FileReader();
     rd.onload = () => {
-      try { DB = normalize(JSON.parse(rd.result)); }
+      let d;
+      try { d = normalize(JSON.parse(rd.result)); }
       catch (e) { toast(t('s.bad')); return; }
+      if (!Object.keys(d.ws).length) { d.ws = ROOT.ws; d.del.w = { ...(ROOT.del.w || {}) }; }   // a backup from before industries keeps them
+      const was = ACT;
+      setRoot(d);
+      if (ACT !== was) snapshot();   // the industry on screen isn't in the backup: don't stamp one industry against another
+      rebuildMetrics();
       commit(); afterDataReplaced(); toast(t('s.imported'));
     };
     rd.readAsText(f);
@@ -3127,7 +3296,7 @@ function importJSON() {
   inp.click();
 }
 function afterDataReplaced() {
-  if (DB.settings.lang) LANG = DB.settings.lang;
+  if (ROOT.settings.lang) LANG = ROOT.settings.lang;
   document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
   applyTheme(); rebuildMetrics(); KV.clear();
   if (PB) PB.seg.relabel(PERIODS.map(p => t('period.' + p)));
@@ -3144,9 +3313,9 @@ const SB_KEY = 'sb_publishable_jTrhtpvVi1vPFMDby_XLEQ_KY2SkXyb';
 const SYNCKEY = 'pulse.sync';
 const TOMB_TTL = 180 * 864e5;
 
-const DEL_BUCKETS = ['e', 'g', 'c', 't'];   // tombstones for entries, goals, custom metrics, tests
+const DEL_BUCKETS = ['e', 'g', 'c', 't', 'w'];   // tombstones for entries, goals, custom metrics, tests, industries (w: ROOT only)
 function cleanDel(d) {
-  const out = { e: {}, g: {}, c: {}, t: {} }, now = Date.now();
+  const out = { e: {}, g: {}, c: {}, t: {}, w: {} }, now = Date.now();
   if (d && typeof d === 'object') for (const b of DEL_BUCKETS) for (const k in (d[b] || {})) {
     const n = +d[b][k];
     if (n > 0 && now - n < TOMB_TTL) out[b][k] = n;
@@ -3192,8 +3361,8 @@ function stamp() {
 }
 
 /* ---- merge ---- */
-function mergeDB(local, remoteRaw) {
-  const R = normalize(remoteRaw), L = local;
+function mergeDB(local, remoteRaw, isWs) {
+  const R = normalize(remoteRaw, isWs), L = local;
   const del = cleanDel(L.del), rd = cleanDel(R.del);
   for (const b of DEL_BUCKETS) for (const k in rd[b]) del[b][k] = Math.max(del[b][k] || 0, rd[b][k]);
   const pick = (loc, rem, keyOf, b) => {
@@ -3211,10 +3380,25 @@ function mergeDB(local, remoteRaw) {
     custom: pick(L.custom, R.custom, r => r.id, 'c'),
     tests: pick(L.tests || [], R.tests, r => r.id, 't'),
     names: (L.nu || 0) > (R.nu || 0) ? (L.names || {}) : R.names,
-    su: Math.max(L.su || 0, R.su || 0), setu: Math.max(L.setu || 0, R.setu || 0), nu: Math.max(L.nu || 0, R.nu || 0), del
+    su: Math.max(L.su || 0, R.su || 0), setu: Math.max(L.setu || 0, R.setu || 0), nu: Math.max(L.nu || 0, R.nu || 0), del,
+    ...(isWs ? { c: Math.min(...[L.c, R.c].filter(x => x > 0), Date.now()) } : { ws: mergeWs(L.ws || {}, R.ws || {}, del.w) })
   };
 }
-const hasLocalData = () => !!(DB.entries.length || DB.goals.length || DB.custom.length || DB.tests.length);
+/* latest change anywhere in an industry: deleting an industry only wins over one nobody touched since */
+function wsTime(w) {
+  let m = Math.max(w.c || 0, w.su || 0, w.setu || 0, w.nu || 0);
+  for (const k of ['entries', 'goals', 'custom', 'tests']) for (const r of w[k] || []) if ((r.u || 0) > m) m = r.u;
+  return m;
+}
+function mergeWs(L, R, tomb) {
+  const out = {};
+  for (const id of new Set([...Object.keys(L), ...Object.keys(R)])) {
+    const w = L[id] && R[id] ? mergeDB(L[id], R[id], true) : (L[id] || R[id]);
+    if (!(tomb[id] && tomb[id] >= wsTime(w))) out[id] = w;
+  }
+  return out;
+}
+const hasLocalData = () => industries().some(([, d]) => d.entries.length || d.goals.length || d.custom.length || d.tests.length);
 /* key-order-independent fingerprint, so two devices never disagree about "same data" and ping-pong */
 function stable(v) {
   if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']';
@@ -3275,7 +3459,7 @@ const Sync = {
         if (this.st.dirty) {
           this.setStatus('syncing');
           const g = this.gen;
-          const r = await this.rpc('pulse_push', { p_key: key, p_data: DB, p_base: this.st.version });
+          const r = await this.rpc('pulse_push', { p_key: key, p_data: ROOT, p_base: this.st.version });
           if (!still()) return;
           if (r.error === 'conflict') { this.absorb(r.data, r.version); continue; }
           if (r.error) throw new Error(r.error);
@@ -3306,12 +3490,12 @@ const Sync = {
   },
   /* fold server data into local; stay dirty if local holds changes the server lacks */
   absorb(remote, version) {
-    const merged = mergeDB(DB, remote);
+    const merged = mergeDB(ROOT, remote);
     this.st.version = version;
     if (syncSig(merged) !== syncSig(normalize(remote))) { this.st.dirty = true; this.gen++; }
     else this.st.dirty = false;
-    if (syncSig(merged) !== syncSig(DB)) {
-      DB = merged; ctxCache.clear(); snapshot(); save(); rebuildMetrics();
+    if (syncSig(merged) !== syncSig(ROOT)) {
+      setRoot(merged); snapshot(); save(); rebuildMetrics();
       refreshAfterSync();
     }
     this.persist();
@@ -3320,7 +3504,7 @@ const Sync = {
     if (this.on() || this.busy) return;
     this.busy = true; this.setStatus('syncing');
     try {
-      const r = await this.rpc('pulse_create', { p_data: DB });
+      const r = await this.rpc('pulse_create', { p_data: ROOT });
       if (r.error || !r.key) throw new Error(r.error || 'no key');
       this.st = { key: r.key, version: r.version, dirty: false, last: Date.now() };
       this.persist(); this.setStatus('idle');
@@ -3345,12 +3529,12 @@ const Sync = {
   /* joining, step 2. merge: fold both together (this device's data gets uploaded).
      replace: become an exact copy of the cloud — no tombstones are created, so the cloud loses nothing. */
   attach(key, p, mode) {
-    try { localStorage.setItem(LSKEY + '.beforeSync', JSON.stringify(DB)); } catch (e) { }   // safety copy of this device's data
+    try { localStorage.setItem(LSKEY + '.beforeSync', JSON.stringify(ROOT)); } catch (e) { }   // safety copy of this device's data
     this.st = { key, version: p.version, dirty: false, last: Date.now() };
     if (mode === 'replace') {
       const R = normalize(p.data);
-      DB = { ...R, settings: { ...R.settings, lang: DB.settings.lang, theme: DB.settings.theme } };
-      ctxCache.clear(); snapshot(); save(); rebuildMetrics();
+      setRoot({ ...R, settings: { ...R.settings, lang: ROOT.settings.lang, theme: ROOT.settings.theme } });
+      snapshot(); save(); rebuildMetrics();
     } else this.absorb(p.data, p.version);
     this.persist(); this.setStatus(this.st.dirty ? 'pending' : 'idle');
     if (this.st.dirty) this.run();
@@ -3459,7 +3643,7 @@ function openEnableAsk() {
 }
 function openJoin() {
   let busy = false, key = null;   // the key is kept once resolved: a pairing code only works once
-  const counts = d => t('sync.counts', { e: fmtNum(d.entries.length), g: fmtNum(d.goals.length) });
+  const counts = d => { const all = [d, ...Object.values(d.ws || {})]; return t('sync.counts', { e: fmtNum(all.reduce((a, x) => a + x.entries.length, 0)), g: fmtNum(all.reduce((a, x) => a + x.goals.length, 0)) }); };
   const sh = openSheet({
     title: t('sync.joinTitle'), small: true, left: { label: t('cancel') }, right: { label: t('sync.connect'), fn: api => submit(api) },
     body: `<div class="list"><div class="row"><input class="inl" data-code placeholder="ABCD-EFGH" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="80" enterkeyhint="go"
@@ -3472,7 +3656,7 @@ function openJoin() {
     api.setRight(true);
     sh.body.innerHTML = `<p class="note" style="text-align:center;margin:2px 4px 14px;color:var(--text)">${esc(t('sync.choiceQ'))}</p>
       <div class="list">
-        <div class="row"><div class="bd"><div class="t1">${esc(t('sync.thisDevice'))}</div></div><div class="rv num">${esc(counts(DB))}</div></div>
+        <div class="row"><div class="bd"><div class="t1">${esc(t('sync.thisDevice'))}</div></div><div class="rv num">${esc(counts(ROOT))}</div></div>
         <div class="row"><div class="bd"><div class="t1">${esc(t('sync.cloud'))}</div></div><div class="rv num">${esc(counts(normalize(p.data)))}</div></div>
       </div>
       <div style="margin-top:20px">
@@ -3521,13 +3705,13 @@ function openKey() {
 
 /* ---------------------------------------------------------------- boot -- */
 function applyTheme() {
-  const th = DB.settings.theme;
+  const th = ROOT.settings.theme;
   if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th;
   else delete document.documentElement.dataset.theme;
 }
 function setLang(l) {
   if (l === LANG) return;
-  LANG = l; DB.settings.lang = l; save();
+  LANG = l; ROOT.settings.lang = l; save();
   document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
   if (PB) { PB.seg.relabel(PERIODS.map(p => t('period.' + p))); PB.text = ''; }
   renderShell(); render();
@@ -3588,9 +3772,14 @@ document.addEventListener('click', async e => {
     toast(`${stageName(gone)} — ${t('delete')}`, { label: t('undo'), fn: () => { DB.stages = before; commit(); rebuildMetrics(); render(); } });
     return;
   }
+  const ind = el.closest('[data-ind]');
+  if (ind) { if (ind.dataset.ind === ACT) openIndustry(ACT); else switchIndustry(ind.dataset.ind); return; }
+  const ied = el.closest('[data-indedit]');
+  if (ied) { openIndustry(ied.dataset.indedit); return; }
   const act = el.closest('[data-act]');
   if (!act) return;
   switch (act.dataset.act) {
+    case 'newind': openIndustry(); break;
     case 'add': openEntry(); break;
     case 'addq': openEntry(quickKey()); break;
     case 'newtest': openTest(); break;
@@ -3607,7 +3796,7 @@ document.addEventListener('click', async e => {
     case 'newgoal': openGoal(); break;
     case 'newcustom': openCustom(); break;
     case 'more': UI.histLimit += 60; render(); break;
-    case 'export': download(`pulse-backup-${today()}.json`, JSON.stringify(DB, null, 2), 'application/json'); break;
+    case 'export': download(`pulse-backup-${today()}.json`, JSON.stringify(ROOT, null, 2), 'application/json'); break;
     case 'import': importJSON(); break;
     case 'csv': exportCSV(); break;
     case 'sync-enable': openEnableAsk(); break;
@@ -3628,11 +3817,11 @@ document.addEventListener('click', async e => {
     }
     case 'sample':
       if (DB.entries.length && !(await confirmSheet(t('s.sampleQ'), t('s.sample'), false))) return;
-      DB = sampleDB(); commit(); afterDataReplaced(); toast(t('s.sampled'));
+      replaceActive(sampleDB()); commit(); afterDataReplaced(); toast(t('s.sampled'));
       break;
     case 'erase':
-      if (!(await confirmSheet(t('s.eraseQ'), t('s.erase')))) return;
-      DB = defaultDB(); DB.settings.lang = LANG; commit(); afterDataReplaced(); toast(t('s.erased'));
+      if (!(await confirmSheet(industries().length > 1 ? t('s.eraseIndQ', { n: indName(DB) }) : t('s.eraseQ'), t('s.erase')))) return;
+      replaceActive(defaultDB()); commit(); afterDataReplaced(); toast(t('s.erased'));
       break;
   }
 });
@@ -3719,6 +3908,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 $('#addBtn').addEventListener('click', () => openEntry(UI.view === 'log' ? quickKey() : undefined));
 $('#langBtn').addEventListener('click', () => setLang(LANG === 'zh' ? 'en' : 'zh'));
+$('#indBtn').addEventListener('click', openIndPick);
 $('#syncBtn').addEventListener('click', () => {
   switchTab('settings');
   requestAnimationFrame(() => { const s = $('#sync'); if (s) s.scrollIntoView({ behavior: RM.matches ? 'auto' : 'smooth', block: 'start' }); });
@@ -3730,7 +3920,7 @@ window.addEventListener('storage', e => {
 
 (function init() {
   load();
-  LANG = DB.settings.lang || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
+  LANG = ROOT.settings.lang || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
   try {
     const u = JSON.parse(localStorage.getItem('pulse.ui') || '{}');
     if (VIEWS[u.view]) UI.view = u.view;
