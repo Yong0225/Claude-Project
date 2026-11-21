@@ -2737,7 +2737,7 @@ function replySplit(c, col) {
   return { bar, legend: `<div class="fn-split">${legend}</div>` };
 }
 /* the six overview cards: settings.kpis per industry; a missing metric (deleted custom metric, renamed stage) falls back to the default card for that slot */
-const KPI_DEF = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltvCac'];
+const KPI_DEF = ['revenue', 'newCust', 'convOverall', 'cac', 'netProfit', 'ltgpCac'];
 const KPI_HUES = ['var(--blue)', 'var(--green)', 'var(--purple)', 'var(--orange)', 'var(--teal)', 'var(--indigo)'];
 function kpiKeys() {
   const s = Array.isArray(DB.settings.kpis) ? DB.settings.kpis : [];
