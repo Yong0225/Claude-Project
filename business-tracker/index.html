@@ -535,7 +535,7 @@ const I18N = {
     'md.convOverall':'Out of every lead, how many became paying clients. For cold outreach, 0.5–3% is typical.',
     'md.conv':'Share of {a} that made it to {b}. Watch the step with the biggest drop — that’s where the money leaks.',
     'm.posRate':'Engaged rate','m.negRate':'Negative reply rate','m.posShare':'Engaged share of replies','m.posBook':'Engaged → booked','m.refRate':'Referral rate',
-    'md.posRate':'Replies that raised their hand — Hormozi’s engaged leads. This is the number your offer and opener should move. Counted from the first day you logged an engaged reply.',
+    'md.posRate':'Replies that raised their hand — Hormozi’s engaged leads. This is the number your offer and opener should move. Days before you started sorting replies are left out only if they had replies you didn’t sort.',
     'md.refRate':'Replies that pointed you to someone else — the owner, manager or person in charge. In Hormozi’s terms it’s a referral — a warm intro to the real decision maker, so follow up fast and name who sent you.',
     'md.negRate':'Replies that said no, not now or stop. When every reply is sorted, engaged + referral + negative adds up to the response rate.',
     'md.posShare':'Of everyone who replied, how many were interested. Low means you reach people, but the wrong ones or with the wrong offer.',
@@ -782,7 +782,7 @@ const I18N = {
     'md.convOverall':'每条线索里有多少变成了付费客户。冷邮件开发一般在 0.5–3%。',
     'md.conv':'{a} 中进入 {b} 的比例。掉得最多的那一步，就是钱漏掉的地方。',
     'm.posRate':'正面回复率','m.negRate':'负面回复率','m.posShare':'正面占比','m.posBook':'正面 → 约见率','m.refRate':'转介回复率',
-    'md.posRate':'举手表示有兴趣的回复，也就是 Hormozi 说的 engaged leads（意向线索）。你的开场白和 offer 要推动的就是这个数。从你第一次记录正面回复的那天开始算。',
+    'md.posRate':'举手表示有兴趣的回复，也就是 Hormozi 说的 engaged leads（意向线索）。你的开场白和 offer 要推动的就是这个数。开始分类回复之前的日子，只有当天有回复却没分类时才不算进去。',
     'md.refRate':'把你介绍给别人的回复，比如老板、经理或负责人（PIC）。按 Hormozi 的说法这是 referral（转介）：等于有人帮你暖场介绍了真正拍板的人，要尽快跟进，并说明是谁介绍你来的。',
     'md.negRate':'说不要、以后再说或别再发的回复。每条回复都分好类的话，正面 + 转介 + 负面加起来就是总回复率。',
     'md.posShare':'所有回复的人里，有兴趣的占多少。偏低说明你触达到了人，但人不对，或者 offer 不对。',
@@ -1309,7 +1309,8 @@ function posStart(variant) {
 }
 
 /* totals leave out A/B test entries; pass a variant id to sum only that A/B test variant.
-   _pa/_pr/_pn: reply-rate base, replies and next stage counted only from posStart() on */
+   _pa/_pr: base and replies for the engaged / referral / negative rates. Days before posStart() count only when they had
+   no replies (nothing there was left unsorted); _pn (the stage after engaged) counts from posStart() on */
 function sumRange(from, to, variant) {
   const S = {};
   for (const k of inputKeys()) S[k] = 0;
@@ -1322,7 +1323,8 @@ function sumRange(from, to, variant) {
     if (variant ? e.t !== variant : e.t) continue;
     n++;
     for (const k in e.v) if (k in S) S[k] += e.v[k];
-    if (p0 && e.date >= p0) { S._pa += e.v[ps.a] || 0; S._pr += e.v.replied || 0; if (ps.n) S._pn += e.v[ps.n] || 0; }
+    if (p0 && (e.date >= p0 || !(e.v.replied > 0))) { S._pa += e.v[ps.a] || 0; S._pr += e.v.replied || 0; }
+    if (p0 && e.date >= p0 && ps.n) S._pn += e.v[ps.n] || 0;
   }
   return { S, n };
 }
