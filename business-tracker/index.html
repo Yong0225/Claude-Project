@@ -99,7 +99,6 @@ svg{display:block}
 [aria-expanded="true"] .cbcv{transform:rotate(90deg)}
 .cbar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:var(--orange);border-radius:2px}
 .cbar.rev::after{background:var(--green-t)}
-.kpedit{padding:6px 14px;font-size:15px;min-height:0}
 .kpdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px}
 .indgo{flex:1;min-width:0;border:0;background:none;padding:0;margin:0;text-align:left;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:1px}
 .indck{color:var(--blue);display:grid;place-items:center;flex:none}
@@ -599,7 +598,7 @@ const I18N = {
     's.life':'Max client lifetime','s.lifeF':'LTV uses 1 ÷ churn for lifetime, capped at this many months so LTV stays sensible when churn is 0.',
     's.pay':'How clients pay','s.payAuto':'Auto','s.paySub':'Recurring','s.payOnce':'One-time',
     's.payF':'One-time: LTV is what an average new client paid. Recurring: monthly revenue per client × lifetime. LTGP is LTV minus delivery costs. Auto picks one-time until you log recurring revenue or churn.',
-    'kp.edit':'Edit','kp.title':'Overview cards','kp.slot':'Card {n}','kp.reset':'Reset to default','kp.foot':'Pick any metric for each of the six cards, including your custom metrics. Each industry keeps its own cards.',
+    'kp.title':'Overview cards','kp.slot':'Card {n}','kp.reset':'Reset to default','kp.foot':'Pick any metric for each of the six cards, including your custom metrics. Each industry keeps its own cards.',
     's.months':'months','s.stages':'Funnel stages','s.stagesF':'Top to bottom. The last stage counts as new clients; conversion rates are calculated between neighbouring stages.',
     's.addStage':'Add stage','s.newStage':'New stage','s.minStages':'Keep at least 2 stages','s.custom':'Custom metrics',
     's.customF':'Build any ratio from your numbers — e.g. Revenue ÷ Meetings.','s.addCustom':'Add custom metric',
@@ -846,7 +845,7 @@ const I18N = {
     's.life':'客户生命周期上限','s.lifeF':'LTV 的生命周期 = 1 ÷ 流失率，并以此为上限，避免流失率为 0 时 LTV 无限大。',
     's.pay':'客户怎么付钱','s.payAuto':'自动','s.paySub':'订阅续费','s.payOnce':'一次性',
     's.payF':'一次性：LTV = 平均每个新客户付的钱。订阅续费：每客户月均收入 × 生命周期。LTGP = LTV 扣掉交付成本。自动：在你记录续费收入或流失客户之前，都按一次性算。',
-    'kp.edit':'编辑','kp.title':'概览卡片','kp.slot':'第 {n} 格','kp.reset':'恢复默认','kp.foot':'六个格子都可以选任何指标，包括自定义指标。每个行业各自保存。',
+    'kp.title':'概览卡片','kp.slot':'第 {n} 格','kp.reset':'恢复默认','kp.foot':'六个格子都可以选任何指标，包括自定义指标。每个行业各自保存。',
     's.months':'个月','s.stages':'漏斗阶段','s.stagesF':'从上到下排列。最后一个阶段算作新客户，转化率按相邻两个阶段计算。',
     's.addStage':'添加阶段','s.newStage':'新阶段','s.minStages':'至少保留 2 个阶段','s.custom':'自定义指标',
     's.customF':'用你的数据组合任意比率——例如 总收入 ÷ 会议数。','s.addCustom':'添加自定义指标',
@@ -2759,7 +2758,7 @@ function openKpis() {
   $('[data-kpreset]', sh.body).addEventListener('click', () => { KPI_DEF.forEach((d, i) => keys[i] = MX[d] ? d : 'revenue'); $('[data-kplist]', sh.body).innerHTML = rows(); haptic(); });
 }
 function viewOverview() {
-  const head = `<div class="srow"><h1 class="lt" style="flex:1">${esc(t('ov.title'))}</h1>${mainEntries().length ? `<button class="btn sec kpedit" data-act="kpis">${esc(t('kp.edit'))}</button>` : ''}</div><p class="sub">${esc(bizLine())}</p>`;
+  const head = `<h1 class="lt">${esc(t('ov.title'))}</h1><p class="sub">${esc(bizLine())}</p>`;
   if (!mainEntries().length) return head + (hzOn() ? `<div class="card rise hzcard" style="margin-bottom:12px">${coachHTML(t('hz.f.noData'))}</div>` : '') + emptyHero();
   const r = curRange(), p = prevRange(), c = ctxFor(r.from, r.to), pc = p && ctxFor(p.from, p.to);
   const hist = historyRanges(UI.period, UI.offset, 8).map(h => ctxFor(h.from, h.to));
@@ -3035,6 +3034,7 @@ function viewSettings() {
       <div class="row"><span class="lbl">${esc(t('s.lang'))}</span><span style="flex:1"></span><div data-mount="seg:lang"></div></div>
       <div class="row"><span class="lbl">${esc(t('s.cur'))}</span><select class="inl" data-set="currency">${[...new Set([st.currency, ...curs])].map(c => `<option ${c === st.currency ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
       <div class="row"><span class="lbl">${esc(t('s.theme'))}</span><span style="flex:1"></span><div data-mount="seg:theme"></div></div>
+      <button class="row" data-act="kpis"><div class="bd"><div class="t1">${esc(t('kp.title'))}</div><div class="t2">${esc(kpiKeys().map(k => MX[k].name()).join(' · '))}</div></div>${chevSVG}</button>
     </div></div>
     ${hzSettingsHTML()}
     <div class="rise" style="--i:1"><div class="gh">${esc(t('s.clients'))}</div><div class="list">
